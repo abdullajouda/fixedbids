@@ -18,15 +18,13 @@ const kTextColor = Color(0x0ff252225);
 const kTextMidColor = Color(0x0ff626262);
 const kTextLightColor = Color(0x0ff999999);
 const grayColor = Color(0x0ffC4C4C4);
-const kPadding =  EdgeInsets.symmetric(horizontal: 36);
+const kPadding = EdgeInsets.symmetric(horizontal: 36);
 const emailRegExp =
     r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
-
 
 class Data {
   static Size size;
 }
-
 
 class Constants {
   static const String domain = 'https://v2.basit.app/api/';
@@ -50,7 +48,13 @@ class Constants {
 
   static const List list = [purpleColor, lightOrangeColor, yellowColor];
 
-  static const List categories = ['All','New','Delivered', 'Preparing', 'On Delivery'];
+  static const List categories = [
+    'All',
+    'New',
+    'Delivered',
+    'Preparing',
+    'On Delivery'
+  ];
 
   static const List list2 = [coffee, clothes];
 
@@ -63,20 +67,16 @@ class Constants {
   //   'Authorization': AppData.user != null ? 'Bearer ${AppData.user.accessToken}' : '',
   // };
 
-
   static TextStyle applyStyle({double size, Color color}) {
-    if (size != null) {
-      return TextStyle(
-        color: color != null ? color : kTextColor,
-        fontSize: size,
-        fontWeight: FontWeight.w400,
-      );
-    }
-    return TextStyle(color: color != null ? color : kTextColor, fontSize: 18);
+    return TextStyle(
+      color: color != null ? color : kTextColor,
+      fontSize: size ?? 24,
+      fontWeight: FontWeight.w400,
+    );
   }
 }
 
-showAlert({@required BuildContext context,String error}){
+showAlert({@required BuildContext context, String error}) {
   showDialog(
     context: context,
     builder: (context) => AlertDialog(
@@ -102,7 +102,6 @@ showAlert({@required BuildContext context,String error}){
   );
 }
 
-
 class FieldValidator {
   static String validate(String value, context) {
     if (value.isEmpty) {
@@ -125,45 +124,35 @@ class EmailValidator {
   }
 }
 
-InputDecoration inputDecoration({Widget suffix, String hint}) {
+InputDecoration inputDecoration(
+    {Widget suffix, String hint, bool focused = false}) {
   return InputDecoration(
-    fillColor: Colors.white,
-    filled: true,
-    hintStyle: Constants.applyStyle(size: 12, color: grayColor),
-    hintText: hint,
+    fillColor: Color(0x0ffF2F2F2),
+    filled: !focused,
+    labelStyle: Constants.applyStyle(size: 18, color: grayColor),
+    floatingLabelStyle: Constants.applyStyle(size: 18, color: kPrimaryColor),
+    labelText: hint,
     suffixIcon: suffix != null
         ? Container(width: 17, child: Center(child: suffix))
         : null,
-    contentPadding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+    contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
     border: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(15.0),
-        borderSide:
-        BorderSide(width: 1.0, color: Color.fromRGBO(0, 14, 45, 0.6))),
-    enabledBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(15.0),
-        borderSide:
-        BorderSide(width: 1.0, color: Color.fromRGBO(0, 14, 45, 0.6))),
-    disabledBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(15.0),
-        borderSide:
-        BorderSide(width: 1.0, color: Color.fromRGBO(0, 14, 45, 0.6))),
-    errorBorder: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(15.0),
+      borderRadius: BorderRadius.circular(12.0),
       borderSide: BorderSide(
-        color: Colors.red,
-        width: 2.0,
+        width: 0.0,
+        color: Color(0x0ffF2F2F2),
       ),
     ),
-    focusedErrorBorder: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(15.0),
+    enabledBorder: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(12.0),
       borderSide: BorderSide(
-        color: Colors.red,
-        width: 2.0,
+        width: focused ? 1 : 0.0,
+        color: focused ? kPrimaryColor : Color(0x0ffF2F2F2),
       ),
     ),
     focusedBorder: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(15.0),
-      borderSide: BorderSide(width: 2.0, color: greenColor),
+      borderRadius: BorderRadius.circular(12.0),
+      borderSide: BorderSide(width: 1.0, color: kPrimaryColor),
     ),
   );
 }

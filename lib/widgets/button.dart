@@ -4,15 +4,16 @@ import '../constants.dart';
 
 class Button extends StatelessWidget {
   final String title;
+  final VoidCallback onPressed;
 
-  const Button({Key key,@required this.title}) : super(key: key);
+  const Button({Key key,@required this.title,@required this.onPressed}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Material(
       color: kPrimaryColor,
       borderRadius: BorderRadius.all(Radius.circular(12)),
       child: InkWell(
-        onTap: () {},
+        onTap: onPressed,
         borderRadius: BorderRadius.all(Radius.circular(12)),
         child: Container(
             width: Data.size.width,

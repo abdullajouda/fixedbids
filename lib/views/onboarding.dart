@@ -1,7 +1,9 @@
+import 'package:fixed_bids/views/auth/sign_in.dart';
+import 'package:fixed_bids/views/auth/sign_up.dart';
 import 'package:fixed_bids/widgets/button.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
+import 'package:easy_localization/easy_localization.dart';
 import '../constants.dart';
 
 class OnBoardingScreen extends StatefulWidget {
@@ -101,6 +103,13 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
             padding: kPadding,
             child: Button(
               title: 'Log into your account',
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => SignIn(),
+                    ));
+              },
             ),
           ),
           CupertinoButton(
@@ -112,7 +121,13 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                 fontWeight: FontWeight.w600,
               ),
             ),
-            onPressed: () {},
+            onPressed: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => SignUp(),
+                  ));
+            },
           )
         ],
       ),
