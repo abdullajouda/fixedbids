@@ -146,7 +146,7 @@ InputDecoration inputDecoration(
     enabledBorder: OutlineInputBorder(
       borderRadius: BorderRadius.circular(12.0),
       borderSide: BorderSide(
-        width: focused ? 1 : 0.0,
+        width: focused ? 1 : 0,
         color: focused ? kPrimaryColor : Color(0x0ffF2F2F2),
       ),
     ),
