@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:fixed_bids/constants.dart';
 import 'package:fixed_bids/views/auth/sign_up.dart';
+import 'package:fixed_bids/views/place_picker.dart';
 import 'package:fixed_bids/widgets/button.dart';
 import 'package:fixed_bids/widgets/check_box.dart';
 import 'package:fixed_bids/widgets/text_field.dart';
@@ -9,6 +10,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class SignIn extends StatefulWidget {
   @override
@@ -161,7 +163,20 @@ class _SignInState extends State<SignIn> {
               padding: kPadding,
               child: Button(
                 title: 'Log in'.tr(),
-                onPressed: () {},
+                onPressed: () async {
+                  LatLng initialPosition =
+                      await Constants.getCurrentLocation(context: context);
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => PlacePickerScreen(
+                          initialPosition: initialPosition,
+                          onPlacePicked: (p0) {
+                            Navigator.pop(context);
+                          },
+                        ),
+                      ));
+                },
               ),
             ),
             SizedBox(

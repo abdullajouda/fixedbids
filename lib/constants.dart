@@ -1,7 +1,14 @@
+import 'dart:io';
+
+import 'package:fixed_bids/widgets/request_location_sheet.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:location/location.dart' hide PermissionStatus;
+import 'package:permission_handler/permission_handler.dart';
 
 const loyalGreenColor = Color.fromRGBO(36, 217, 167, 1);
 const greenColor = Color.fromRGBO(41, 243, 183, 1);
@@ -24,6 +31,7 @@ const emailRegExp =
 
 class Data {
   static Size size;
+  static LatLng currentLocation;
 }
 
 class Constants {
@@ -72,6 +80,103 @@ class Constants {
       color: color != null ? color : kTextColor,
       fontSize: size ?? 24,
       fontWeight: FontWeight.w400,
+    );
+  }
+
+  static Future<LatLng> getCurrentLocation({
+    @required BuildContext context,
+    bool isNewestLocation = false,
+  }) async {
+    if (!isNewestLocation && Data.currentLocation != null)
+      return Data.currentLocation;
+    // Location location = Location.instance;
+    PermissionStatus permissionStatus = await Permission.location.request();
+    if (permissionStatus == PermissionStatus.granted) {
+      if (Platform.isIOS) {
+        showDialog(
+          context: context,
+          builder: (context) => Material(
+            color: Colors.transparent,
+            child: Container(
+              color: Colors.transparent,
+              alignment: Alignment.center,
+              child: CircularProgressIndicator(),
+            ),
+          ),
+        );
+        Position locationData = await Geolocator.getCurrentPosition();
+        Navigator.pop(context);
+        return Data.currentLocation = LatLng(
+          locationData.latitude,
+          locationData.longitude,
+        );
+      }
+      bool isGps = await Geolocator.isLocationServiceEnabled();
+      if (isGps) {
+        showDialog(
+          context: context,
+          builder: (context) => Material(
+            color: Colors.transparent,
+            child: Container(
+              color: Colors.transparent,
+              alignment: Alignment.center,
+              child: CircularProgressIndicator(),
+            ),
+          ),
+        );
+        Position locationData = await Geolocator.getCurrentPosition();
+        Navigator.pop(context);
+        return Data.currentLocation = LatLng(
+          locationData.latitude,
+          locationData.longitude,
+        );
+      } else {
+        bool isGpsEnabled = await Constants.bottomSheet(
+          context: context,
+          child: RequestLocationSheet(),
+        );
+        if (isGpsEnabled == null) return null;
+        showDialog(
+          context: context,
+          builder: (BuildContext context) => Material(
+            color: Colors.transparent,
+            child: Container(
+              color: Colors.transparent,
+              alignment: Alignment.center,
+              child: CircularProgressIndicator(),
+            ),
+          ),
+        );
+        Position locationData = await Geolocator.getCurrentPosition();
+        Navigator.pop(context);
+        return Data.currentLocation = LatLng(
+          locationData.latitude,
+          locationData.longitude,
+        );
+      }
+    } else
+      return null;
+  }
+
+  static Future<dynamic> bottomSheet({
+    @required BuildContext context,
+    @required Widget child,
+    Color backgroundColor,
+    bool enableDrag = true,
+    double radius = 30,
+    bool isScrollControlled = true,
+  }) async {
+    return await showModalBottomSheet(
+      context: context,
+      enableDrag: enableDrag,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(radius),
+        ),
+      ),
+      isScrollControlled: isScrollControlled,
+      backgroundColor: backgroundColor,
+      builder: (_) => child,
     );
   }
 }
