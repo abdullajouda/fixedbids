@@ -34,10 +34,14 @@ class _SplashScreenState extends State<SplashScreen> {
         height: size.height,
         width: size.width,
         decoration: BoxDecoration(
-          gradient: LinearGradient(colors: [
-            Color(0x0ff1F71ED),
-            Color(0x0ff649AEC),
-          ], begin: Alignment.topCenter, end: Alignment.bottomCenter),
+          gradient: LinearGradient(
+            colors: [
+              Color(0x0ff1F71ED),
+              Color(0x0ff649AEC),
+            ],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          ),
         ),
         child: Stack(
           alignment: Alignment.center,

@@ -75,11 +75,12 @@ class Constants {
   //   'Authorization': AppData.user != null ? 'Bearer ${AppData.user.accessToken}' : '',
   // };
 
-  static TextStyle applyStyle({double size, Color color}) {
+  static TextStyle applyStyle(
+      {double size, Color color, FontWeight fontWeight}) {
     return TextStyle(
       color: color != null ? color : kTextColor,
       fontSize: size ?? 24,
-      fontWeight: FontWeight.w400,
+      fontWeight: fontWeight ?? FontWeight.w400,
     );
   }
 

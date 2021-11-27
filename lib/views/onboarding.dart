@@ -1,10 +1,11 @@
 import 'package:fixed_bids/views/auth/sign_in.dart';
-import 'package:fixed_bids/views/auth/sign_up.dart';
+import 'package:fixed_bids/views/auth/sign_up_customer.dart';
 import 'package:fixed_bids/widgets/button.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
 import '../constants.dart';
+import 'auth/account_type.dart';
 
 class OnBoardingScreen extends StatefulWidget {
   @override
@@ -147,7 +148,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => SignUp(),
+                    builder: (context) => AccountType(),
                   ));
             },
           )

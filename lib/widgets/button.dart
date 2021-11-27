@@ -6,11 +6,13 @@ class Button extends StatelessWidget {
   final String title;
   final VoidCallback onPressed;
 
-  const Button({Key key,@required this.title,@required this.onPressed}) : super(key: key);
+  const Button({Key key, @required this.title, @required this.onPressed})
+      : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: kPrimaryColor,
+      color: onPressed == null ? kTextLightColor : kPrimaryColor,
       borderRadius: BorderRadius.all(Radius.circular(12)),
       child: InkWell(
         onTap: onPressed,

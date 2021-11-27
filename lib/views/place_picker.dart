@@ -3,7 +3,6 @@ import 'package:fixed_bids/external/lib/src/place_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
-
 class PlacePickerScreen extends StatefulWidget {
   final Function(PickResult) onPlacePicked;
   final LatLng initialPosition;
@@ -33,6 +32,7 @@ class _PlacePickerScreenState extends State<PlacePickerScreen> {
         selectInitialPosition: widget.selectInitialPosition,
         useCurrentLocation: false,
         initialPosition: widget.initialPosition,
+        automaticallyImplyAppBarLeading: false,
         selectedPlaceWidgetBuilder: (BuildContext context,
                 PickResult selectedPlace,
                 SearchingState state,
