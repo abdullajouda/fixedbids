@@ -5,7 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-import 'nav_screens/home_screen.dart';
+import 'nav_screens/customer/home_screen.dart';
+import 'nav_screens/customer/job_history_screen.dart';
+import 'other/customer/choose_category.dart';
 
 class RootPage extends StatefulWidget {
   const RootPage({Key key}) : super(key: key);
@@ -183,8 +185,7 @@ class _RootPageState extends State<RootPage>
             color: Color(0x0ffF1F1F1),
             borderRadius: BorderRadius.circular(12),
           ),
-          child: Center(
-              child: SvgPicture.asset('assets/icons/logout.svg')),
+          child: Center(child: SvgPicture.asset('assets/icons/logout.svg')),
         ),
       ),
       actions: [
@@ -243,12 +244,12 @@ class _RootPageState extends State<RootPage>
   Widget build(BuildContext context) {
     _bodyList = [
       UserHomeScreen(),
-      UserHomeScreen(),
+      JobHistoryScreen(),
       UserHomeScreen(),
       UserHomeScreen(),
     ];
     return Scaffold(
-      backgroundColor: Color(0x0ffF8F8F8),
+      backgroundColor: kBackGroundColor,
       floatingActionButton: ScaleTransition(
         scale: animation,
         child: FloatingActionButton(
@@ -260,8 +261,14 @@ class _RootPageState extends State<RootPage>
             color: HexColor('#FFFFFF'),
           ),
           onPressed: () {
-            _animationController.reset();
-            _animationController.forward();
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ChooseCategory(),
+                )).then((value) {
+              _animationController.reset();
+              _animationController.forward();
+            });
           },
         ),
       ),

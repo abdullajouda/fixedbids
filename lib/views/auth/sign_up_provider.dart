@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:fixed_bids/constants.dart';
+import 'package:fixed_bids/views/auth/select_service.dart';
 import 'package:fixed_bids/views/auth/sign_in.dart';
 import 'package:fixed_bids/widgets/back_button.dart';
 import 'package:fixed_bids/widgets/button.dart';
@@ -63,9 +64,7 @@ class _SignUpProviderState extends State<SignUpProvider> {
             Align(
               alignment: AlignmentDirectional.topStart,
               child: Padding(
-                  padding: const EdgeInsets.all(22.0),
-                  child: MyBackButton()
-              ),
+                  padding: const EdgeInsets.all(22.0), child: MyBackButton()),
             ),
             Expanded(
               child: SingleChildScrollView(
@@ -245,7 +244,15 @@ class _SignUpProviderState extends State<SignUpProvider> {
                       padding: kPadding,
                       child: Button(
                         title: 'Sign up'.tr(),
-                        onPressed:agree? () {}:null,
+                        onPressed: agree
+                            ? () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => SelectService(),
+                                    ));
+                              }
+                            : null,
                       ),
                     ),
                     SizedBox(
@@ -302,7 +309,8 @@ class _SignUpProviderState extends State<SignUpProvider> {
                               borderRadius: BorderRadius.circular(12),
                             ),
                             child: CupertinoButton(
-                              child: SvgPicture.asset('assets/images/apple.svg'),
+                              child:
+                                  SvgPicture.asset('assets/images/apple.svg'),
                               onPressed: () {},
                             ),
                           ),
