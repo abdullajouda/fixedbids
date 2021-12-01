@@ -44,7 +44,8 @@ class _MyAppState extends State<MyApp> {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primarySwatch: Colors.blue,
-      ),
+        scaffoldBackgroundColor: Color(0x0ffF8F8F8),
+    ),
       home: SplashScreen(),
     );
   }

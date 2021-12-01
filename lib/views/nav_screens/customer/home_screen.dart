@@ -1,4 +1,5 @@
 import 'package:fixed_bids/constants.dart';
+import 'package:fixed_bids/views/other/customer/service_providers.dart';
 import 'package:flutter/material.dart';
 
 class UserHomeScreen extends StatefulWidget {
@@ -158,65 +159,73 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
               ),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(10),
-                child: Row(
-                  children: [
-                    Image.network(
-                      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRbYhKlHNXF-hJL0xmzuFsnFRUTvjOcE-d45nG4tW21vwT9S_tJJTXLsYF1aTk_J0SFASA&usqp=CAU',
-                      width: Data.size.width * .35,
-                      height: 132,
-                      fit: BoxFit.cover,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(15.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Home Cleaning',
-                            style: Constants.applyStyle(
-                              size: 18,
-                              fontWeight: FontWeight.w700,
-                            ),
-                          ),
-                          SizedBox(
-                            height: 17,
-                          ),
-                          Text.rich(
-                            TextSpan(
-                              text: 'from',
-                              children: [
-                                TextSpan(text: '  '),
+                child: Material(
+                  color: Colors.transparent,
+                  child: InkWell(
+                    onTap: () {
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => ServiceProviders(),));
+                    },
+                    child: Row(
+                      children: [
+                        Image.network(
+                          'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRbYhKlHNXF-hJL0xmzuFsnFRUTvjOcE-d45nG4tW21vwT9S_tJJTXLsYF1aTk_J0SFASA&usqp=CAU',
+                          width: Data.size.width * .35,
+                          height: 132,
+                          fit: BoxFit.cover,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(15.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Home Cleaning',
+                                style: Constants.applyStyle(
+                                  size: 18,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                              SizedBox(
+                                height: 17,
+                              ),
+                              Text.rich(
                                 TextSpan(
-                                    text: '\$18',
-                                    style: Constants.applyStyle(
-                                        color: kPrimaryColor,
-                                        size: 16,
-                                        fontWeight: FontWeight.w700)),
-                              ],
-                            ),
-                            style: Constants.applyStyle(
-                                size: 14,
-                                color: Color(0x0ff9F9F9F),
-                                fontWeight: FontWeight.w400),
+                                  text: 'from',
+                                  children: [
+                                    TextSpan(text: '  '),
+                                    TextSpan(
+                                        text: '\$18',
+                                        style: Constants.applyStyle(
+                                            color: kPrimaryColor,
+                                            size: 16,
+                                            fontWeight: FontWeight.w700)),
+                                  ],
+                                ),
+                                style: Constants.applyStyle(
+                                    size: 14,
+                                    color: Color(0x0ff9F9F9F),
+                                    fontWeight: FontWeight.w400),
+                              ),
+                              SizedBox(
+                                height: 6,
+                              ),
+                              Container(
+                                width: Data.size.width * .45,
+                                child: Text(
+                                  'We provide best service and best quality.',
+                                  overflow: TextOverflow.ellipsis,
+                                  style: Constants.applyStyle(
+                                      size: 14,
+                                      fontWeight: FontWeight.w400,
+                                      color: Color(0x0ff4D4D4D)),
+                                ),
+                              )
+                            ],
                           ),
-                          SizedBox(
-                            height: 6,
-                          ),
-                          Container(
-                            width: Data.size.width * .45,
-                            child: Text(
-                              'We provide best service and best quality.',
-                              overflow: TextOverflow.ellipsis,
-                              style: Constants.applyStyle(
-                                  size: 14,
-                                  fontWeight: FontWeight.w400,
-                                  color: Color(0x0ff4D4D4D)),
-                            ),
-                          )
-                        ],
-                      ),
-                    )
-                  ],
+                        )
+                      ],
+                    ),
+                  ),
                 ),
               ),
             ),

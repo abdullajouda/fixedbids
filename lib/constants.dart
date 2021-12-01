@@ -233,13 +233,49 @@ class EmailValidator {
 }
 
 InputDecoration inputDecoration(
-    {Widget suffix, String hint, bool focused = false}) {
+    {Widget suffix, Widget prefix, String hint, bool focused = false}) {
   return InputDecoration(
     fillColor: Color(0x0ffF2F2F2),
     filled: !focused,
     labelStyle: Constants.applyStyle(size: 18, color: grayColor),
     floatingLabelStyle: Constants.applyStyle(size: 18, color: kPrimaryColor),
     labelText: hint,
+    prefix: prefix,
+    suffixIcon: suffix != null
+        ? Container(width: 17, child: Center(child: suffix))
+        : null,
+    contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+    border: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(12.0),
+      borderSide: BorderSide(
+        width: 0.0,
+        color: Color(0x0ffF2F2F2),
+      ),
+    ),
+    enabledBorder: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(12.0),
+      borderSide: BorderSide(
+        width: focused ? 1 : 0,
+        color: focused ? kPrimaryColor : Color(0x0ffF2F2F2),
+      ),
+    ),
+    focusedBorder: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(12.0),
+      borderSide: BorderSide(width: 1.0, color: kPrimaryColor),
+    ),
+  );
+}
+
+InputDecoration fatInputDecoration(
+    {Widget suffix, Widget prefix, String hint, bool focused = false}) {
+  return InputDecoration(
+    fillColor: Color(0x0ffF2F2F2),
+    filled: !focused,
+    labelStyle: Constants.applyStyle(size: 18, color: grayColor),
+    alignLabelWithHint: true,
+    floatingLabelStyle: Constants.applyStyle(size: 18, color: kPrimaryColor),
+    labelText: hint,
+    prefix: prefix,
     suffixIcon: suffix != null
         ? Container(width: 17, child: Center(child: suffix))
         : null,
@@ -267,13 +303,13 @@ InputDecoration inputDecoration(
 
 InputDecoration searchInputDecoration({String hint, Widget suffix}) {
   return InputDecoration(
-    fillColor: lightGreenColor,
+    fillColor: Colors.white,
     filled: true,
     hintStyle: TextStyle(
-      fontSize: 16,
-      color: Color.fromRGBO(0, 14, 45, 0.6),
-      letterSpacing: 0.7000000000000001,
-      fontWeight: FontWeight.w300,
+      fontSize: 14,
+      color: Color.fromRGBO(153, 153, 153, 1),
+      letterSpacing: 0.4,
+      fontWeight: FontWeight.w400,
     ),
     hintText: hint ?? '',
     suffixIcon: Container(
@@ -283,39 +319,42 @@ InputDecoration searchInputDecoration({String hint, Widget suffix}) {
     prefixIcon: Container(
       width: 17,
       child: Center(
-        child: SvgPicture.asset('assets/icons/search.svg'),
+        child: SvgPicture.asset(
+          'assets/icons/Search.svg',
+          color: Color.fromRGBO(153, 153, 153, 1),
+        ),
       ),
     ),
     contentPadding: EdgeInsets.symmetric(horizontal: 15),
     border: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(100.0),
-      borderSide: BorderSide(width: 0, color: lightGreenColor),
+      borderRadius: BorderRadius.circular(12.0),
+      borderSide: BorderSide(width: 0, color: Colors.transparent),
     ),
     enabledBorder: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(100.0),
-      borderSide: BorderSide(width: 0, color: lightGreenColor),
+      borderRadius: BorderRadius.circular(12.0),
+      borderSide: BorderSide(width: 0, color: Colors.transparent),
     ),
     disabledBorder: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(100.0),
-      borderSide: BorderSide(width: 0, color: lightGreenColor),
+      borderRadius: BorderRadius.circular(12.0),
+      borderSide: BorderSide(width: 0, color: Colors.transparent),
     ),
     errorBorder: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(100.0),
+      borderRadius: BorderRadius.circular(12.0),
       borderSide: BorderSide(
         color: Colors.red,
         width: 1.0,
       ),
     ),
     focusedErrorBorder: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(100.0),
+      borderRadius: BorderRadius.circular(12.0),
       borderSide: BorderSide(
         color: Colors.red,
         width: 1.0,
       ),
     ),
     focusedBorder: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(100.0),
-      borderSide: BorderSide(width: 0.0, color: lightGreenColor),
+      borderRadius: BorderRadius.circular(12.0),
+      borderSide: BorderSide(width: 0.0, color: Colors.transparent),
     ),
   );
 }

@@ -4,6 +4,8 @@ import 'package:fixed_bids/widgets/back_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
+import 'job_details.dart';
+
 class ChooseCategory extends StatefulWidget {
   const ChooseCategory({Key key}) : super(key: key);
 
@@ -31,7 +33,8 @@ class _ChooseCategoryState extends State<ChooseCategory> {
                 BoxShadow(
                     color: Color.fromRGBO(0, 0, 0, 0.05),
                     offset: Offset(0, 4),
-                    blurRadius: 10,spreadRadius: 0)
+                    blurRadius: 10,
+                    spreadRadius: 0)
               ]),
           child: ClipRRect(
             borderRadius: BorderRadius.circular(10),
@@ -39,7 +42,11 @@ class _ChooseCategoryState extends State<ChooseCategory> {
               color: Colors.white,
               child: InkWell(
                 onTap: () {
-
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => JobDetails(),
+                      ));
                 },
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
