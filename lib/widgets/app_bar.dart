@@ -7,7 +7,7 @@ import 'package:flutter_svg/svg.dart';
 
 import 'notification_button.dart';
 
-Widget buildAppBar({String title = '', Color color, List<Widget> actions}) {
+Widget buildAppBar({String title = '', Color color, List<Widget> actions, Widget leading}) {
   return AppBar(
     elevation: 0,
     toolbarHeight: 80,
@@ -22,9 +22,9 @@ Widget buildAppBar({String title = '', Color color, List<Widget> actions}) {
     centerTitle: true,
     backgroundColor: color ?? Color(0x0ffF8F8F8),
     leadingWidth: 90,
-    leading: Padding(
+    leading:  Padding(
       padding: const EdgeInsets.symmetric(horizontal: 22),
-      child: Center(child: MyBackButton()),
+      child: Center(child:leading ?? MyBackButton()),
     ),
     actions: actions != null
         ? actions

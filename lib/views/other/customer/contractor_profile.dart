@@ -6,13 +6,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 class ContractorProfile extends StatefulWidget {
-  const ContractorProfile({Key key}) : super(key: key);
+  final int withRequest;
+
+  const ContractorProfile({Key key, this.withRequest = 0}) : super(key: key);
 
   @override
   _ContractorProfileState createState() => _ContractorProfileState();
 }
 
 class _ContractorProfileState extends State<ContractorProfile> {
+  int actionTaken = 0;
+
   List test = [
     'home cleaning',
     'ac servicing',
@@ -150,28 +154,108 @@ class _ContractorProfileState extends State<ContractorProfile> {
                           ),
                           Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 22),
-                            child: Row(
-                              children: [
-                                Expanded(
-                                  child: Button(
+                            child: actionTaken == 1
+                                ? Button(
                                     title: 'Message',
                                     onPressed: () {},
+                                  )
+                                : Row(
+                                    children: [
+                                      if (widget.withRequest == 1)
+                                        Expanded(
+                                          child: Button(
+                                            title: 'Action',
+                                            onPressed: () {
+                                              setState(() {
+                                                actionTaken = 1;
+                                              });
+                                              showModalBottomSheet(
+                                                context: context,
+                                                isScrollControlled: true,
+                                                isDismissible: true,
+                                                enableDrag: true,
+                                                barrierColor:
+                                                    Colors.transparent,
+                                                builder: (context) => Container(
+                                                  // constraints:
+                                                  //     BoxConstraints(maxHeight: 200),
+                                                  decoration: BoxDecoration(
+                                                    color: Colors.white,
+                                                    borderRadius:
+                                                        BorderRadius.vertical(
+                                                            top:
+                                                                Radius.circular(
+                                                                    30)),
+                                                    boxShadow: [
+                                                      BoxShadow(
+                                                          color: Color.fromRGBO(
+                                                              0, 0, 0, 0.05),
+                                                          offset: Offset(0, 4),
+                                                          blurRadius: 10,
+                                                          spreadRadius: 0)
+                                                    ],
+                                                  ),
+                                                  padding: EdgeInsets.symmetric(
+                                                      horizontal: 22,
+                                                      vertical: 27),
+                                                  child: Column(
+                                                    mainAxisSize:
+                                                        MainAxisSize.min,
+                                                    children: [
+                                                      Button(
+                                                        title: 'Accept',
+                                                        onPressed: () {},
+                                                      ),
+                                                      SizedBox(
+                                                        height: 15,
+                                                      ),
+                                                      Button(
+                                                        title: 'Decline',
+                                                        color: Colors.white,
+                                                        fontColor:
+                                                            HexColor('#263238'),
+                                                        hasBorder: true,
+                                                        onPressed: () {},
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              );
+                                            },
+                                          ),
+                                        )
+                                      else
+                                        Expanded(
+                                          child: Button(
+                                            title: 'Message',
+                                            onPressed: () {},
+                                          ),
+                                        ),
+                                      SizedBox(
+                                        width: 11,
+                                      ),
+                                      if (widget.withRequest == 1)
+                                        Expanded(
+                                          child: Button(
+                                            title: 'Message',
+                                            color: Colors.white,
+                                            fontColor: HexColor('#263238'),
+                                            hasBorder: true,
+                                            onPressed: () {},
+                                          ),
+                                        )
+                                      else
+                                        Expanded(
+                                          child: Button(
+                                            title: 'Hire Me',
+                                            color: Colors.white,
+                                            fontColor: HexColor('#263238'),
+                                            hasBorder: true,
+                                            onPressed: () {},
+                                          ),
+                                        ),
+                                    ],
                                   ),
-                                ),
-                                SizedBox(
-                                  width: 11,
-                                ),
-                                Expanded(
-                                  child: Button(
-                                    title: 'Hire Me',
-                                    color: Colors.white,
-                                    fontColor: HexColor('#263238'),
-                                    hasBorder: true,
-                                    onPressed: () {},
-                                  ),
-                                ),
-                              ],
-                            ),
                           ),
                         ],
                       ),

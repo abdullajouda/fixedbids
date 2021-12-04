@@ -1,5 +1,6 @@
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
 import 'package:fixed_bids/constants.dart';
+import 'package:fixed_bids/views/nav_screens/customer/chat_screen.dart';
 import 'package:fixed_bids/widgets/notification_button.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -8,6 +9,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 import 'nav_screens/customer/home_screen.dart';
 import 'nav_screens/customer/job_history_screen.dart';
+import 'nav_screens/customer/profile_screen.dart';
 import 'other/customer/choose_category.dart';
 
 class RootPage extends StatefulWidget {
@@ -74,7 +76,7 @@ class _RootPageState extends State<RootPage>
           ),
         ),
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10),
+          padding: const EdgeInsets.symmetric(horizontal: 22),
           child: Center(
             child: NotificationButton()
           ),
@@ -107,7 +109,7 @@ class _RootPageState extends State<RootPage>
       ),
       actions: [
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10),
+          padding: const EdgeInsets.symmetric(horizontal: 22),
           child: Center(
             child: NotificationButton(),
           ),
@@ -140,37 +142,14 @@ class _RootPageState extends State<RootPage>
       ),
       actions: [
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10),
+          padding: const EdgeInsets.symmetric(horizontal: 22),
           child: Center(
             child: NotificationButton()
           ),
         )
       ],
     ),
-    AppBar(
-      elevation: 0,
-      toolbarHeight: 80,
-      backgroundColor: Color(0x0ffF8F8F8),
-      leading: Center(
-        child: Container(
-          height: 45,
-          width: 45,
-          decoration: BoxDecoration(
-            color: Color(0x0ffF1F1F1),
-            borderRadius: BorderRadius.circular(12),
-          ),
-          child: Center(child: SvgPicture.asset('assets/icons/logout.svg')),
-        ),
-      ),
-      actions: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10),
-          child: Center(
-            child: NotificationButton()
-          ),
-        )
-      ],
-    ),
+    null
   ];
 
   @override
@@ -210,8 +189,8 @@ class _RootPageState extends State<RootPage>
     _bodyList = [
       UserHomeScreen(),
       JobHistoryScreen(),
-      UserHomeScreen(),
-      UserHomeScreen(),
+      ChatScreen(),
+      ProfileScreen(),
     ];
     return Scaffold(
       backgroundColor: kBackGroundColor,

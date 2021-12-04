@@ -1,3 +1,4 @@
+import 'package:fixed_bids/views/other/customer/contractor_profile.dart';
 import 'package:fixed_bids/views/root.dart';
 import 'package:fixed_bids/widgets/app_bar.dart';
 import 'package:fixed_bids/widgets/button.dart';
@@ -37,7 +38,15 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
           child: ListView.builder(
               itemCount: 3,
               padding: EdgeInsets.symmetric(horizontal: 20, vertical: 23),
-              itemBuilder: (context, index) => notificationBox()),
+              itemBuilder: (context, index) => InkWell(
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ContractorProfile(withRequest: 1,),
+                        ));
+                  },
+                  child: notificationBox())),
         ),
       ),
     );
