@@ -1,5 +1,6 @@
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
 import 'package:fixed_bids/constants.dart';
+import 'package:fixed_bids/widgets/notification_button.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -75,16 +76,7 @@ class _RootPageState extends State<RootPage>
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 10),
           child: Center(
-            child: Container(
-              height: 45,
-              width: 45,
-              decoration: BoxDecoration(
-                color: Color(0x0ffF1F1F1),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Center(
-                  child: SvgPicture.asset('assets/icons/Notification.svg')),
-            ),
+            child: NotificationButton()
           ),
         )
       ],
@@ -117,16 +109,7 @@ class _RootPageState extends State<RootPage>
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 10),
           child: Center(
-            child: Container(
-              height: 45,
-              width: 45,
-              decoration: BoxDecoration(
-                color: Color(0x0ffF1F1F1),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Center(
-                  child: SvgPicture.asset('assets/icons/Notification.svg')),
-            ),
+            child: NotificationButton(),
           ),
         )
       ],
@@ -159,16 +142,7 @@ class _RootPageState extends State<RootPage>
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 10),
           child: Center(
-            child: Container(
-              height: 45,
-              width: 45,
-              decoration: BoxDecoration(
-                color: Color(0x0ffF1F1F1),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Center(
-                  child: SvgPicture.asset('assets/icons/Notification.svg')),
-            ),
+            child: NotificationButton()
           ),
         )
       ],
@@ -192,16 +166,7 @@ class _RootPageState extends State<RootPage>
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 10),
           child: Center(
-            child: Container(
-              height: 45,
-              width: 45,
-              decoration: BoxDecoration(
-                color: Color(0x0ffF1F1F1),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Center(
-                  child: SvgPicture.asset('assets/icons/Notification.svg')),
-            ),
+            child: NotificationButton()
           ),
         )
       ],

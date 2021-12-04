@@ -10,14 +10,12 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart' hide PermissionStatus;
 import 'package:permission_handler/permission_handler.dart';
 
-const loyalGreenColor = Color.fromRGBO(36, 217, 167, 1);
-const greenColor = Color.fromRGBO(41, 243, 183, 1);
-const lightGreenColor = Color.fromRGBO(191, 251, 233, 1);
-const redColor = Color.fromRGBO(251, 133, 119, 1);
-const darkRedColor = Color.fromRGBO(252, 80, 80, 1);
+
+// const redColor = Color.fromRGBO(251, 133, 119, 1);
+// const darkRedColor = Color.fromRGBO(252, 80, 80, 1);
 const purpleColor = Color.fromRGBO(227, 214, 255, 1);
-const darkPurpleColor = Color.fromRGBO(162, 118, 255, 1);
-const lightOrangeColor = Color.fromRGBO(254, 218, 214, 1);
+// const darkPurpleColor = Color.fromRGBO(162, 118, 255, 1);
+// const lightOrangeColor = Color.fromRGBO(254, 218, 214, 1);
 const yellowColor = Color.fromRGBO(255, 245, 194, 1);
 const shadowColor = Color.fromRGBO(0, 0, 0, 0.05);
 const kPrimaryColor = Color(0x0ff1F71ED);
@@ -39,36 +37,10 @@ class Data {
 class Constants {
   static const String domain = 'https://v2.basit.app/api/';
 
-  static const String splashLogo = 'assets/images/splash.svg';
-  static const String eclipse2 = 'assets/images/Ellipse2.svg';
-  static const String eclipse1 = 'assets/images/Ellipse1.svg';
-  static const String logo = 'assets/icons/logo.svg';
-
-  static const String coffee = 'assets/images/coffee.svg';
-  static const String clothes = 'assets/images/clothes.svg';
-
   static const String User_type_Guest = '-1';
   static const String User_type_User = '0';
-  static const String User_type_Store = '1';
-  static const String User_type_SP = '2';
-  static const String User_type_Driver = '3';
+  static const String User_type_Contractor = '1';
 
-  static const String Browsing_products = '2';
-  static const String Browsing_stores = '1';
-
-  static const List list = [purpleColor, lightOrangeColor, yellowColor];
-
-  static const List categories = [
-    'All',
-    'New',
-    'Delivered',
-    'Preparing',
-    'On Delivery'
-  ];
-
-  static const List list2 = [coffee, clothes];
-
-  static const List list3 = ['All', 'Pants', 'T-shirt'];
 
   // Map<String, String> headers = {
   //   'Accept': 'application/json',
@@ -188,10 +160,10 @@ showAlert({@required BuildContext context, String error}) {
   showDialog(
     context: context,
     builder: (context) => AlertDialog(
-      backgroundColor: lightGreenColor,
+      backgroundColor: purpleColor,
       title: Text(
         error.replaceAll(',', '\n'),
-        style: TextStyle(fontSize: 14, color: redColor),
+        style: TextStyle(fontSize: 14, color: Colors.white),
       ),
       actions: [
         TextButton(
@@ -359,56 +331,56 @@ InputDecoration searchInputDecoration({String hint, Widget suffix}) {
   );
 }
 
-InputDecoration messagingDecoration({String hint, Widget suffix}) {
-  return InputDecoration(
-    fillColor: lightGreenColor,
-    filled: true,
-    hintStyle: TextStyle(
-      fontSize: 16,
-      color: Color.fromRGBO(0, 14, 45, 0.6),
-      letterSpacing: 0.7000000000000001,
-      fontWeight: FontWeight.w300,
-    ),
-    hintText: hint ?? '',
-    suffixIcon: Container(
-      width: 18,
-      child: Center(
-        child: suffix,
-      ),
-    ),
-    contentPadding: EdgeInsets.symmetric(horizontal: 15),
-    border: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(10.0),
-      borderSide: BorderSide(width: 0, color: lightGreenColor),
-    ),
-    enabledBorder: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(10.0),
-      borderSide: BorderSide(width: 0, color: lightGreenColor),
-    ),
-    disabledBorder: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(10.0),
-      borderSide: BorderSide(width: 0, color: lightGreenColor),
-    ),
-    errorBorder: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(10.0),
-      borderSide: BorderSide(
-        color: Colors.red,
-        width: 1.0,
-      ),
-    ),
-    focusedErrorBorder: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(10.0),
-      borderSide: BorderSide(
-        color: Colors.red,
-        width: 1.0,
-      ),
-    ),
-    focusedBorder: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(10.0),
-      borderSide: BorderSide(width: 0.0, color: lightGreenColor),
-    ),
-  );
-}
+// InputDecoration messagingDecoration({String hint, Widget suffix}) {
+//   return InputDecoration(
+//     fillColor: lightGreenColor,
+//     filled: true,
+//     hintStyle: TextStyle(
+//       fontSize: 16,
+//       color: Color.fromRGBO(0, 14, 45, 0.6),
+//       letterSpacing: 0.7000000000000001,
+//       fontWeight: FontWeight.w300,
+//     ),
+//     hintText: hint ?? '',
+//     suffixIcon: Container(
+//       width: 18,
+//       child: Center(
+//         child: suffix,
+//       ),
+//     ),
+//     contentPadding: EdgeInsets.symmetric(horizontal: 15),
+//     border: OutlineInputBorder(
+//       borderRadius: BorderRadius.circular(10.0),
+//       borderSide: BorderSide(width: 0, color: lightGreenColor),
+//     ),
+//     enabledBorder: OutlineInputBorder(
+//       borderRadius: BorderRadius.circular(10.0),
+//       borderSide: BorderSide(width: 0, color: lightGreenColor),
+//     ),
+//     disabledBorder: OutlineInputBorder(
+//       borderRadius: BorderRadius.circular(10.0),
+//       borderSide: BorderSide(width: 0, color: lightGreenColor),
+//     ),
+//     errorBorder: OutlineInputBorder(
+//       borderRadius: BorderRadius.circular(10.0),
+//       borderSide: BorderSide(
+//         color: Colors.red,
+//         width: 1.0,
+//       ),
+//     ),
+//     focusedErrorBorder: OutlineInputBorder(
+//       borderRadius: BorderRadius.circular(10.0),
+//       borderSide: BorderSide(
+//         color: Colors.red,
+//         width: 1.0,
+//       ),
+//     ),
+//     focusedBorder: OutlineInputBorder(
+//       borderRadius: BorderRadius.circular(10.0),
+//       borderSide: BorderSide(width: 0.0, color: lightGreenColor),
+//     ),
+//   );
+// }
 
 // Future<BitmapDescriptor> bitmapDescriptorFromSvgAsset(
 //     BuildContext context, String assetName) async {

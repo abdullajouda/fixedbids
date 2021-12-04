@@ -2,6 +2,8 @@ import 'package:fixed_bids/constants.dart';
 import 'package:fixed_bids/widgets/app_bar.dart';
 import 'package:flutter/material.dart';
 
+import 'contractor_profile.dart';
+
 class ServiceProviders extends StatefulWidget {
   const ServiceProviders({Key key}) : super(key: key);
 
@@ -65,7 +67,12 @@ class _ServiceProvidersState extends State<ServiceProviders> {
                   child: InkWell(
                     borderRadius: BorderRadius.circular(12),
                     onTap: () {
-
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ContractorProfile(),
+                        ),
+                      );
                     },
                     child: Padding(
                       padding: EdgeInsets.symmetric(vertical: 5),
@@ -92,21 +99,25 @@ class _ServiceProvidersState extends State<ServiceProviders> {
                               Row(
                                 children: [
                                   SizedBox(
-                                    width: Data.size.width*.38,
+                                    width: Data.size.width * .38,
                                     child: Text(
                                       'Khashogi Nil',
                                       overflow: TextOverflow.ellipsis,
                                       style: Constants.applyStyle(
-                                          size: 18, fontWeight: FontWeight.w600),
+                                          size: 18,
+                                          fontWeight: FontWeight.w600),
                                     ),
                                   ),
-                                  Row(mainAxisSize: MainAxisSize.min,
+                                  Row(
+                                    mainAxisSize: MainAxisSize.min,
                                     children: [
                                       Icon(
                                         Icons.star_rounded,
                                         color: kPrimaryColor,
                                       ),
-                                      SizedBox(width: 5,),
+                                      SizedBox(
+                                        width: 5,
+                                      ),
                                       Text(
                                         '4.2',
                                         style: Constants.applyStyle(
@@ -151,8 +162,9 @@ class _ServiceProvidersState extends State<ServiceProviders> {
                                     children: [
                                       Row(
                                         children: List.generate(
-                                          constraints.isSatisfiedBy(
-                                                  Size(constraints.minWidth, 23))
+                                          constraints.isSatisfiedBy(Size(
+                                                  constraints.minWidth - 10,
+                                                  23))
                                               ? test.length
                                               : 1,
                                           (index) => Row(
@@ -160,11 +172,13 @@ class _ServiceProvidersState extends State<ServiceProviders> {
                                               Container(
                                                 decoration: BoxDecoration(
                                                     borderRadius:
-                                                        BorderRadius.circular(20),
+                                                        BorderRadius.circular(
+                                                            20),
                                                     color: Color.fromRGBO(
                                                         232, 241, 255, 1)),
                                                 padding: EdgeInsets.symmetric(
-                                                    vertical: 4, horizontal: 7.5),
+                                                    vertical: 4,
+                                                    horizontal: 7.5),
                                                 child: Text(
                                                   'home cleaning',
                                                   style: Constants.applyStyle(
@@ -182,8 +196,8 @@ class _ServiceProvidersState extends State<ServiceProviders> {
                                           ),
                                         ),
                                       ),
-                                      if (constraints.isSatisfiedBy(
-                                          Size(constraints.minWidth, 23)))
+                                      if (!constraints.isSatisfiedBy(
+                                          Size(constraints.minWidth - 10, 23)))
                                         Container(
                                           decoration: BoxDecoration(
                                               borderRadius:

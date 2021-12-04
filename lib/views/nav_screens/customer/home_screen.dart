@@ -1,5 +1,5 @@
 import 'package:fixed_bids/constants.dart';
-import 'package:fixed_bids/views/other/customer/service_providers.dart';
+import 'package:fixed_bids/views/other/customer/service_contractors.dart';
 import 'package:flutter/material.dart';
 
 class UserHomeScreen extends StatefulWidget {

@@ -4,7 +4,7 @@ import 'package:fixed_bids/widgets/back_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-import 'job_details.dart';
+import 'create_job.dart';
 
 class ChooseCategory extends StatefulWidget {
   const ChooseCategory({Key key}) : super(key: key);
@@ -45,7 +45,7 @@ class _ChooseCategoryState extends State<ChooseCategory> {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => JobDetails(),
+                        builder: (context) => CreateJob(),
                       ));
                 },
                 child: Row(
