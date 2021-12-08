@@ -7,9 +7,10 @@ class MyIconButton extends StatelessWidget {
   final Color iconColor;
   final String svg;
   final VoidCallback onPressed;
+  final bool isRounded;
 
   const MyIconButton(
-      {Key key, this.color, this.iconColor, this.svg, this.onPressed})
+      {Key key, this.color, this.iconColor, this.svg, this.onPressed, this.isRounded = false})
       : super(key: key);
 
   @override
@@ -23,7 +24,7 @@ class MyIconButton extends StatelessWidget {
         width: 45,
         decoration: BoxDecoration(
           color:color?? Color(0x0ffF1F1F1),
-          borderRadius: BorderRadius.circular(12),
+          borderRadius:isRounded?BorderRadius.all(Radius.elliptical(9999, 9999)): BorderRadius.circular(12),
         ),
         child: Center(
           child: SvgPicture.asset(

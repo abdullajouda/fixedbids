@@ -10,7 +10,6 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart' hide PermissionStatus;
 import 'package:permission_handler/permission_handler.dart';
 
-
 // const redColor = Color.fromRGBO(251, 133, 119, 1);
 // const darkRedColor = Color.fromRGBO(252, 80, 80, 1);
 const purpleColor = Color.fromRGBO(227, 214, 255, 1);
@@ -40,7 +39,6 @@ class Constants {
   static const String User_type_Guest = '-1';
   static const String User_type_User = '0';
   static const String User_type_Contractor = '1';
-
 
   // Map<String, String> headers = {
   //   'Accept': 'application/json',
@@ -205,7 +203,13 @@ class EmailValidator {
 }
 
 InputDecoration inputDecoration(
-    {Widget suffix, Widget prefix, String hint, bool focused = false}) {
+    {Widget suffix,
+    Widget suffixIcon,
+    Widget prefix,
+    Widget prefixIcon,
+    BorderRadius radius,
+    String hint,
+    bool focused = false}) {
   return InputDecoration(
     fillColor: Color(0x0ffF2F2F2),
     filled: !focused,
@@ -213,26 +217,27 @@ InputDecoration inputDecoration(
     floatingLabelStyle: Constants.applyStyle(size: 18, color: kPrimaryColor),
     labelText: hint,
     prefix: prefix,
-    suffixIcon: suffix != null
+    prefixIcon: prefixIcon,
+    suffixIcon: suffixIcon ?? (suffix != null
         ? Container(width: 17, child: Center(child: suffix))
-        : null,
+        : null),
     contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
     border: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(12.0),
+      borderRadius: radius ?? BorderRadius.circular(12.0),
       borderSide: BorderSide(
         width: 0.0,
         color: Color(0x0ffF2F2F2),
       ),
     ),
     enabledBorder: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(12.0),
+      borderRadius: radius ?? BorderRadius.circular(12.0),
       borderSide: BorderSide(
         width: focused ? 1 : 0,
         color: focused ? kPrimaryColor : Color(0x0ffF2F2F2),
       ),
     ),
     focusedBorder: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(12.0),
+      borderRadius: radius ?? BorderRadius.circular(12.0),
       borderSide: BorderSide(width: 1.0, color: kPrimaryColor),
     ),
   );

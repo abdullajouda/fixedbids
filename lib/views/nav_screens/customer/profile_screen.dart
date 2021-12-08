@@ -2,6 +2,7 @@ import 'package:fixed_bids/constants.dart';
 import 'package:fixed_bids/views/root.dart';
 import 'package:fixed_bids/widgets/app_bar.dart';
 import 'package:fixed_bids/widgets/icon_button.dart';
+import 'package:fixed_bids/widgets/text_field.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -17,6 +18,36 @@ class _ProfileScreenState extends State<ProfileScreen> {
   bool isNameEditing = false;
   bool isEmailEditing = false;
   bool isLocationEditing = false;
+  bool isPasswordEditing = false;
+  TextEditingController oldPasswordController,
+      newPasswordController,
+      confirmPasswordController;
+  FocusNode oldPasswordNode, newPasswordNode, confirmPasswordNode;
+  bool oldPasswordObscure = true;
+  bool newPasswordObscure = true;
+  bool confirmPasswordObscure = true;
+
+  @override
+  void initState() {
+    oldPasswordController = new TextEditingController();
+    newPasswordController = new TextEditingController();
+    confirmPasswordController = new TextEditingController();
+    oldPasswordNode = new FocusNode();
+    newPasswordNode = new FocusNode();
+    confirmPasswordNode = new FocusNode();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    oldPasswordController.dispose();
+    newPasswordController.dispose();
+    confirmPasswordController.dispose();
+    oldPasswordNode.dispose();
+    newPasswordNode.dispose();
+    confirmPasswordNode.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -126,7 +157,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               height: 20,
             ),
             Container(
-              height: Data.size.height - appbar.preferredSize.height - 210,
+              // height: Data.size.height - appbar.preferredSize.height - 210,
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(12),
@@ -153,10 +184,127 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     isEditing: isEmailEditing,
                     initialValue: 'mahabub.j@gmail.com',
                   ),
-                  buildInfoField(
-                    title: 'Password',
-                    buttonTitle: 'Change',
-                    initialValue: '*********',
+                  Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'Password',
+                            style: Constants.applyStyle(
+                                size: 18,
+                                color: HexColor('#444444'),
+                                fontWeight: FontWeight.w600),
+                          ),
+                          if (isPasswordEditing)
+                            CupertinoButton(
+                              minSize: 0,
+                              padding: EdgeInsets.symmetric(horizontal: 5),
+                              child: Text(
+                                'Save',
+                                style: Constants.applyStyle(
+                                    size: 14,
+                                    color: kPrimaryColor,
+                                    fontWeight: FontWeight.w600),
+                              ),
+                              onPressed: () {
+                                setState(() {
+                                  isPasswordEditing = false;
+                                });
+                              },
+                            )
+                          else
+                            CupertinoButton(
+                              minSize: 0,
+                              padding: EdgeInsets.symmetric(horizontal: 5),
+                              child: Text(
+                                'Change',
+                                style: Constants.applyStyle(
+                                    size: 14,
+                                    color: kPrimaryColor,
+                                    fontWeight: FontWeight.w600),
+                              ),
+                              onPressed: () {
+                                setState(() {
+                                  isPasswordEditing = true;
+                                });
+                              },
+                            )
+                        ],
+                      ),
+                      SizedBox(
+                        height: 15,
+                      ),
+                      if (isPasswordEditing)
+                        Column(
+                          children: [
+                            CustomTextField(
+                              controller: oldPasswordController,
+                              focusNode: oldPasswordNode,
+                              nextFocusNode: newPasswordNode,
+                              obscure: oldPasswordObscure,
+                              label: 'Old password',
+                            ),
+                            SizedBox(
+                              height: 18,
+                            ),
+                            CustomTextField(
+                              controller: newPasswordController,
+                              focusNode: newPasswordNode,
+                              nextFocusNode: confirmPasswordNode,
+                              obscure: newPasswordObscure,
+                              label: 'New password',
+                            ),
+                            SizedBox(
+                              height: 18,
+                            ),
+                            CustomTextField(
+                              controller: confirmPasswordController,
+                              focusNode: confirmPasswordNode,
+                              nextFocusNode: null,
+                              obscure: confirmPasswordObscure,
+                              label: 'Retype password',
+                            ),
+                          ],
+                        )
+                      else
+                        TextFormField(
+                          initialValue: '*********',
+                          style: Constants.applyStyle(
+                              size: 18,
+                              color: isPasswordEditing
+                                  ? HexColor('444444')
+                                  : HexColor('A8A8A8')),
+                          decoration: InputDecoration(
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12.0),
+                              borderSide:
+                                  BorderSide(width: 1.0, color: kPrimaryColor),
+                            ),
+                            disabledBorder: InputBorder.none,
+                            constraints: BoxConstraints(
+                                maxHeight: isPasswordEditing ? 52 : 22),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12.0),
+                              borderSide:
+                                  BorderSide(width: 1.0, color: kPrimaryColor),
+                            ),
+                          ),
+                          enabled: isPasswordEditing,
+                        ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      Divider(
+                        thickness: 1,
+                        height: 0,
+                        color: HexColor('#EDECEC'),
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                    ],
                   ),
                   buildInfoField(
                     title: 'Location',
@@ -242,7 +390,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 borderSide: BorderSide(width: 1.0, color: kPrimaryColor),
               ),
               disabledBorder: InputBorder.none,
-              constraints: BoxConstraints(maxHeight:isEditing? 52:22),
+              constraints: BoxConstraints(maxHeight: isEditing ? 52 : 22),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12.0),
                 borderSide: BorderSide(width: 1.0, color: kPrimaryColor),
