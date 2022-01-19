@@ -1,6 +1,8 @@
+import 'package:fixed_bids/controllers/global_controller.dart';
 import 'package:fixed_bids/views/onboarding.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:lottie/lottie.dart';
 
 import '../constants.dart';
 
@@ -9,9 +11,13 @@ class SplashScreen extends StatefulWidget {
   _SplashScreenState createState() => _SplashScreenState();
 }
 
-class _SplashScreenState extends State<SplashScreen> {
+class _SplashScreenState extends State<SplashScreen>
+    with TickerProviderStateMixin {
+  AnimationController _controller;
+
   landingPage() async {
-    await Future.delayed(Duration(seconds: 1));
+    await Future.delayed(_controller.duration);
+    await GlobalController().getSettings();
     Navigator.pushReplacement(
         context,
         MaterialPageRoute(
@@ -21,8 +27,17 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   void initState() {
+    _controller = AnimationController(
+      vsync: this,duration: Duration(seconds: 3)
+    );
     landingPage();
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
   }
 
   @override
@@ -46,7 +61,17 @@ class _SplashScreenState extends State<SplashScreen> {
         child: Stack(
           alignment: Alignment.center,
           children: [
-            SvgPicture.asset('assets/images/logo.svg'),
+            SizedBox(
+              height: size.width * .3,
+              width: size.width * .3,
+              child: Lottie.asset('assets/logo.json', controller: _controller,
+                  onLoaded: (composition) {
+                _controller
+                  ..duration = composition.duration
+                  ..forward();
+              }, repeat: false),
+            ),
+            // SvgPicture.asset('assets/images/logo.svg'),
             Positioned(
                 bottom: size.height * .1,
                 child: SvgPicture.asset('assets/images/FixedBids.svg')),

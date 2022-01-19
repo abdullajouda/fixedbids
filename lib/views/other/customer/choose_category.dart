@@ -20,7 +20,7 @@ class _ChooseCategoryState extends State<ChooseCategory> {
       backgroundColor: Color(0x0ffF8F8F8),
       appBar: buildAppBar(title: 'Choose category'),
       body: ListView.separated(
-        itemCount: 4,
+        itemCount: Data.services.items.length,
         padding: EdgeInsets.symmetric(horizontal: 22, vertical: 10),
         separatorBuilder: (context, index) => SizedBox(
           height: 10,
@@ -54,7 +54,7 @@ class _ChooseCategoryState extends State<ChooseCategory> {
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: 22),
                       child: Text(
-                        'Handy Man',
+                        Data.services.items[index].name,
                         style: Constants.applyStyle(
                             color: kAppbarTitleColor,
                             size: 18,
@@ -62,7 +62,8 @@ class _ChooseCategoryState extends State<ChooseCategory> {
                       ),
                     ),
                     Image.network(
-                      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSqHvYi53ys3nmY4Jc4IKFBpRzmY6-rvEzESA&usqp=CAU',
+                      Data.services.items[index].image,
+                      errorBuilder: (context, error, stackTrace) => SizedBox(),
                     )
                   ],
                 ),

@@ -26,9 +26,7 @@ class _AccountTypeState extends State<AccountType> {
             Align(
               alignment: AlignmentDirectional.topStart,
               child: Padding(
-                padding: const EdgeInsets.all(22.0),
-                child: MyBackButton()
-              ),
+                  padding: const EdgeInsets.all(22.0), child: MyBackButton()),
             ),
             Expanded(
               child: SingleChildScrollView(
@@ -76,8 +74,8 @@ class _AccountTypeState extends State<AccountType> {
                                     ));
                               },
                               child: Container(
-                                height: Data.size.height * .35,
-                                width: Data.size.height * .2,
+                                height: 300,
+                                width: Data.size.width * .4,
                                 decoration: BoxDecoration(
                                     color: kPrimaryColor,
                                     borderRadius: BorderRadius.circular(15)),
@@ -142,9 +140,9 @@ class _AccountTypeState extends State<AccountType> {
                           SizedBox(
                             width: 13,
                           ),
-                          Transform.translate(
-                            offset: Offset(0, 30),
-                            child: Expanded(
+                          Expanded(
+                            child: Transform.translate(
+                              offset: Offset(0, 30),
                               child: CupertinoButton(
                                 minSize: 0,
                                 padding: EdgeInsets.zero,
@@ -156,8 +154,8 @@ class _AccountTypeState extends State<AccountType> {
                                       ));
                                 },
                                 child: Container(
-                                  height: Data.size.height * .35,
-                                  width: Data.size.height * .2,
+                                  height: 300,
+                                  width: Data.size.width * .4,
                                   decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(15)),
                                   child: Stack(
@@ -200,8 +198,8 @@ class _AccountTypeState extends State<AccountType> {
                                             ),
                                             Spacer(),
                                             Align(
-                                              alignment: AlignmentDirectional
-                                                  .bottomEnd,
+                                              alignment:
+                                                  AlignmentDirectional.bottomEnd,
                                               child: Container(
                                                 height: 33,
                                                 width: 33,

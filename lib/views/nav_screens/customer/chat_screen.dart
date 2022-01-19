@@ -56,7 +56,7 @@ class _ChatScreenState extends State<ChatScreen> {
               borderRadius: BorderRadius.circular(12),
               child: ListView.builder(
                 itemCount: 5,
-                padding: EdgeInsets.symmetric(horizontal: 22, vertical: 22),
+                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 22),
                 itemBuilder: (context, index) => Column(
                   children: [
                     Material(
@@ -69,8 +69,7 @@ class _ChatScreenState extends State<ChatScreen> {
                         child: Container(
                           margin: EdgeInsets.only(bottom: 22),
                           child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
+                             children: [
                               Row(
                                 children: [
                                   Container(
@@ -147,6 +146,7 @@ class _ChatScreenState extends State<ChatScreen> {
                                   ),
                                   Container(
                                     height: 21,
+                                    width: 21,
                                     decoration: BoxDecoration(
                                         color: kPrimaryColor,
                                         borderRadius: BorderRadius.circular(4)),

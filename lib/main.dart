@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 
+import 'constants.dart';
 import 'external/lib/providers/search_provider.dart';
 
 void main() async {
@@ -36,6 +37,7 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
+    Data.locale = context.locale;
     return MaterialApp(
       title: 'Fixed Bids',
       localizationsDelegates: context.localizationDelegates,

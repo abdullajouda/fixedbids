@@ -10,6 +10,9 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart' hide PermissionStatus;
 import 'package:permission_handler/permission_handler.dart';
 
+import 'models/responses/services_response.dart';
+import 'models/responses/settings_response.dart';
+
 // const redColor = Color.fromRGBO(251, 133, 119, 1);
 // const darkRedColor = Color.fromRGBO(252, 80, 80, 1);
 const purpleColor = Color.fromRGBO(227, 214, 255, 1);
@@ -31,21 +34,26 @@ const emailRegExp =
 class Data {
   static Size size;
   static LatLng currentLocation;
+  // static User user;
+  static String fcm;
+  static Locale locale;
+  static SettingsResponse settings;
+  static ServicesResponse services;
 }
 
 class Constants {
-  static const String domain = 'https://v2.basit.app/api/';
+  static const String domain = 'https://fixedbids.com/api/';
 
   static const String User_type_Guest = '-1';
   static const String User_type_User = '0';
   static const String User_type_Contractor = '1';
 
-  // Map<String, String> headers = {
-  //   'Accept': 'application/json',
-  //   'fcm_token': '${AppData.fcm}',
-  //   'Accept-Language': '${AppData.locale.languageCode}',
-  //   'Authorization': AppData.user != null ? 'Bearer ${AppData.user.accessToken}' : '',
-  // };
+  Map<String, String> headers = {
+    'Accept': 'application/json',
+    'fcm_token': '${Data.fcm}',
+    'Accept-Language': '${Data.locale.languageCode}',
+    // 'Authorization': Data.user != null ? 'Bearer ${Data.user.accessToken}' : '',
+  };
 
   static TextStyle applyStyle(
       {double size, Color color, FontWeight fontWeight}) {

@@ -58,12 +58,11 @@ Widget buildAppBar() {
         SizedBox(
           width: 16,
         ),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(
-              width: Data.size.width * .35,
-              child: Text(
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
                 'Shara Banu Banu Banu',
                 style: Constants.applyStyle(
                   fontWeight: FontWeight.w600,
@@ -71,24 +70,24 @@ Widget buildAppBar() {
                   color: kAppbarTitleColor,
                 ),
               ),
-            ),
-            SizedBox(
-              height: 5,
-            ),
-            Container(
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20),
-                  color: Color.fromRGBO(232, 241, 255, 1)),
-              padding: EdgeInsets.symmetric(vertical: 4, horizontal: 7.5),
-              child: Text(
-                'home cleaning',
-                style: Constants.applyStyle(
-                    size: 12,
-                    color: Color.fromRGBO(31, 113, 237, 1),
-                    fontWeight: FontWeight.w400),
+              SizedBox(
+                height: 5,
               ),
-            ),
-          ],
+              Container(
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
+                    color: Color.fromRGBO(232, 241, 255, 1)),
+                padding: EdgeInsets.symmetric(vertical: 4, horizontal: 7.5),
+                child: Text(
+                  'home cleaning',
+                  style: Constants.applyStyle(
+                      size: 12,
+                      color: Color.fromRGBO(31, 113, 237, 1),
+                      fontWeight: FontWeight.w400),
+                ),
+              ),
+            ],
+          ),
         ),
       ],
     ),
