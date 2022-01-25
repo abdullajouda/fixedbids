@@ -1,4 +1,5 @@
 import 'package:fixed_bids/views/root.dart';
+import 'package:fixed_bids/widgets/loading.dart';
 import 'package:flutter/material.dart';
 
 import '../constants.dart';
@@ -9,6 +10,7 @@ class Button extends StatelessWidget {
   final Color color;
   final Color fontColor;
   final bool hasBorder;
+  final bool loading;
 
   const Button(
       {Key key,
@@ -16,7 +18,9 @@ class Button extends StatelessWidget {
       @required this.onPressed,
       this.color,
       this.fontColor,
-      this.hasBorder = false})
+      this.hasBorder = false,
+      this.loading = false,
+      })
       : super(key: key);
 
   @override
@@ -39,7 +43,7 @@ class Button extends StatelessWidget {
                       )
                     : null),
             child: Center(
-              child: Text(
+              child:loading?ButtonLoad(): Text(
                 '$title',
                 style: TextStyle(
                   fontSize: 18,

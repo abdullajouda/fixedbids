@@ -1,5 +1,8 @@
 import 'package:fixed_bids/controllers/global_controller.dart';
+import 'package:fixed_bids/controllers/shared_preferences_controller.dart';
+import 'package:fixed_bids/views/auth/sign_in.dart';
 import 'package:fixed_bids/views/onboarding.dart';
+import 'package:fixed_bids/views/root.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:lottie/lottie.dart';
@@ -16,20 +19,38 @@ class _SplashScreenState extends State<SplashScreen>
   AnimationController _controller;
 
   landingPage() async {
+    Data.sharedPreferencesController =
+        await SharedPreferencesController.instance;
     await Future.delayed(_controller.duration);
     await GlobalController().getSettings();
-    Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (context) => OnBoardingScreen(),
-        ));
+    if (Data.sharedPreferencesController.getIsLogin()) {
+      Data.currentUser = Data.sharedPreferencesController.getUserData();
+      Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => RootPage(),
+          ));
+    } else {
+      if (Data.sharedPreferencesController.getAppLaunchTimes() != null) {
+        Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => OnBoardingScreen(),
+            ));
+      } else {
+        Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => SignIn(),
+            ));
+      }
+    }
   }
 
   @override
   void initState() {
-    _controller = AnimationController(
-      vsync: this,duration: Duration(seconds: 3)
-    );
+    _controller =
+        AnimationController(vsync: this, duration: Duration(seconds: 3));
     landingPage();
     super.initState();
   }

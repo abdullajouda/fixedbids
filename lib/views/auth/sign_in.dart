@@ -1,8 +1,8 @@
 import 'dart:io';
-
+import 'package:bot_toast/bot_toast.dart';
 import 'package:fixed_bids/constants.dart';
-import 'package:fixed_bids/views/auth/sign_up_customer.dart';
-import 'package:fixed_bids/views/place_picker.dart';
+import 'package:fixed_bids/controllers/global_controller.dart';
+import 'package:fixed_bids/models/responses/login_response.dart';
 import 'package:fixed_bids/widgets/button.dart';
 import 'package:fixed_bids/widgets/check_box.dart';
 import 'package:fixed_bids/widgets/text_field.dart';
@@ -10,8 +10,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
-
 import '../root.dart';
 import 'account_type.dart';
 
@@ -21,10 +19,12 @@ class SignIn extends StatefulWidget {
 }
 
 class _SignInState extends State<SignIn> {
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   TextEditingController emailController, passwordController;
   FocusNode emailNode, passwordNode;
   bool obscure = true;
   bool remember = false;
+  bool loading = false;
 
   @override
   void initState() {
@@ -83,6 +83,7 @@ class _SignInState extends State<SignIn> {
                 height: Data.size.height * .06,
               ),
               Form(
+                key: _formKey,
                 child: Column(
                   children: [
                     Padding(
@@ -173,12 +174,37 @@ class _SignInState extends State<SignIn> {
                 padding: kPadding,
                 child: Button(
                   title: 'Log in'.tr(),
+                  loading:  loading,
                   onPressed: () async {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => RootPage(),
-                        ));
+                    if(_formKey.currentState.validate()){
+                      setState(() {
+                        loading = true;
+                      });
+                      LoginResponse userResponse = await GlobalController()
+                          .signIn(
+                          email: emailController.text,
+                          password: passwordController.text);
+                      if (userResponse.status && userResponse.code == 200) {
+                        if(remember){
+                          Data.sharedPreferencesController.setIsLogin(true);
+                        }
+                        Data.sharedPreferencesController
+                            .setUserData(userResponse.user);
+                        Data.currentUser = userResponse.user;
+                        Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => RootPage(),
+                            ));
+                      } else if (userResponse.code == 201) {
+                        BotToast.showText(text: userResponse.message);
+                      } else {
+                        BotToast.showText(text: userResponse.message);
+                      }
+                      setState(() {
+                        loading = false;
+                      });
+                    }
                   },
                 ),
               ),

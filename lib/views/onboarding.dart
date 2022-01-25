@@ -30,27 +30,25 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
           }
           return Column(
             children: [
-              Container(
-                width: Data.size.width,
-                height: Data.size.height /2,
-                child: PageView.builder(
-                  onPageChanged: (value) {
-                    setState(() {
-                      _currentIndex = value;
-                    });
-                  },
-                  itemCount: snapshot.data.items.length,
-                  itemBuilder: (context, index) => Image.network(
-                    snapshot.data.items[index].image,
-                    fit: BoxFit.cover,
+              Expanded(
+                child: Container(
+                  width: Data.size.width,
+                  height: Data.size.height /2,
+                  child: PageView.builder(
+                    onPageChanged: (value) {
+                      setState(() {
+                        _currentIndex = value;
+                      });
+                    },
+                    itemCount: snapshot.data.items.length,
+                    itemBuilder: (context, index) => Image.network(
+                      snapshot.data.items[index].image,
+                      fit: BoxFit.cover,
+                    ),
                   ),
                 ),
               ),
-              // SizedBox(
-              //   height: Data.size.width * .1,
-              // ),
-              SizedBox(
-                height: Data.size.height /2,
+              Expanded(
                 child: Center(
                   child: Column(mainAxisSize: MainAxisSize.min,
                     children: [

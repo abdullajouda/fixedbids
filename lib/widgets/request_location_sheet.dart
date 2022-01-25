@@ -3,6 +3,7 @@ import 'dart:io';
 import 'dart:ui';
 
 import 'package:android_intent/android_intent.dart';
+import 'package:fixed_bids/widgets/button.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -20,9 +21,10 @@ class _RequestLocationSheetState extends State<RequestLocationSheet> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    locationEventStream = Permission.location.request()
+    locationEventStream = Permission.location
+        .request()
         .asStream()
-        .map((s) => s.isGranted  ? true : false);
+        .map((s) => s.isGranted ? true : false);
     locationEventStream.listen((status) {
       if (isClosed) return;
       if (isFirstTime) {
@@ -44,13 +46,15 @@ class _RequestLocationSheetState extends State<RequestLocationSheet> {
   @override
   Widget build(BuildContext context) {
     return Column(
+      mainAxisSize: MainAxisSize.min,
       children: [
         SizedBox(
           height: 15,
         ),
         Container(
+          margin: EdgeInsets.symmetric(horizontal: 15),
           child: Text(
-            'PleaseMakeSureTheGpsIsEnabled',
+            'Please Make Sure The Gps Is Enabled',
             style: TextStyle(
               fontSize: 22,
               fontWeight: FontWeight.w500,
@@ -61,15 +65,15 @@ class _RequestLocationSheetState extends State<RequestLocationSheet> {
         SizedBox(
           height: 50,
         ),
-        TextButton(
-          onPressed:  () async {
+        Button(
+          title: 'Go To Settings',
+          onPressed: () async {
             if (Platform.isAndroid) {
               final AndroidIntent intent = AndroidIntent(
                   action: 'android.settings.LOCATION_SOURCE_SETTINGS');
               await intent.launch();
             }
           },
-          child: Text('GoToSettings'),
         ),
       ],
     );

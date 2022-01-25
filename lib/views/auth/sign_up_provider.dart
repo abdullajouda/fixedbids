@@ -3,6 +3,8 @@ import 'dart:io';
 import 'package:fixed_bids/constants.dart';
 import 'package:fixed_bids/views/auth/select_service.dart';
 import 'package:fixed_bids/views/auth/sign_in.dart';
+import 'package:fixed_bids/views/other/conditions.dart';
+import 'package:fixed_bids/views/other/terms.dart';
 import 'package:fixed_bids/widgets/back_button.dart';
 import 'package:fixed_bids/widgets/button.dart';
 import 'package:fixed_bids/widgets/check_box.dart';
@@ -207,7 +209,11 @@ class _SignUpProviderState extends State<SignUpProvider> {
                                       text: 'terms',
                                       recognizer: TapGestureRecognizer()
                                         ..onTap = () {
-                                          print('object');
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) => Terms(),
+                                              ));
                                         },
                                       style: TextStyle(
                                         fontWeight: FontWeight.w500,
@@ -222,7 +228,11 @@ class _SignUpProviderState extends State<SignUpProvider> {
                                       text: 'conditions',
                                       recognizer: TapGestureRecognizer()
                                         ..onTap = () {
-                                          print('object');
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) => Conditions(),
+                                              ));
                                         },
                                       style: TextStyle(
                                         fontWeight: FontWeight.w500,

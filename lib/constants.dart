@@ -9,7 +9,9 @@ import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart' hide PermissionStatus;
 import 'package:permission_handler/permission_handler.dart';
-
+import 'package:shared_preferences/shared_preferences.dart';
+import 'controllers/shared_preferences_controller.dart';
+import 'models/responses/login_response.dart';
 import 'models/responses/services_response.dart';
 import 'models/responses/settings_response.dart';
 
@@ -34,7 +36,10 @@ const emailRegExp =
 class Data {
   static Size size;
   static LatLng currentLocation;
-  // static User user;
+  static SharedPreferencesController sharedPreferencesController;
+  static NavigatorObserver navigator = NavigatorObserver();
+
+  static User currentUser;
   static String fcm;
   static Locale locale;
   static SettingsResponse settings;
@@ -52,7 +57,7 @@ class Constants {
     'Accept': 'application/json',
     'fcm_token': '${Data.fcm}',
     'Accept-Language': '${Data.locale.languageCode}',
-    // 'Authorization': Data.user != null ? 'Bearer ${Data.user.accessToken}' : '',
+    'Authorization': Data.currentUser != null ? 'Bearer ${Data.currentUser.accessToken}' : '',
   };
 
   static TextStyle applyStyle(
@@ -226,9 +231,10 @@ InputDecoration inputDecoration(
     labelText: hint,
     prefix: prefix,
     prefixIcon: prefixIcon,
-    suffixIcon: suffixIcon ?? (suffix != null
-        ? Container(width: 17, child: Center(child: suffix))
-        : null),
+    suffixIcon: suffixIcon ??
+        (suffix != null
+            ? Container(width: 17, child: Center(child: suffix))
+            : null),
     contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
     border: OutlineInputBorder(
       borderRadius: radius ?? BorderRadius.circular(12.0),

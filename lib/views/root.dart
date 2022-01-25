@@ -53,14 +53,14 @@ class _RootPageState extends State<RootPage>
             borderRadius: BorderRadius.circular(12),
             image: DecorationImage(
                 image: NetworkImage(
-                  'https://img.favpng.com/24/8/12/illustrator-graphic-design-illustration-png-favpng-PzA7bSXNAishtJa9PBckFrwL3.jpg',
+                  Data.currentUser.imageProfile,
                 ),
                 fit: BoxFit.cover),
           ),
         ),
       ),
       title: Text(
-        'Hi, Mahabub!',
+        'Hi, ${Data.currentUser.name}',
         style: Constants.applyStyle(size: 22, fontWeight: FontWeight.w600),
       ),
       actions: [
@@ -96,7 +96,7 @@ class _RootPageState extends State<RootPage>
             borderRadius: BorderRadius.circular(12),
             image: DecorationImage(
                 image: NetworkImage(
-                  'https://img.favpng.com/24/8/12/illustrator-graphic-design-illustration-png-favpng-PzA7bSXNAishtJa9PBckFrwL3.jpg',
+                  Data.currentUser.imageProfile,
                 ),
                 fit: BoxFit.cover),
           ),
@@ -129,7 +129,7 @@ class _RootPageState extends State<RootPage>
             borderRadius: BorderRadius.circular(12),
             image: DecorationImage(
                 image: NetworkImage(
-                  'https://img.favpng.com/24/8/12/illustrator-graphic-design-illustration-png-favpng-PzA7bSXNAishtJa9PBckFrwL3.jpg',
+                  Data.currentUser.imageProfile,
                 ),
                 fit: BoxFit.cover),
           ),

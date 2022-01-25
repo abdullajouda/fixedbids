@@ -1,3 +1,4 @@
+import 'package:bot_toast/bot_toast.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:fixed_bids/external/lib/providers/place_provider.dart';
 import 'package:fixed_bids/views/splash.dart';
@@ -43,6 +44,8 @@ class _MyAppState extends State<MyApp> {
       localizationsDelegates: context.localizationDelegates,
       supportedLocales: context.supportedLocales,
       locale: context.locale,
+      builder: BotToastInit(),
+      navigatorObservers: [Data.navigator, BotToastNavigatorObserver()],
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primarySwatch: Colors.blue,
