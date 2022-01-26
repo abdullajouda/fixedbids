@@ -4,6 +4,7 @@ import 'package:fixed_bids/controllers/user_controller.dart';
 import 'package:fixed_bids/external/lib/src/place_picker.dart';
 import 'package:fixed_bids/models/responses/login_response.dart';
 import 'package:fixed_bids/views/auth/sign_in.dart';
+import 'package:fixed_bids/views/other/settings.dart';
 import 'package:fixed_bids/views/place_picker.dart';
 import 'package:fixed_bids/views/root.dart';
 import 'package:fixed_bids/widgets/app_bar.dart';
@@ -70,22 +71,32 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     AppBar appbar = buildAppBar(
-      color: Colors.transparent,
-      leading: MyIconButton(
-        onPressed: () {
-          GlobalController().logout();
-          Navigator.popUntil(context, (route) => route.isFirst);
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-              builder: (context) => SignIn(),
-            ),
-          );
-        },
-        svg: 'assets/icons/logout.svg',
-        iconColor: HexColor('FF0000'),
-      ),
-    );
+        color: Colors.transparent,
+        // leading: MyIconButton(
+        //   svg: 'assets/icons/Setting.svg',
+        //   onPressed: () {
+        //     Navigator.push(
+        //         context,
+        //         MaterialPageRoute(
+        //           builder: (context) => SettingsScreen(),
+        //         ));
+        //   },
+        // )
+        leading: MyIconButton(
+          onPressed: () {
+            GlobalController().logout();
+            Navigator.popUntil(context, (route) => route.isFirst);
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => SignIn(),
+              ),
+            );
+          },
+          svg: 'assets/icons/logout.svg',
+          iconColor: HexColor('FF0000'),
+        ),
+        );
 
     return Scaffold(
       extendBodyBehindAppBar: true,

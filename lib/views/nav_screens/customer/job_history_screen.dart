@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:fixed_bids/constants.dart';
 import 'package:fixed_bids/external/lib/src/components/animated_pin.dart';
+import 'package:fixed_bids/views/other/contractor/contractor_job_details.dart';
 import 'package:fixed_bids/views/other/customer/create_job.dart';
 import 'package:fixed_bids/views/other/customer/job_details.dart';
 import 'package:fixed_bids/views/root.dart';
@@ -26,8 +27,18 @@ class _JobHistoryScreenState extends State<JobHistoryScreen>
 
   @override
   void initState() {
-    _tabController = TabController(length: 2, vsync: this);
+    _tabController = TabController(
+      length: 2,
+      vsync: this,
+    );
+
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
   }
 
   @override
@@ -109,7 +120,9 @@ class _JobHistoryScreenState extends State<JobHistoryScreen>
             ),
           ),
           Expanded(
-              child: TabBarView(controller: _tabController,
+              child: TabBarView(
+            controller: _tabController,
+            physics: NeverScrollableScrollPhysics(),
             children: [
               ListView.separated(
                 itemCount: 3,
@@ -153,11 +166,20 @@ class _JobHistoryScreenState extends State<JobHistoryScreen>
         child: InkWell(
           borderRadius: BorderRadius.circular(20),
           onTap: () {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => JobDetails(),
-                ));
+            if(Data.currentUser.type == '2'){
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ContractorJobDetails(),
+                  ));
+            }else{
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => JobDetails(),
+                  ));
+            }
+
           },
           child: Column(
             children: [

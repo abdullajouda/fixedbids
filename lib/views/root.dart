@@ -1,12 +1,15 @@
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
 import 'package:fixed_bids/constants.dart';
-import 'package:fixed_bids/views/nav_screens/customer/chat_screen.dart';
+import 'package:fixed_bids/views/nav_screens/chat_screen.dart';
 import 'package:fixed_bids/widgets/notification_button.dart';
+import 'package:fixed_bids/widgets/onExit.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
+import 'nav_screens/contractor/contractor_home_screen.dart';
+import 'nav_screens/contractor/contractor_profile_screen.dart';
 import 'nav_screens/customer/home_screen.dart';
 import 'nav_screens/customer/job_history_screen.dart';
 import 'nav_screens/customer/profile_screen.dart';
@@ -40,49 +43,7 @@ class _RootPageState extends State<RootPage>
 
   List<Widget> _bodyList = [];
   List<Widget> _appBarList = [
-    AppBar(
-      elevation: 0,
-      toolbarHeight: 80,
-      backgroundColor: Color(0x0ffF8F8F8),
-      leading: Center(
-        child: Container(
-          height: 45,
-          width: 45,
-          decoration: BoxDecoration(
-            color: Color(0x0ffF1F1F1),
-            borderRadius: BorderRadius.circular(12),
-            image: DecorationImage(
-                image: NetworkImage(
-                  Data.currentUser.imageProfile,
-                ),
-                fit: BoxFit.cover),
-          ),
-        ),
-      ),
-      title: Text(
-        'Hi, ${Data.currentUser.name}',
-        style: Constants.applyStyle(size: 22, fontWeight: FontWeight.w600),
-      ),
-      actions: [
-        Center(
-          child: Container(
-            height: 45,
-            width: 45,
-            decoration: BoxDecoration(
-              color: Color(0x0ffF1F1F1),
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Center(child: SvgPicture.asset('assets/icons/Search.svg')),
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 22),
-          child: Center(
-            child: NotificationButton()
-          ),
-        )
-      ],
-    ),
+    null,
     AppBar(
       elevation: 0,
       toolbarHeight: 80,
@@ -143,9 +104,7 @@ class _RootPageState extends State<RootPage>
       actions: [
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 22),
-          child: Center(
-            child: NotificationButton()
-          ),
+          child: Center(child: NotificationButton()),
         )
       ],
     ),
@@ -186,70 +145,98 @@ class _RootPageState extends State<RootPage>
 
   @override
   Widget build(BuildContext context) {
-    _bodyList = [
-      UserHomeScreen(),
-      JobHistoryScreen(),
-      ChatScreen(),
-      ProfileScreen(),
-    ];
-    return Scaffold(
-      backgroundColor: kBackGroundColor,
-      floatingActionButton: ScaleTransition(
-        scale: animation,
-        child: FloatingActionButton(
-          elevation: 8,
-          backgroundColor: kPrimaryColor,
-          child: Icon(
-            Icons.add_rounded,
-            size: 32,
-            color: HexColor('#FFFFFF'),
-          ),
-          onPressed: () {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => ChooseCategory(),
-                )).then((value) {
-              _animationController.reset();
-              _animationController.forward();
-            });
-          },
+    if (Data.currentUser.type == '2') {
+      _bodyList = [
+        ContractorHomeScreen(),
+        JobHistoryScreen(),
+        ChatScreen(),
+        ContractorProfileScreen(),
+      ];
+    } else {
+      _bodyList = [
+        UserHomeScreen(),
+        JobHistoryScreen(),
+        ChatScreen(),
+        ProfileScreen(),
+      ];
+    }
+
+    return OnExit(
+      child: Scaffold(
+        backgroundColor: kBackGroundColor,
+        floatingActionButton: ScaleTransition(
+          scale: animation,
+          child: Data.currentUser.type == '2'
+              ? FloatingActionButton(
+                  elevation: 8,
+                  backgroundColor: kPrimaryColor,
+                  child: SvgPicture.asset('assets/icons/search2.svg'),
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ChooseCategory(),
+                        )).then((value) {
+                      _animationController.reset();
+                      _animationController.forward();
+                    });
+                  },
+                )
+              : FloatingActionButton(
+                  elevation: 8,
+                  backgroundColor: kPrimaryColor,
+                  child: Icon(
+                    Icons.add_rounded,
+                    size: 32,
+                    color: HexColor('#FFFFFF'),
+                  ),
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ChooseCategory(),
+                        )).then((value) {
+                      _animationController.reset();
+                      _animationController.forward();
+                    });
+                  },
+                ),
         ),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      bottomNavigationBar: AnimatedBottomNavigationBar.builder(
-        itemCount: iconList.length,
-        tabBuilder: (int index, bool isActive) {
-          final icon = isActive ? selectedIconsList[index] : iconList[index];
-          return IconButton(
-            onPressed: () {
-              setState(() {
-                isActive = true;
-                _bottomNavIndex = index;
-              });
-            },
-            icon: SizedBox(
-              height: 23,
-              child: Center(
-                child: SvgPicture.asset(
-                  icon,
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+        bottomNavigationBar: AnimatedBottomNavigationBar.builder(
+          itemCount: iconList.length,
+          tabBuilder: (int index, bool isActive) {
+            final icon = isActive ? selectedIconsList[index] : iconList[index];
+            return IconButton(
+              onPressed: () {
+                setState(() {
+                  isActive = true;
+                  _bottomNavIndex = index;
+                });
+              },
+              icon: SizedBox(
+                height: 23,
+                child: Center(
+                  child: SvgPicture.asset(
+                    icon,
+                  ),
                 ),
               ),
-            ),
-          );
-        },
-        backgroundColor: HexColor('#FFFFFF'),
-        activeIndex: _bottomNavIndex,
-        height: 70,
-        splashColor: kPrimaryColor,
-        notchAndCornersAnimation: animation,
-        splashSpeedInMilliseconds: 300,
-        notchSmoothness: NotchSmoothness.softEdge,
-        gapLocation: GapLocation.center,
-        onTap: (index) => setState(() => _bottomNavIndex = index),
+            );
+          },
+          backgroundColor: HexColor('#FFFFFF'),
+          activeIndex: _bottomNavIndex,
+          height: 70,
+          splashColor: kPrimaryColor,
+          notchAndCornersAnimation: animation,
+          splashSpeedInMilliseconds: 300,
+          notchSmoothness: NotchSmoothness.softEdge,
+          gapLocation: GapLocation.center,
+          onTap: (index) => setState(() => _bottomNavIndex = index),
+        ),
+        appBar: _appBarList[_bottomNavIndex],
+        body: _bodyList[_bottomNavIndex],
       ),
-      appBar: _appBarList[_bottomNavIndex],
-      body: _bodyList[_bottomNavIndex],
     );
   }
 }
