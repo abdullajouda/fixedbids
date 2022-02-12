@@ -1,4 +1,4 @@
-import 'package:fixed_bids/constants.dart';
+import 'package:fixed_bids/utils/constants.dart';
 import 'package:fixed_bids/widgets/app_bar.dart';
 import 'package:fixed_bids/widgets/back_button.dart';
 import 'package:flutter/material.dart';
@@ -45,7 +45,9 @@ class _ChooseCategoryState extends State<ChooseCategory> {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => CreateJob(),
+                        builder: (context) => CreateJob(
+                          id: Data.services.items[index].id,
+                        ),
                       ));
                 },
                 child: Row(

@@ -1,7 +1,8 @@
 import 'dart:convert';
 import 'package:bot_toast/bot_toast.dart';
-import 'package:fixed_bids/constants.dart';
+import 'package:fixed_bids/utils/constants.dart';
 import 'package:fixed_bids/models/responses/login_response.dart';
+import 'package:fixed_bids/models/responses/nearby_jobs_response.dart';
 import 'package:flutter/material.dart';
 
 import 'package:http/http.dart';
@@ -42,4 +43,16 @@ class UserController {
     }
     return userResponse;
   }
+
+  Future<NearByJobsResponse> getMyJobsByUser({int isOpen = 1}) async {
+    var request = await get(
+      Uri.parse("${Constants.domain}getMyJobsByUser?is_open=$isOpen"),
+      headers: Constants().headers,
+    );
+    var output = json.decode(request.body);
+    print(output);
+    NearByJobsResponse response = NearByJobsResponse.fromJson(output);
+    return response;
+  }
+
 }

@@ -1,4 +1,4 @@
-import 'package:fixed_bids/constants.dart';
+import 'package:fixed_bids/utils/constants.dart';
 import 'package:fixed_bids/controllers/global_controller.dart';
 import 'package:fixed_bids/models/responses/banners_response.dart';
 import 'package:fixed_bids/views/other/customer/service_contractors.dart';

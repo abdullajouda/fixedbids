@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'package:bot_toast/bot_toast.dart';
-import 'package:fixed_bids/constants.dart';
+import 'package:fixed_bids/utils/constants.dart';
 import 'package:fixed_bids/controllers/global_controller.dart';
 import 'package:fixed_bids/models/responses/login_response.dart';
 import 'package:fixed_bids/widgets/button.dart';

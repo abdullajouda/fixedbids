@@ -4,7 +4,7 @@
     "type": "PACKAGED_MANIFESTS",
     "kind": "Directory"
   },
-  "applicationId": "com.example.fixed_bids",
+  "applicationId": "com.fixedbids.app",
   "variantName": "release",
   "elements": [
     {

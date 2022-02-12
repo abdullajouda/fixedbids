@@ -1,4 +1,4 @@
-com.example.fixed_bids
+com.fixedbids.app
 attr alpha
 attr ambientEnabled
 attr buttonSize

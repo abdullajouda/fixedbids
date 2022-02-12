@@ -1,4 +1,4 @@
-import 'package:fixed_bids/constants.dart';
+import 'package:fixed_bids/utils/constants.dart';
 import 'package:fixed_bids/widgets/button.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -67,7 +67,9 @@ class _JobPublishedState extends State<JobPublished> {
                     color: Color(0x0ff575757)),
                 textAlign: TextAlign.center,
               ),
-              SizedBox(height: 100,),
+              SizedBox(
+                height: 100,
+              ),
             ],
           ),
         ),
@@ -79,7 +81,9 @@ class _JobPublishedState extends State<JobPublished> {
             padding: const EdgeInsets.all(22.0),
             child: Button(
               title: 'Okay',
-              onPressed: () {},
+              onPressed: () {
+                Navigator.popUntil(context, (route) => route.isFirst);
+              },
             ),
           ),
           Padding(

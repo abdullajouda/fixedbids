@@ -1,4 +1,4 @@
-import 'package:fixed_bids/constants.dart';
+import 'package:fixed_bids/utils/constants.dart';
 import 'package:fixed_bids/widgets/app_bar.dart';
 import 'package:flutter/material.dart';
 

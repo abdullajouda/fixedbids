@@ -1,5 +1,5 @@
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
-import 'package:fixed_bids/constants.dart';
+import 'package:fixed_bids/utils/constants.dart';
 import 'package:fixed_bids/views/nav_screens/chat_screen.dart';
 import 'package:fixed_bids/widgets/notification_button.dart';
 import 'package:fixed_bids/widgets/onExit.dart';
@@ -7,12 +7,15 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import 'nav_screens/contractor/contractor_home_screen.dart';
+import 'nav_screens/contractor/contractor_job_history_screen.dart';
 import 'nav_screens/contractor/contractor_profile_screen.dart';
 import 'nav_screens/customer/home_screen.dart';
 import 'nav_screens/customer/job_history_screen.dart';
 import 'nav_screens/customer/profile_screen.dart';
+import 'other/contractor/near_by_jobs_map.dart';
 import 'other/customer/choose_category.dart';
 
 class RootPage extends StatefulWidget {
@@ -139,7 +142,7 @@ class _RootPageState extends State<RootPage>
 
     Future.delayed(
       Duration(seconds: 1),
-      () => _animationController.forward(),
+          () => _animationController.forward(),
     );
   }
 
@@ -148,7 +151,7 @@ class _RootPageState extends State<RootPage>
     if (Data.currentUser.type == '2') {
       _bodyList = [
         ContractorHomeScreen(),
-        JobHistoryScreen(),
+        ContractorJobHistoryScreen(),
         ChatScreen(),
         ContractorProfileScreen(),
       ];
@@ -168,39 +171,47 @@ class _RootPageState extends State<RootPage>
           scale: animation,
           child: Data.currentUser.type == '2'
               ? FloatingActionButton(
-                  elevation: 8,
-                  backgroundColor: kPrimaryColor,
-                  child: SvgPicture.asset('assets/icons/search2.svg'),
-                  onPressed: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => ChooseCategory(),
-                        )).then((value) {
-                      _animationController.reset();
-                      _animationController.forward();
-                    });
-                  },
-                )
+              elevation: 8,
+              backgroundColor: kPrimaryColor,
+              child: SvgPicture.asset('assets/icons/search2.svg'),
+              onPressed: () async {
+                LatLng initialPosition =
+                await Constants.getCurrentLocation(
+                    context: context);
+                if (initialPosition != null) {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            NearbyJobsMap(initialPosition: initialPosition,
+                            ),
+                      )).then((value) {
+                    _animationController.reset();
+                    _animationController.forward();
+                  });
+                }
+
+              }
+          )
               : FloatingActionButton(
-                  elevation: 8,
-                  backgroundColor: kPrimaryColor,
-                  child: Icon(
-                    Icons.add_rounded,
-                    size: 32,
-                    color: HexColor('#FFFFFF'),
-                  ),
-                  onPressed: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => ChooseCategory(),
-                        )).then((value) {
-                      _animationController.reset();
-                      _animationController.forward();
-                    });
-                  },
-                ),
+            elevation: 8,
+            backgroundColor: kPrimaryColor,
+            child: Icon(
+              Icons.add_rounded,
+              size: 32,
+              color: HexColor('#FFFFFF'),
+            ),
+            onPressed: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ChooseCategory(),
+                  )).then((value) {
+                _animationController.reset();
+                _animationController.forward();
+              });
+            },
+          ),
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         bottomNavigationBar: AnimatedBottomNavigationBar.builder(

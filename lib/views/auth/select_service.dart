@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:fixed_bids/constants.dart';
+import 'package:fixed_bids/utils/constants.dart';
 import 'package:fixed_bids/views/auth/sign_in.dart';
 import 'package:fixed_bids/widgets/back_button.dart';
 import 'package:fixed_bids/widgets/button.dart';

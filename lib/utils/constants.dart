@@ -1,19 +1,21 @@
 import 'dart:io';
 
+import 'package:fixed_bids/models/user.dart';
 import 'package:fixed_bids/widgets/request_location_sheet.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:location/location.dart' hide PermissionStatus;
+import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'controllers/shared_preferences_controller.dart';
-import 'models/responses/login_response.dart';
-import 'models/responses/services_response.dart';
-import 'models/responses/settings_response.dart';
+import '../controllers/shared_preferences_controller.dart';
+import '../models/option.dart';
+import '../models/responses/services_response.dart';
+import '../models/responses/settings_response.dart';
+import 'dart:ui' as ui;
 
 // const redColor = Color.fromRGBO(251, 133, 119, 1);
 // const darkRedColor = Color.fromRGBO(252, 80, 80, 1);
@@ -40,6 +42,8 @@ class Data {
   static NavigatorObserver navigator = NavigatorObserver();
 
   static User currentUser;
+  static final ImagePicker picker = ImagePicker();
+
   static String fcm;
   static Locale locale;
   static SettingsResponse settings;
@@ -57,8 +61,16 @@ class Constants {
     'Accept': 'application/json',
     'fcm_token': '${Data.fcm}',
     'Accept-Language': '${Data.locale.languageCode}',
-    'Authorization': Data.currentUser != null ? 'Bearer ${Data.currentUser.accessToken}' : '',
+    'Authorization': Data.currentUser != null
+        ? 'Bearer ${Data.currentUser.accessToken}'
+        : '',
   };
+
+  List<Option> urgencyOptions = [
+    Option(id: 1, title: 'Low'),
+    Option(id: 2, title: 'High'),
+    Option(id: 3, title: 'Emergency'),
+  ];
 
   static TextStyle applyStyle(
       {double size, Color color, FontWeight fontWeight}) {
@@ -226,6 +238,7 @@ InputDecoration inputDecoration(
   return InputDecoration(
     fillColor: Color(0x0ffF2F2F2),
     filled: !focused,
+    alignLabelWithHint: true,
     labelStyle: Constants.applyStyle(size: 18, color: grayColor),
     floatingLabelStyle: Constants.applyStyle(size: 18, color: kPrimaryColor),
     labelText: hint,
@@ -401,13 +414,13 @@ InputDecoration searchInputDecoration({String hint, Widget suffix}) {
 //   );
 // }
 
-// Future<BitmapDescriptor> bitmapDescriptorFromSvgAsset(
-//     BuildContext context, String assetName) async {
-//   String svgString = await DefaultAssetBundle.of(context).loadString(assetName);
-//   //Draws string representation of svg to DrawableRoot
-//   DrawableRoot svgDrawableRoot = await svg.fromSvgString(svgString, null);
-//   ui.Picture picture = svgDrawableRoot.toPicture();
-//   ui.Image image = await picture.toImage(165, 192);
-//   ByteData bytes = await image.toByteData(format: ui.ImageByteFormat.png);
-//   return BitmapDescriptor.fromBytes(bytes.buffer.asUint8List());
-// }
+Future<BitmapDescriptor> bitmapDescriptorFromSvgAsset(
+    BuildContext context, String assetName) async {
+  String svgString = await DefaultAssetBundle.of(context).loadString(assetName);
+  //Draws string representation of svg to DrawableRoot
+  DrawableRoot svgDrawableRoot = await svg.fromSvgString(svgString, null);
+  ui.Picture picture = svgDrawableRoot.toPicture();
+  ui.Image image = await picture.toImage(165, 192);
+  ByteData bytes = await image.toByteData(format: ui.ImageByteFormat.png);
+  return BitmapDescriptor.fromBytes(bytes.buffer.asUint8List());
+}

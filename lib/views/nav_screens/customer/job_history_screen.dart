@@ -1,13 +1,16 @@
 import 'dart:math';
 
-import 'package:fixed_bids/constants.dart';
-import 'package:fixed_bids/external/lib/src/components/animated_pin.dart';
-import 'package:fixed_bids/views/other/contractor/contractor_job_details.dart';
-import 'package:fixed_bids/views/other/customer/create_job.dart';
+import 'package:fixed_bids/controllers/user_controller.dart';
+import 'package:fixed_bids/models/job.dart';
+import 'package:fixed_bids/models/responses/nearby_jobs_response.dart';
+import 'package:fixed_bids/utils/constants.dart';
+import 'package:timeago/timeago.dart' as timeago;
 import 'package:fixed_bids/views/other/customer/job_details.dart';
 import 'package:fixed_bids/views/root.dart';
 import 'package:fixed_bids/widgets/icon_button.dart';
+import 'package:fixed_bids/widgets/loading.dart';
 import 'package:flutter/material.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class JobHistoryScreen extends StatefulWidget {
   const JobHistoryScreen({Key key}) : super(key: key);
@@ -19,11 +22,23 @@ class JobHistoryScreen extends StatefulWidget {
 class _JobHistoryScreenState extends State<JobHistoryScreen>
     with SingleTickerProviderStateMixin {
   TabController _tabController;
-  List test = [
-    'home cleaning',
-    'ac servicing',
-    'car repair',
-  ];
+  Future _openFuture;
+  Future _closedFuture;
+  RefreshController _openRefreshController =
+      RefreshController(initialRefresh: false);
+
+  RefreshController _closedRefreshController =
+      RefreshController(initialRefresh: false);
+
+  void _onRefresh() async {
+    setState(() {
+      _openFuture = UserController().getMyJobsByUser();
+      _closedFuture = UserController().getMyJobsByUser(isOpen: 0);
+    });
+
+    _openRefreshController.refreshCompleted();
+    _closedRefreshController.refreshCompleted();
+  }
 
   @override
   void initState() {
@@ -31,6 +46,8 @@ class _JobHistoryScreenState extends State<JobHistoryScreen>
       length: 2,
       vsync: this,
     );
+    _openFuture = UserController().getMyJobsByUser();
+    _closedFuture = UserController().getMyJobsByUser(isOpen: 0);
 
     super.initState();
   }
@@ -124,21 +141,48 @@ class _JobHistoryScreenState extends State<JobHistoryScreen>
             controller: _tabController,
             physics: NeverScrollableScrollPhysics(),
             children: [
-              ListView.separated(
-                itemCount: 3,
-                padding: EdgeInsets.symmetric(horizontal: 22, vertical: 10),
-                separatorBuilder: (context, index) => SizedBox(
-                  height: 20,
-                ),
-                itemBuilder: (context, index) => buildJobBox(),
-              ),
-              ListView.separated(
-                itemCount: 3,
-                padding: EdgeInsets.symmetric(horizontal: 22, vertical: 10),
-                separatorBuilder: (context, index) => SizedBox(
-                  height: 20,
-                ),
-                itemBuilder: (context, index) => buildJobBox(),
+              FutureBuilder<NearByJobsResponse>(
+                  future: _openFuture,
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return Loading();
+                    }
+                    return SmartRefresher(
+                      controller: _openRefreshController,
+                      onRefresh: _onRefresh,
+                      child: ListView.separated(
+                        itemCount: snapshot.data.items.length,
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 22, vertical: 10),
+                        separatorBuilder: (context, index) => SizedBox(
+                          height: 20,
+                        ),
+                        itemBuilder: (context, index) =>
+                            buildJobBox(job: snapshot.data.items[index]),
+                      ),
+                    );
+                  }),
+              FutureBuilder<NearByJobsResponse>(
+                future: _closedFuture,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Expanded(child: Loading());
+                  }
+                  return SmartRefresher(
+                    controller: _closedRefreshController,
+                    onRefresh: _onRefresh,
+                    child: ListView.separated(
+                      itemCount: snapshot.data.items.length,
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 22, vertical: 10),
+                      separatorBuilder: (context, index) => SizedBox(
+                        height: 20,
+                      ),
+                      itemBuilder: (context, index) =>
+                          buildJobBox(job: snapshot.data.items[index]),
+                    ),
+                  );
+                },
               ),
             ],
           )),
@@ -147,7 +191,7 @@ class _JobHistoryScreenState extends State<JobHistoryScreen>
     );
   }
 
-  Widget buildJobBox() {
+  Widget buildJobBox({Job job}) {
     return Container(
       // height: 369,
       decoration: BoxDecoration(
@@ -166,20 +210,13 @@ class _JobHistoryScreenState extends State<JobHistoryScreen>
         child: InkWell(
           borderRadius: BorderRadius.circular(20),
           onTap: () {
-            if(Data.currentUser.type == '2'){
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => ContractorJobDetails(),
-                  ));
-            }else{
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => JobDetails(),
-                  ));
-            }
-
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => JobDetails(
+                    id: job.id,
+                  ),
+                ));
           },
           child: Column(
             children: [
@@ -189,8 +226,7 @@ class _JobHistoryScreenState extends State<JobHistoryScreen>
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
                   image: DecorationImage(
-                    image: NetworkImage(
-                        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQY6nriKa13M9mOT9enoiRVTnQK1TmzcZKq5DI8YbsIVcdnrLO_9oQlw5sslR6SQ-yGrB8&usqp=CAU'),
+                    image: NetworkImage(job.image),
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -209,7 +245,7 @@ class _JobHistoryScreenState extends State<JobHistoryScreen>
                       padding:
                           EdgeInsets.symmetric(horizontal: 13, vertical: 4),
                       child: Text(
-                        'Open',
+                        '${job.status}',
                         style: Constants.applyStyle(
                             color: Colors.white,
                             size: 12,
@@ -228,12 +264,12 @@ class _JobHistoryScreenState extends State<JobHistoryScreen>
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          'Need to Clean Bed Room',
+                          job.title,
                           style: Constants.applyStyle(
                               size: 20, fontWeight: FontWeight.w600),
                         ),
                         Text(
-                          '\$120',
+                          '\$${job.price}',
                           style: Constants.applyStyle(
                               size: 20,
                               fontWeight: FontWeight.w700,
@@ -247,13 +283,17 @@ class _JobHistoryScreenState extends State<JobHistoryScreen>
                     Row(
                       children: [
                         Text(
-                          'Yesterday',
+                          timeago.format(job.createdAt),
                           style: Constants.applyStyle(
                               size: 14, color: HexColor('A6A6A6')),
                         ),
                         Text('  •  '),
                         Text(
-                          'EMERGENCY',
+                          job.urgencyType == 1
+                              ? 'LOW'
+                              : job.urgencyType == 2
+                                  ? 'HIGH'
+                                  : 'EMERGENCY',
                           style: Constants.applyStyle(
                               size: 14,
                               color: HexColor('19A716'),
@@ -282,6 +322,9 @@ class _JobHistoryScreenState extends State<JobHistoryScreen>
                               width: 50,
                               decoration: BoxDecoration(
                                 color: purpleColor,
+                                image: DecorationImage(
+                                    fit: BoxFit.cover,
+                                    image: NetworkImage(job.user.imageProfile)),
                                 borderRadius: BorderRadius.all(
                                   Radius.elliptical(9999, 9999),
                                 ),
@@ -301,7 +344,7 @@ class _JobHistoryScreenState extends State<JobHistoryScreen>
                                     ),
                                     child: Center(
                                       child: Text(
-                                        '4.9',
+                                        '${job.user.rate}',
                                         style: Constants.applyStyle(
                                             color: Colors.white,
                                             size: 12,
@@ -319,79 +362,90 @@ class _JobHistoryScreenState extends State<JobHistoryScreen>
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  'Monalisa Paul',
+                                  '${job.user.name}',
                                   style: Constants.applyStyle(
                                       fontWeight: FontWeight.w600, size: 18),
                                 ),
                                 SizedBox(
                                   height: 12.8,
                                 ),
-                                LayoutBuilder(
-                                  builder: (context, constraints) =>
-                                      SizedOverflowBox(
-                                    alignment: AlignmentDirectional.centerStart,
-                                    size: Size(constraints.minWidth, 23),
-                                    child: Row(
-                                      children: [
-                                        Row(
-                                          children: List.generate(
-                                            constraints.isSatisfiedBy(Size(
-                                                    constraints.minWidth - 10,
-                                                    23))
-                                                ? test.length
-                                                : 1,
-                                            (index) => Row(
-                                              children: [
-                                                Container(
-                                                  decoration: BoxDecoration(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              20),
-                                                      color: Color.fromRGBO(
-                                                          232, 241, 255, 1)),
-                                                  padding: EdgeInsets.symmetric(
-                                                      vertical: 4,
-                                                      horizontal: 7.5),
-                                                  child: Text(
-                                                    'home cleaning',
-                                                    style: Constants.applyStyle(
-                                                        size: 12,
+                                if (job.user.servises != null &&
+                                    job.user.servises.isNotEmpty)
+                                  LayoutBuilder(
+                                    builder: (context, constraints) =>
+                                        SizedOverflowBox(
+                                      alignment:
+                                          AlignmentDirectional.centerStart,
+                                      size: Size(constraints.minWidth, 23),
+                                      child: Row(
+                                        children: [
+                                          Row(
+                                            children: List.generate(
+                                              constraints.isSatisfiedBy(Size(
+                                                      constraints.minWidth - 10,
+                                                      23))
+                                                  ? job.user.servises.length
+                                                  : 1,
+                                              (index) => Row(
+                                                children: [
+                                                  Container(
+                                                    decoration: BoxDecoration(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(20),
                                                         color: Color.fromRGBO(
-                                                            31, 113, 237, 1),
-                                                        fontWeight:
-                                                            FontWeight.w400),
+                                                            232, 241, 255, 1)),
+                                                    padding:
+                                                        EdgeInsets.symmetric(
+                                                            vertical: 4,
+                                                            horizontal: 7.5),
+                                                    child: Text(
+                                                      '${job.service.name}',
+                                                      style:
+                                                          Constants.applyStyle(
+                                                              size: 12,
+                                                              color: Color
+                                                                  .fromRGBO(
+                                                                      31,
+                                                                      113,
+                                                                      237,
+                                                                      1),
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w400),
+                                                    ),
                                                   ),
-                                                ),
-                                                SizedBox(
-                                                  width: 5,
-                                                )
-                                              ],
+                                                  SizedBox(
+                                                    width: 5,
+                                                  )
+                                                ],
+                                              ),
                                             ),
                                           ),
-                                        ),
-                                        if (!constraints.isSatisfiedBy(Size(
-                                            constraints.minWidth - 10, 23)))
-                                          Container(
-                                            decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(20),
-                                                color: Color.fromRGBO(
-                                                    232, 241, 255, 1)),
-                                            padding: EdgeInsets.symmetric(
-                                                vertical: 4, horizontal: 7.5),
-                                            child: Text(
-                                              '${test.length - 1}+',
-                                              style: Constants.applyStyle(
-                                                  size: 12,
+                                          if (!constraints.isSatisfiedBy(Size(
+                                              constraints.minWidth - 10, 23)))
+                                            Container(
+                                              decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(20),
                                                   color: Color.fromRGBO(
-                                                      31, 113, 237, 1),
-                                                  fontWeight: FontWeight.w400),
+                                                      232, 241, 255, 1)),
+                                              padding: EdgeInsets.symmetric(
+                                                  vertical: 4, horizontal: 7.5),
+                                              child: Text(
+                                                '${job.user.servises.length - 1}+',
+                                                style: Constants.applyStyle(
+                                                    size: 12,
+                                                    color: Color.fromRGBO(
+                                                        31, 113, 237, 1),
+                                                    fontWeight:
+                                                        FontWeight.w400),
+                                              ),
                                             ),
-                                          ),
-                                      ],
+                                        ],
+                                      ),
                                     ),
                                   ),
-                                ),
                               ],
                             )
                           ],

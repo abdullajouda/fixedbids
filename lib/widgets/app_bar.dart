@@ -1,4 +1,4 @@
-import 'package:fixed_bids/constants.dart';
+import 'package:fixed_bids/utils/constants.dart';
 import 'package:fixed_bids/views/other/notifications.dart';
 import 'package:fixed_bids/widgets/back_button.dart';
 import 'package:flutter/cupertino.dart';

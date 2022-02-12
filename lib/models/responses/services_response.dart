@@ -4,6 +4,8 @@
 
 import 'dart:convert';
 
+import 'package:fixed_bids/models/service.dart';
+
 ServicesResponse servicesResponseFromJson(String str) => ServicesResponse.fromJson(json.decode(str));
 
 String servicesResponseToJson(ServicesResponse data) => json.encode(data.toJson());
@@ -19,13 +21,13 @@ class ServicesResponse {
   bool status;
   int code;
   String message;
-  List<Item> items;
+  List<Service> items;
 
   factory ServicesResponse.fromJson(Map<String, dynamic> json) => ServicesResponse(
     status: json["status"],
     code: json["code"],
     message: json["message"],
-    items: List<Item>.from(json["items"].map((x) => Item.fromJson(x))),
+    items: List<Service>.from(json["items"].map((x) => Service.fromJson(x))),
   );
 
   Map<String, dynamic> toJson() => {
@@ -36,34 +38,3 @@ class ServicesResponse {
   };
 }
 
-class Item {
-  Item({
-    this.id,
-    this.image,
-    this.status,
-    this.createdAt,
-    this.name,
-  });
-
-  int id;
-  String image;
-  String status;
-  DateTime createdAt;
-  String name;
-
-  factory Item.fromJson(Map<String, dynamic> json) => Item(
-    id: json["id"],
-    image: json["image"],
-    status: json["status"],
-    createdAt: DateTime.parse(json["created_at"]),
-    name: json["name"],
-  );
-
-  Map<String, dynamic> toJson() => {
-    "id": id,
-    "image": image,
-    "status": status,
-    "created_at": createdAt.toIso8601String(),
-    "name": name,
-  };
-}

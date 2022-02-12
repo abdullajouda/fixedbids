@@ -128,7 +128,7 @@ ADDED from C:\Users\histo\IdeaProjects\fixed_bids\android\app\src\main\AndroidMa
 		ADDED from C:\Users\histo\IdeaProjects\fixed_bids\android\app\src\main\AndroidManifest.xml:24:13-68
 	android:name
 		ADDED from C:\Users\histo\IdeaProjects\fixed_bids\android\app\src\main\AndroidManifest.xml:23:13-58
-activity#com.example.fixed_bids.MainActivity
+activity#com.fixedbids.app.MainActivity
 ADDED from C:\Users\histo\IdeaProjects\fixed_bids\android\app\src\main\AndroidManifest.xml:25:9-51:20
 	android:launchMode
 		ADDED from C:\Users\histo\IdeaProjects\fixed_bids\android\app\src\main\AndroidManifest.xml:29:13-43

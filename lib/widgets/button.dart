@@ -2,7 +2,7 @@ import 'package:fixed_bids/views/root.dart';
 import 'package:fixed_bids/widgets/loading.dart';
 import 'package:flutter/material.dart';
 
-import '../constants.dart';
+import '../utils/constants.dart';
 
 class Button extends StatelessWidget {
   final String title;

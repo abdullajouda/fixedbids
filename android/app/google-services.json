@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "20486437389",
+    "project_id": "fixed-bids",
+    "storage_bucket": "fixed-bids.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:20486437389:android:0dc106a691a9bd9085f344",
+        "android_client_info": {
+          "package_name": "com.fixedbids.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "20486437389-sl8cb7g9j5qvubfl3f5q0gl3nqt5rceg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBIiPAZUxoKhS6rPEMBO-bN5BdaGyKYRKk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "20486437389-sl8cb7g9j5qvubfl3f5q0gl3nqt5rceg.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

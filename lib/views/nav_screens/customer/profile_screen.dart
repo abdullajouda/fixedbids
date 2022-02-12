@@ -1,4 +1,4 @@
-import 'package:fixed_bids/constants.dart';
+import 'package:fixed_bids/utils/constants.dart';
 import 'package:fixed_bids/controllers/global_controller.dart';
 import 'package:fixed_bids/controllers/user_controller.dart';
 import 'package:fixed_bids/external/lib/src/place_picker.dart';

@@ -1,7 +1,8 @@
 import 'dart:async';
 
-import 'package:fixed_bids/constants.dart';
+import 'package:fixed_bids/utils/constants.dart';
 import 'package:fixed_bids/models/responses/login_response.dart';
+import 'package:fixed_bids/models/user.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SharedPreferencesController {

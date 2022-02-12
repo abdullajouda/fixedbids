@@ -1,3 +1,4 @@
+import 'package:fixed_bids/controllers/firebase_messaging_service.dart';
 import 'package:fixed_bids/controllers/global_controller.dart';
 import 'package:fixed_bids/controllers/shared_preferences_controller.dart';
 import 'package:fixed_bids/views/auth/sign_in.dart';
@@ -7,7 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:lottie/lottie.dart';
 
-import '../constants.dart';
+import '../utils/constants.dart';
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -45,6 +46,7 @@ class _SplashScreenState extends State<SplashScreen>
             ));
       }
     }
+    FirebaseMessagingService().initialise();
   }
 
   @override

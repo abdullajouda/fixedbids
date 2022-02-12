@@ -8,7 +8,7 @@ import 'package:fixed_bids/widgets/loading.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
-import '../constants.dart';
+import '../utils/constants.dart';
 import 'auth/account_type.dart';
 
 class OnBoardingScreen extends StatefulWidget {

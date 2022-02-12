@@ -1,4 +1,4 @@
-package com.example.fixed_bids
+package com.fixedbids.app
 
 import io.flutter.embedding.android.FlutterActivity
 

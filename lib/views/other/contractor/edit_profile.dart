@@ -1,5 +1,6 @@
-import 'package:fixed_bids/constants.dart';
+import 'package:fixed_bids/utils/constants.dart';
 import 'package:fixed_bids/controllers/global_controller.dart';
+import 'package:fixed_bids/controllers/provider_controller.dart';
 import 'package:fixed_bids/controllers/user_controller.dart';
 import 'package:fixed_bids/external/lib/src/place_picker.dart';
 import 'package:fixed_bids/models/responses/login_response.dart';
@@ -117,7 +118,7 @@ class _ContractorProfileEditState extends State<ContractorProfileEdit> {
                             height: 8,
                           ),
                           Text(
-                            Data.currentUser.address,
+                            Data.currentUser.address??'',
                             style: Constants.applyStyle(
                                 size: 14,
                                 fontWeight: FontWeight.w400,
@@ -132,7 +133,7 @@ class _ContractorProfileEditState extends State<ContractorProfileEdit> {
                               Column(
                                 children: [
                                   Text(
-                                    '345',
+                                    '${Data.currentUser.completeJobCount}',
                                     style: Constants.applyStyle(
                                       size: 18,
                                       fontWeight: FontWeight.w600,
@@ -154,7 +155,7 @@ class _ContractorProfileEditState extends State<ContractorProfileEdit> {
                               Column(
                                 children: [
                                   Text(
-                                    '4.5',
+                                    '${Data.currentUser.rate}',
                                     style: Constants.applyStyle(
                                       size: 18,
                                       fontWeight: FontWeight.w600,
@@ -499,7 +500,7 @@ class _ContractorProfileEditState extends State<ContractorProfileEdit> {
                         setState(() {
                           isLocationLoading = true;
                         });
-                        await UserController().editProfile(
+                        await ProviderController().editProfile(
                             name: nameController.text,
                             email: emailController.text,
                             address: locationController.text,

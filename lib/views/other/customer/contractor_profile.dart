@@ -1,4 +1,4 @@
-import 'package:fixed_bids/constants.dart';
+import 'package:fixed_bids/utils/constants.dart';
 import 'package:fixed_bids/views/root.dart';
 import 'package:fixed_bids/widgets/app_bar.dart';
 import 'package:fixed_bids/widgets/button.dart';
@@ -7,8 +7,9 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 class ContractorProfile extends StatefulWidget {
   final int withRequest;
+  final int id;
 
-  const ContractorProfile({Key key, this.withRequest = 0}) : super(key: key);
+  const ContractorProfile({Key key, this.withRequest = 0, this.id}) : super(key: key);
 
   @override
   _ContractorProfileState createState() => _ContractorProfileState();

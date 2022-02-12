@@ -1,30 +1,29 @@
 import 'dart:convert';
-import 'dart:io';
-import 'package:bot_toast/bot_toast.dart';
-import 'package:fixed_bids/constants.dart';
+import 'package:fixed_bids/utils/constants.dart';
 import 'package:fixed_bids/models/responses/ads_response.dart';
 import 'package:fixed_bids/models/responses/api_response.dart';
 import 'package:fixed_bids/models/responses/banners_response.dart';
+
 import 'package:fixed_bids/models/responses/login_response.dart';
+import 'package:fixed_bids/models/responses/notifications_response.dart';
+import 'package:fixed_bids/models/responses/profile_response.dart';
 import 'package:fixed_bids/models/responses/questions_response.dart';
 import 'package:fixed_bids/models/responses/services_response.dart';
 import 'package:fixed_bids/models/responses/settings_response.dart';
-import 'package:flutter/material.dart';
+import 'package:async/async.dart';
+import 'package:fixed_bids/models/responses/user_by_service_response.dart';
 import 'package:http/http.dart';
 
 class GlobalController {
   Future getSettings() async {
     var request = await get(
       Uri.parse("${Constants.domain}getSetting"),
-      headers: {
-        'Accept-Language': Data.locale.languageCode,
-        'Accept': 'application/json',
-      },
+      headers: Constants().headers,
     );
     var output = json.decode(request.body);
     SettingsResponse response = SettingsResponse.fromJson(output);
     Data.settings = response;
-   await getServices();
+    await getServices();
   }
 
   Future<AdsResponse> getAds() async {
@@ -46,21 +45,23 @@ class GlobalController {
   Future<QuestionsResponse> allQuestions() async {
     var request = await get(
       Uri.parse("${Constants.domain}allQuestions"),
-      headers: {
-        'Accept-Language': Data.locale.languageCode,
-        'Accept': 'application/json',
-      },
+      headers: Constants().headers,
     );
     return QuestionsResponse.fromJson(json.decode(request.body));
+  }
+
+  Future<NotificationsResponse> myNotifications() async {
+    var request = await get(
+      Uri.parse("${Constants.domain}myNotifications"),
+      headers: Constants().headers,
+    );
+    return NotificationsResponse.fromJson(json.decode(request.body));
   }
 
   Future<ServicesResponse> getServices() async {
     var request = await get(
       Uri.parse("${Constants.domain}getServices"),
-      headers: {
-        'Accept-Language': Data.locale.languageCode,
-        'Accept': 'application/json',
-      },
+      headers: Constants().headers,
     );
     var output = json.decode(request.body);
     ServicesResponse response = ServicesResponse.fromJson(output);
@@ -113,7 +114,7 @@ class GlobalController {
     return userResponse;
   }
 
-  Future contactUs(
+  Future<ApiResponse> contactUs(
       {String email, String name, String mobile, String message}) async {
     var response = await post(
       Uri.parse("${Constants.domain}contactUs"),
@@ -125,12 +126,27 @@ class GlobalController {
       },
       headers: Constants().headers,
     );
-    var output = json.decode(response.body);
-    if (output['status'] == true) {
-    } else {}
+    return ApiResponse.fromJson(json.decode(response.body));
   }
 
-  Future forgotPassword({String email}) async {
+  Future<ApiResponse> newReview({
+    String rate,
+    String offerId,
+    String comment,
+  }) async {
+    var response = await post(
+      Uri.parse("${Constants.domain}newReview"),
+      body: {
+        'rate': rate,
+        'offerId': offerId,
+        'comment': comment,
+      },
+      headers: Constants().headers,
+    );
+    return ApiResponse.fromJson(json.decode(response.body));
+  }
+
+  Future<ApiResponse> forgotPassword({String email}) async {
     var response = await post(
       Uri.parse("${Constants.domain}forgotPassword"),
       body: {
@@ -138,30 +154,31 @@ class GlobalController {
       },
       headers: Constants().headers,
     );
-    var output = json.decode(response.body);
+    return ApiResponse.fromJson(json.decode(response.body));
   }
 
-// Future<List<FavoriteModel>> getFavorites() async {
-//   var request = await get(
-//     Uri.parse("${Constants.domain}getMyFavorite"),
-//     headers: Constants().headers,
-//   );
-//   var output = json.decode(request.body);
-//   List<FavoriteModel> list = (output['items'] as List)
-//       .map((e) => FavoriteModel.fromJson(e))
-//       .toList();
-//   return list;
-// }
+  Future<ProfileResponse> getProfileById({int id}) async {
+    var request = await get(
+      Uri.parse("${Constants.domain}getProfileById/$id"),
+      headers: Constants().headers,
+    );
+    ProfileResponse response =
+        ProfileResponse.fromJson(json.decode(request.body));
+    if (response.status) {
+      Data.currentUser.completeJobCount = response.item.completeJobCount;
+      Data.currentUser.rate = response.item.rate;
+      Data.currentUser.servises = response.item.servises;
+     }
+    return response;
+  }
 
-// Future<ApiResponse> addRemoveFavorite({int id}) async {
-//   var request = await get(
-//     Uri.parse("${Constants.domain}addAndRemoveFromFavorite/$id"),
-//     headers: Constants().headers,
-//   );
-//   var output = json.decode(request.body);
-//   ApiResponse response = ApiResponse.fromJson(output);
-//   return response;
-// }
+  Future<UsersByServiceResponse> getUsersByServiceId({int id}) async {
+    var request = await get(
+      Uri.parse("${Constants.domain}getUsersByServiceId/$id"),
+      headers: Constants().headers,
+    );
+    return UsersByServiceResponse.fromJson(json.decode(request.body));
+  }
 
   logout() async {
     await get(

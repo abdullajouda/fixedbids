@@ -3,7 +3,7 @@ import 'package:fixed_bids/views/auth/sign_up_provider.dart';
 import 'package:fixed_bids/widgets/back_button.dart';
 import 'package:fixed_bids/widgets/dashed_border.dart';
 import 'package:flutter/material.dart';
-import 'package:fixed_bids/constants.dart';
+import 'package:fixed_bids/utils/constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_svg/flutter_svg.dart';

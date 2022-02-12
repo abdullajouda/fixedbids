@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.fixed_bids"
+    package="com.fixedbids.app"
     android:versionCode="1"
     android:versionName="1.0.0" >
 
@@ -38,7 +38,7 @@
             android:value="AIzaSyCYf4b7gvOivFUwidxSzSPhPcpQz0WJ7gg" />
 
         <activity
-            android:name="com.example.fixed_bids.MainActivity"
+            android:name="com.fixedbids.app.MainActivity"
             android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
             android:hardwareAccelerated="true"
             android:launchMode="singleTop"

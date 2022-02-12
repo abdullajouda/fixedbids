@@ -1,4 +1,4 @@
-import 'package:fixed_bids/constants.dart';
+import 'package:fixed_bids/utils/constants.dart';
 import 'package:flutter/material.dart';
 
 class CustomTextField extends StatefulWidget {
@@ -6,9 +6,14 @@ class CustomTextField extends StatefulWidget {
   final FocusNode nextFocusNode;
   final String label;
   final Widget suffix;
+  final Widget prefix;
   final bool obscure;
   final TextEditingController controller;
   final bool required;
+  final bool readOnly;
+  final int maxLines;
+  final VoidCallback onPressed;
+  final TextInputType inputType;
 
   const CustomTextField(
       {Key key,
@@ -16,9 +21,12 @@ class CustomTextField extends StatefulWidget {
       this.nextFocusNode,
       this.label,
       this.suffix,
+      this.prefix,
       this.obscure = false,
+      this.readOnly = false,
       this.controller,
-      this.required = true})
+      this.onPressed,
+      this.required = true, this.maxLines, this.inputType})
       : super(key: key);
 
   @override
@@ -48,12 +56,17 @@ class _CustomTextFieldState extends State<CustomTextField> {
     return TextFormField(
       obscureText: widget.obscure,
       controller: widget.controller,
+      keyboardType: widget.inputType,
       validator: widget.required
           ? (value) => FieldValidator.validate(value, context)
           : null,
+      maxLines: widget.maxLines??1,
+      readOnly:  widget.readOnly,
+      onTap: widget.onPressed,
       decoration: inputDecoration(
         hint: widget.label,
         suffix: widget.suffix,
+        prefix: widget.prefix,
         focused: widget.focusNode.hasFocus || widget.controller?.text != '',
       ),
       focusNode: widget.focusNode,

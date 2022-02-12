@@ -2,15 +2,17 @@ import 'package:bot_toast/bot_toast.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:fixed_bids/external/lib/providers/place_provider.dart';
 import 'package:fixed_bids/views/splash.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
 
-import 'constants.dart';
+import 'utils/constants.dart';
 import 'external/lib/providers/search_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   await EasyLocalization.ensureInitialized();
 
   runApp(MultiProvider(
@@ -47,10 +49,11 @@ class _MyAppState extends State<MyApp> {
       builder: BotToastInit(),
       navigatorObservers: [Data.navigator, BotToastNavigatorObserver()],
       debugShowCheckedModeBanner: false,
+      scrollBehavior: CupertinoScrollBehavior(),
       theme: ThemeData(
         primarySwatch: Colors.blue,
         scaffoldBackgroundColor: Color(0x0ffF8F8F8),
-    ),
+      ),
       home: SplashScreen(),
     );
   }

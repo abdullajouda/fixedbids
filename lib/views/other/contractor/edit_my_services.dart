@@ -1,20 +1,37 @@
-import 'package:fixed_bids/constants.dart';
+import 'dart:math';
+
+import 'package:bot_toast/bot_toast.dart';
+import 'package:fixed_bids/utils/constants.dart';
+import 'package:fixed_bids/controllers/provider_controller.dart';
+import 'package:fixed_bids/models/responses/api_response.dart';
+import 'package:fixed_bids/models/responses/login_response.dart';
 import 'package:fixed_bids/widgets/app_bar.dart';
-import 'package:fixed_bids/widgets/back_button.dart';
 import 'package:fixed_bids/widgets/button.dart';
 import 'package:fixed_bids/widgets/check_box.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
 
-
 class EditMyServices extends StatefulWidget {
+  final List<Servise> services;
+
+  const EditMyServices({Key key, this.services}) : super(key: key);
+
   @override
   _EditMyServicesState createState() => _EditMyServicesState();
 }
 
 class _EditMyServicesState extends State<EditMyServices> {
+  List<int> _services = [];
+  bool load = false;
 
+  @override
+  void initState() {
+    widget.services.forEach((element) {
+      _services.add(element.serviceId);
+    });
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +41,6 @@ class _EditMyServicesState extends State<EditMyServices> {
       body: SafeArea(
         child: Column(
           children: [
-
             Expanded(
               child: SingleChildScrollView(
                 child: Column(
@@ -60,8 +76,21 @@ class _EditMyServicesState extends State<EditMyServices> {
                       padding: kPadding,
                       shrinkWrap: true,
                       physics: NeverScrollableScrollPhysics(),
-                      itemBuilder: (context, index) =>
-                          _checkBoxBuilder(title: Data.services.items[index].name),
+                      itemBuilder: (context, index) => _checkBoxBuilder(
+                        title: Data.services.items[index].name,
+                        value:
+                            _services.contains(Data.services.items[index].id),
+                        onPressed: () {
+                          setState(() {
+                            if (_services
+                                .contains(Data.services.items[index].id)) {
+                              _services.remove(Data.services.items[index].id);
+                            } else {
+                              _services.add(Data.services.items[index].id);
+                            }
+                          });
+                        },
+                      ),
                     ),
                     SizedBox(
                       height: Data.size.height * .1,
@@ -81,8 +110,30 @@ class _EditMyServicesState extends State<EditMyServices> {
             height: 55,
             child: Button(
               title: 'Save'.tr(),
-              onPressed: () async{
-
+              loading: load,
+              onPressed: () async {
+                setState(() {
+                  load = true;
+                });
+                ApiResponse response = await ProviderController()
+                    .editServices(services: _services);
+                if (response.status) {
+                  // _services.forEach((element) {
+                  //   Data.currentUser.servises.clear();
+                  //   Data.currentUser.servises.add(Servise(
+                  //       serviceId: element ,
+                  //       id: element* Random().nextInt(12),
+                  //       createdAt: DateTime.now(),
+                  //       service: Data.services.items
+                  //           .firstWhere((et) => et.id == element)));
+                  // });
+                  Navigator.of(context).pop(true);
+                } else {
+                  BotToast.showText(text: response.message);
+                }
+                setState(() {
+                  load = false;
+                });
               },
             ),
           ),
@@ -91,18 +142,16 @@ class _EditMyServicesState extends State<EditMyServices> {
     );
   }
 
-  Widget _checkBoxBuilder({String title}) {
+  Widget _checkBoxBuilder({String title, VoidCallback onPressed, bool value}) {
     return Column(
       children: [
         TextButton(
-            onPressed: () {},
+            onPressed: onPressed,
             child: Row(
               children: [
                 CustomCheckBox(
-                  value: false,
-                  onPressed: () {
-                    setState(() {});
-                  },
+                  value: value,
+                  onPressed: onPressed,
                 ),
                 Text(
                   '$title',
@@ -113,12 +162,12 @@ class _EditMyServicesState extends State<EditMyServices> {
                 ),
               ],
             )),
-
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20.0),
           child: Divider(
             color: Color(0x0ffE3E3E3),
-            thickness: 1,height: 0,
+            thickness: 1,
+            height: 0,
           ),
         )
       ],

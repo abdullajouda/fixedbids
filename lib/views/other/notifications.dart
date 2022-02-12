@@ -1,11 +1,14 @@
+import 'package:fixed_bids/controllers/global_controller.dart';
+import 'package:fixed_bids/models/notification.dart';
+import 'package:fixed_bids/models/responses/notifications_response.dart';
 import 'package:fixed_bids/views/other/customer/contractor_profile.dart';
 import 'package:fixed_bids/views/root.dart';
 import 'package:fixed_bids/widgets/app_bar.dart';
-import 'package:fixed_bids/widgets/button.dart';
+import 'package:fixed_bids/widgets/loading.dart';
 import 'package:flutter/material.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
-import '../../constants.dart';
+import '../../utils/constants.dart';
 
 class NotificationsScreen extends StatefulWidget {
   const NotificationsScreen({Key key}) : super(key: key);
@@ -15,44 +18,61 @@ class NotificationsScreen extends StatefulWidget {
 }
 
 class _NotificationsScreenState extends State<NotificationsScreen> {
+  Future _future;
+
+  @override
+  void initState() {
+    _future = GlobalController().myNotifications();
+    super.initState();
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: buildAppBar(title: 'Notification', actions: []),
-      body: Container(
-        margin: EdgeInsets.symmetric(horizontal: 22)
-            .add(EdgeInsets.only(bottom: 25)),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(10),
-          boxShadow: [
-            BoxShadow(
-                color: Color.fromRGBO(0, 0, 0, 0.05),
-                offset: Offset(0, 4),
-                blurRadius: 10,
-                spreadRadius: 0)
-          ],
-        ),
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(10),
-          child: ListView.builder(
-              itemCount: 3,
-              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 23),
-              itemBuilder: (context, index) => InkWell(
-                  onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => ContractorProfile(withRequest: 1,),
-                        ));
-                  },
-                  child: notificationBox())),
-        ),
-      ),
+      body: FutureBuilder<NotificationsResponse>(
+        future: _future,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Loading();
+          }
+         return Container(
+            margin: EdgeInsets.symmetric(horizontal: 22)
+                .add(EdgeInsets.only(bottom: 25)),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(10),
+              boxShadow: [
+                BoxShadow(
+                    color: Color.fromRGBO(0, 0, 0, 0.05),
+                    offset: Offset(0, 4),
+                    blurRadius: 10,
+                    spreadRadius: 0)
+              ],
+            ),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(10),
+              child: ListView.builder(
+                  itemCount: snapshot.data.items.length,
+                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 23),
+                  itemBuilder: (context, index) => InkWell(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ContractorProfile(withRequest: 1,id: snapshot.data.items[index].userId,),
+                            ));
+                      },
+                      child: notificationBox(notification: snapshot.data.items[index]))),
+            ),
+          );
+        },
+       ),
     );
   }
 
-  Widget notificationBox() {
+  Widget notificationBox({NotificationModel notification}) {
     return Column(
       children: [
         Row(
@@ -91,7 +111,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                             children: [
                               TextSpan(text: ' '),
                               TextSpan(
-                                text: 'interested to your',
+                                text: notification.message,
                                 style: Constants.applyStyle(
                                   size: 16,
                                   fontWeight: FontWeight.w400,
