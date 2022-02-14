@@ -32,7 +32,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               height: 25,
             ),
             _buildSettingsBox(
-              title: 'Terms',
+              title: 'Terms'.tr(),
               titleColor: Colors.black,
               svg: 'assets/icons/list.svg',
               onTap: () {
@@ -44,7 +44,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               },
             ),
             _buildSettingsBox(
-              title: 'Log out',
+              title: 'Log out'.tr(),
               titleColor: HexColor('FF0000'),
               svg: 'assets/icons/logout.svg',
               onTap: () {

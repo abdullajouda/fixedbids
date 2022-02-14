@@ -1,14 +1,20 @@
+import 'package:fixed_bids/controllers/chat_controller.dart';
+import 'package:fixed_bids/models/responses/api_response.dart';
 import 'package:fixed_bids/utils/constants.dart';
 import 'package:fixed_bids/controllers/provider_controller.dart';
 import 'package:fixed_bids/models/job.dart';
 import 'package:fixed_bids/models/responses/nearby_jobs_response.dart';
 import 'package:fixed_bids/views/other/contractor/contractor_job_details.dart';
+import 'package:fixed_bids/views/other/open_chat.dart';
 import 'package:fixed_bids/views/root.dart';
 import 'package:fixed_bids/widgets/icon_button.dart';
 import 'package:fixed_bids/widgets/loading.dart';
+import 'package:fixed_bids/widgets/no_data_found.dart';
 import 'package:flutter/material.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:timeago/timeago.dart' as timeago;
+import 'package:easy_localization/easy_localization.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ContractorJobHistoryScreen extends StatefulWidget {
   const ContractorJobHistoryScreen({Key key}) : super(key: key);
@@ -23,11 +29,12 @@ class _ContractorJobHistoryScreenState extends State<ContractorJobHistoryScreen>
   TabController _tabController;
   Future _openFuture;
   Future _closedFuture;
+  bool loadChat = false;
   RefreshController _openRefreshController =
-  RefreshController(initialRefresh: false);
+      RefreshController(initialRefresh: false);
 
   RefreshController _closedRefreshController =
-  RefreshController(initialRefresh: false);
+      RefreshController(initialRefresh: false);
 
   void _onRefresh() async {
     setState(() {
@@ -38,6 +45,7 @@ class _ContractorJobHistoryScreenState extends State<ContractorJobHistoryScreen>
     _openRefreshController.refreshCompleted();
     _closedRefreshController.refreshCompleted();
   }
+
   @override
   void initState() {
     _tabController = TabController(
@@ -98,7 +106,7 @@ class _ContractorJobHistoryScreenState extends State<ContractorJobHistoryScreen>
                           borderRadius: BorderRadius.circular(6)),
                       child: Center(
                         child: Text(
-                          'Open',
+                          'Open'.tr(),
                           style: TextStyle(
                             color: _tabController.index == 0
                                 ? Colors.white
@@ -119,7 +127,7 @@ class _ContractorJobHistoryScreenState extends State<ContractorJobHistoryScreen>
                           borderRadius: BorderRadius.circular(6)),
                       child: Center(
                         child: Text(
-                          'Closed',
+                          'Closed'.tr(),
                           style: TextStyle(
                             color: _tabController.index == 1
                                 ? Colors.white
@@ -148,9 +156,10 @@ class _ContractorJobHistoryScreenState extends State<ContractorJobHistoryScreen>
                   return SmartRefresher(
                     controller: _openRefreshController,
                     onRefresh: _onRefresh,
-                    child: ListView.separated(
+                    child:snapshot.data.items.isEmpty?NoDataFound(): ListView.separated(
                       itemCount: snapshot.data.items.length,
-                      padding: EdgeInsets.symmetric(horizontal: 22, vertical: 10),
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 22, vertical: 10),
                       separatorBuilder: (context, index) => SizedBox(
                         height: 20,
                       ),
@@ -169,9 +178,10 @@ class _ContractorJobHistoryScreenState extends State<ContractorJobHistoryScreen>
                   return SmartRefresher(
                     controller: _closedRefreshController,
                     onRefresh: _onRefresh,
-                    child: ListView.separated(
+                    child:snapshot.data.items.isEmpty?NoDataFound(): ListView.separated(
                       itemCount: snapshot.data.items.length,
-                      padding: EdgeInsets.symmetric(horizontal: 22, vertical: 10),
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 22, vertical: 10),
                       separatorBuilder: (context, index) => SizedBox(
                         height: 20,
                       ),
@@ -242,7 +252,7 @@ class _ContractorJobHistoryScreenState extends State<ContractorJobHistoryScreen>
                       padding:
                           EdgeInsets.symmetric(horizontal: 13, vertical: 4),
                       child: Text(
-                        '${job.status}',
+                        '${job.isOpen == 1 ? 'Open'.tr() : 'Closed'.tr()}',
                         style: Constants.applyStyle(
                             color: Colors.white,
                             size: 12,
@@ -287,10 +297,10 @@ class _ContractorJobHistoryScreenState extends State<ContractorJobHistoryScreen>
                         Text('  •  '),
                         Text(
                           job.urgencyType == 1
-                              ? 'LOW'
+                              ? 'LOW'.tr()
                               : job.urgencyType == 2
-                                  ? 'HIGH'
-                                  : 'EMERGENCY',
+                                  ? 'HIGH'.tr()
+                                  : 'EMERGENCY'.tr(),
                           style: Constants.applyStyle(
                               size: 14,
                               color: HexColor('19A716'),
@@ -451,6 +461,27 @@ class _ContractorJobHistoryScreenState extends State<ContractorJobHistoryScreen>
                           children: [
                             MyIconButton(
                               svg: 'assets/icons/Chat.svg',
+                              loading: loadChat,
+                              onPressed: () async {
+                                setState(() {
+                                  loadChat = true;
+                                });
+                                ApiResponse response = await ChatController()
+                                    .checkChat(id: job.user.id);
+                                setState(() {
+                                  loadChat = false;
+                                });
+                                if (response.status) {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => OpenChat(
+                                        id: response.chatID,
+                                      ),
+                                    ),
+                                  );
+                                }
+                              },
                               color: HexColor('#1F71ED').withOpacity(0.15),
                               iconColor: kPrimaryColor,
                             ),
@@ -459,6 +490,9 @@ class _ContractorJobHistoryScreenState extends State<ContractorJobHistoryScreen>
                             ),
                             MyIconButton(
                               svg: 'assets/icons/Calling.svg',
+                              onPressed: () async {
+                                await launch('tel:' + job.user.mobile);
+                              },
                               color: HexColor('#1F71ED').withOpacity(0.15),
                               iconColor: kPrimaryColor,
                             )

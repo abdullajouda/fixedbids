@@ -1,5 +1,7 @@
+import 'package:fixed_bids/controllers/chat_controller.dart';
 import 'package:fixed_bids/controllers/jobs_controller.dart';
 import 'package:fixed_bids/models/job.dart';
+import 'package:fixed_bids/models/responses/api_response.dart';
 import 'package:fixed_bids/models/responses/job_id_response.dart';
 import 'package:fixed_bids/utils/constants.dart';
 import 'package:fixed_bids/views/root.dart';
@@ -10,6 +12,10 @@ import 'package:fixed_bids/widgets/loading.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:timeago/timeago.dart' as timeago;
+import 'package:easy_localization/easy_localization.dart';
+import 'package:url_launcher/url_launcher.dart';
+
+import '../open_chat.dart';
 
 class ContractorJobDetails extends StatefulWidget {
   final int id;
@@ -22,7 +28,7 @@ class ContractorJobDetails extends StatefulWidget {
 
 class _ContractorJobDetailsState extends State<ContractorJobDetails> {
   Future _future;
-  Job _job;
+  bool loadChat = false;
 
   @override
   void initState() {
@@ -32,16 +38,16 @@ class _ContractorJobDetailsState extends State<ContractorJobDetails> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: buildAppBar(title: 'Job details'),
-      body: FutureBuilder<JobDetailsResponse>(
-        future: _future,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Loading();
-          }
-          _job = snapshot.data.item;
-          return SingleChildScrollView(
+    return FutureBuilder<JobDetailsResponse>(
+      future: _future,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Material(child: Loading());
+        }
+
+        return Scaffold(
+          appBar: buildAppBar(title: 'Job details'.tr()),
+          body: SingleChildScrollView(
             padding: EdgeInsets.symmetric(horizontal: 22)
                 .add(EdgeInsets.only(bottom: 120)),
             child: Column(
@@ -87,7 +93,7 @@ class _ContractorJobDetailsState extends State<ContractorJobDetails> {
                               padding: EdgeInsets.symmetric(
                                   horizontal: 13, vertical: 4),
                               child: Text(
-                                '${snapshot.data.item.status}',
+                                '${snapshot.data.item.isOpen == 1 ? 'Open'.tr() : 'Closed'.tr()}',
                                 style: Constants.applyStyle(
                                     color: Colors.white,
                                     size: 12,
@@ -132,10 +138,10 @@ class _ContractorJobDetailsState extends State<ContractorJobDetails> {
                                 Text('  •  '),
                                 Text(
                                   snapshot.data.item.urgencyType == 1
-                                      ? 'LOW'
+                                      ? 'LOW'.tr()
                                       : snapshot.data.item.urgencyType == 2
-                                          ? 'HIGH'
-                                          : 'EMERGENCY',
+                                          ? 'HIGH'.tr()
+                                          : 'EMERGENCY'.tr(),
                                   style: Constants.applyStyle(
                                       size: 14,
                                       color: HexColor('19A716'),
@@ -332,9 +338,30 @@ class _ContractorJobDetailsState extends State<ContractorJobDetails> {
                                 Row(
                                   children: [
                                     MyIconButton(
-                                      svg: 'assets/icons/Chat.svg',
+                                      svg: 'assets/icons/Chat.svg',loading: loadChat,
+                                      onPressed: () async {
+                                        setState(() {
+                                          loadChat = true;
+                                        });
+                                        ApiResponse response =
+                                        await ChatController().checkChat(
+                                            id: snapshot.data.item.user.id);
+                                        setState(() {
+                                          loadChat = false;
+                                        });
+                                        if (response.status) {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) => OpenChat(
+                                                id: response.chatID,
+                                              ),
+                                            ),
+                                          );
+                                        }
+                                      },
                                       color:
-                                          HexColor('#1F71ED').withOpacity(0.15),
+                                      HexColor('#1F71ED').withOpacity(0.15),
                                       iconColor: kPrimaryColor,
                                     ),
                                     SizedBox(
@@ -342,12 +369,17 @@ class _ContractorJobDetailsState extends State<ContractorJobDetails> {
                                     ),
                                     MyIconButton(
                                       svg: 'assets/icons/Calling.svg',
+                                      onPressed: () async {
+                                        await launch('tel:' +
+                                            snapshot.data.item.user.mobile);
+                                      },
                                       color:
-                                          HexColor('#1F71ED').withOpacity(0.15),
+                                      HexColor('#1F71ED').withOpacity(0.15),
                                       iconColor: kPrimaryColor,
                                     )
                                   ],
                                 ),
+
                               ],
                             ),
                             SizedBox(
@@ -367,7 +399,7 @@ class _ContractorJobDetailsState extends State<ContractorJobDetails> {
                                 Align(
                                   alignment: AlignmentDirectional.centerStart,
                                   child: Text(
-                                    'Job description',
+                                    'Job description'.tr(),
                                     style: Constants.applyStyle(
                                         fontWeight: FontWeight.w600, size: 18),
                                   ),
@@ -376,7 +408,7 @@ class _ContractorJobDetailsState extends State<ContractorJobDetails> {
                                   height: 13,
                                 ),
                                 Text(
-                                  'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.... Read more',
+                                  snapshot.data.item.details,
                                   style: Constants.applyStyle(
                                     size: 14,
                                   ).copyWith(height: 1.5),
@@ -392,7 +424,7 @@ class _ContractorJobDetailsState extends State<ContractorJobDetails> {
                                 Align(
                                   alignment: AlignmentDirectional.centerStart,
                                   child: Text(
-                                    'Photos',
+                                    'Photos'.tr(),
                                     style: Constants.applyStyle(
                                         fontWeight: FontWeight.w600, size: 18),
                                   ),
@@ -401,7 +433,8 @@ class _ContractorJobDetailsState extends State<ContractorJobDetails> {
                                   height: 20,
                                 ),
                                 GridView.builder(
-                                  itemCount: 2,
+                                  itemCount:
+                                      snapshot.data.item.attachments.length,
                                   shrinkWrap: true,
                                   physics: NeverScrollableScrollPhysics(),
                                   gridDelegate:
@@ -413,7 +446,16 @@ class _ContractorJobDetailsState extends State<ContractorJobDetails> {
                                   itemBuilder: (context, index) => Container(
                                     height: 90,
                                     decoration: BoxDecoration(
-                                      color: purpleColor,
+                                      color: kPrimaryColor.withOpacity(0.1),
+                                      image: DecorationImage(
+                                          image: NetworkImage(snapshot.data.item
+                                              .attachments[index].image),
+                                          onError: (exception, stackTrace) =>
+                                              Icon(
+                                                Icons.broken_image_outlined,
+                                                color: kPrimaryColor,
+                                              ),
+                                          fit: BoxFit.cover),
                                       borderRadius: BorderRadius.circular(10),
                                     ),
                                   ),
@@ -428,37 +470,31 @@ class _ContractorJobDetailsState extends State<ContractorJobDetails> {
                 ),
               ],
             ),
-          );
-        },
-      ),
-      bottomSheet: Container(
-        height: 100,
-        width: double.infinity,
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(10),
-          boxShadow: [
-            BoxShadow(
-                color: Color.fromRGBO(0, 0, 0, 0.05),
-                offset: Offset(0, 4),
-                blurRadius: 10,
-                spreadRadius: 0)
-          ],
-        ),
-        padding: EdgeInsets.symmetric(horizontal: 22, vertical: 20),
-        child: Center(
-          child: Button(
-            title: 'Get job',
-            onPressed: () {
-              // Navigator.push(
-              //     context,
-              //     MaterialPageRoute(
-              //       builder: (context) => JobPublished(),
-              //     ));
-            },
           ),
-        ),
-      ),
+          bottomSheet: Container(
+            height: 100,
+            width: double.infinity,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(10),
+              boxShadow: [
+                BoxShadow(
+                    color: Color.fromRGBO(0, 0, 0, 0.05),
+                    offset: Offset(0, 4),
+                    blurRadius: 10,
+                    spreadRadius: 0)
+              ],
+            ),
+            padding: EdgeInsets.symmetric(horizontal: 22, vertical: 20),
+            child: Center(
+              child: Button(
+                title: 'Get job'.tr(),
+                onPressed: () {},
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 }

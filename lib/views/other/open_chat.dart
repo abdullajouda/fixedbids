@@ -1,7 +1,6 @@
 import 'package:fixed_bids/utils/constants.dart';
 import 'package:fixed_bids/controllers/chat_controller.dart';
-import 'package:fixed_bids/controllers/global_controller.dart';
-import 'package:fixed_bids/models/responses/api_response.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:fixed_bids/models/responses/chat_details_response.dart';
 import 'package:fixed_bids/views/root.dart';
 import 'package:fixed_bids/widgets/back_button.dart';
@@ -170,7 +169,7 @@ class _OpenChatState extends State<OpenChat> {
                       });
                     },
                     decoration: inputDecoration(
-                      hint: 'Type a Message',
+                      hint: 'Type a Message'.tr(),
                       radius: BorderRadius.circular(24),
                       suffixIcon: CupertinoButton(
                         onPressed: () {},

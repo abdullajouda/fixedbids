@@ -1,5 +1,8 @@
 import 'dart:io';
 
+import 'package:bot_toast/bot_toast.dart';
+import 'package:fixed_bids/controllers/global_controller.dart';
+import 'package:fixed_bids/models/responses/login_response.dart';
 import 'package:fixed_bids/utils/constants.dart';
 import 'package:fixed_bids/views/auth/sign_in.dart';
 import 'package:fixed_bids/views/other/conditions.dart';
@@ -16,6 +19,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import '../place_picker.dart';
+import '../root.dart';
 
 class SignUpCustomer extends StatefulWidget {
   @override
@@ -23,6 +27,8 @@ class SignUpCustomer extends StatefulWidget {
 }
 
 class _SignUpCustomerState extends State<SignUpCustomer> {
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
   TextEditingController emailController,
       nameController,
       passwordController,
@@ -31,6 +37,7 @@ class _SignUpCustomerState extends State<SignUpCustomer> {
   bool obscure = true;
   bool obscureRetype = true;
   bool agree = false;
+  bool loading = false;
 
   @override
   void initState() {
@@ -101,6 +108,7 @@ class _SignUpCustomerState extends State<SignUpCustomer> {
                       height: Data.size.height * .06,
                     ),
                     Form(
+                      key: _formKey,
                       child: Column(
                         children: [
                           Padding(
@@ -205,10 +213,10 @@ class _SignUpCustomerState extends State<SignUpCustomer> {
                                     color: Color(0x0ff655D64),
                                     fontWeight: FontWeight.w400,
                                   ),
-                                  text: 'Agreed to the ',
+                                  text: '${'Agreed to the'.tr()} ',
                                   children: [
                                     TextSpan(
-                                      text: 'terms',
+                                      text: 'terms'.tr(),
                                       recognizer: TapGestureRecognizer()
                                         ..onTap = () {
                                           Navigator.push(
@@ -223,17 +231,18 @@ class _SignUpCustomerState extends State<SignUpCustomer> {
                                       ),
                                     ),
                                     TextSpan(
-                                      text: ' and ',
+                                      text: ' ${'and'.tr()} ',
                                       style: TextStyle(),
                                     ),
                                     TextSpan(
-                                      text: 'conditions',
+                                      text: 'conditions'.tr(),
                                       recognizer: TapGestureRecognizer()
                                         ..onTap = () {
                                           Navigator.push(
                                               context,
                                               MaterialPageRoute(
-                                                builder: (context) => Conditions(),
+                                                builder: (context) =>
+                                                    Conditions(),
                                               ));
                                         },
                                       style: TextStyle(
@@ -256,22 +265,50 @@ class _SignUpCustomerState extends State<SignUpCustomer> {
                       padding: kPadding,
                       child: Button(
                         title: 'Sign up'.tr(),
+                        loading: loading,
                         onPressed: agree
                             ? () async {
-                                LatLng initialPosition =
+                                if (_formKey.currentState.validate()) {
+                                  setState(() {
+                                    loading = true;
+                                  });
+                                  LoginResponse userResponse =
+                                      await GlobalController().register(
+                                          email: emailController.text,
+                                          password: passwordController.text,
+                                          name: nameController.text,
+                                          confirmPassword:
+                                              retypePasswordController.text,
+                                          type: 1);
+                                  if (userResponse.status &&
+                                      userResponse.code == 200) {
+                                    Data.sharedPreferencesController
+                                        .setIsLogin(true);
+                                    Data.sharedPreferencesController
+                                        .setUserData(userResponse.user);
+                                    Data.currentUser = userResponse.user;
+                                    LatLng initialPosition =
                                     await Constants.getCurrentLocation(
                                         context: context);
-                                if (initialPosition != null) {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => PlacePickerScreen(
-                                          initialPosition: initialPosition,
-                                          onPlacePicked: (p0) {
-                                            Navigator.pop(context);
-                                          },
-                                        ),
-                                      ));
+                                    if (initialPosition != null) {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => PlacePickerScreen(
+                                              initialPosition: initialPosition,
+                                              onPlacePicked: (p0) {
+                                                Navigator.pop(context);
+                                              },
+                                            ),
+                                          ));
+                                    }
+                                  } else {
+                                    BotToast.showText(
+                                        text: userResponse.message);
+                                  }
+                                  setState(() {
+                                    loading = false;
+                                  });
                                 }
                               }
                             : null,
@@ -349,7 +386,7 @@ class _SignUpCustomerState extends State<SignUpCustomer> {
                             color: kTextColor,
                             fontWeight: FontWeight.w400,
                           ),
-                          text: 'I Already have an account?',
+                          text: 'I Already have an account?'.tr(),
                           children: [
                             TextSpan(
                               text: ' ',
@@ -359,7 +396,7 @@ class _SignUpCustomerState extends State<SignUpCustomer> {
                               ),
                             ),
                             TextSpan(
-                              text: 'Sign In',
+                              text: 'Sign In'.tr(),
                               style: TextStyle(
                                 color: kPrimaryColor,
                                 fontWeight: FontWeight.w600,

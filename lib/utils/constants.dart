@@ -67,9 +67,9 @@ class Constants {
   };
 
   List<Option> urgencyOptions = [
-    Option(id: 1, title: 'Low'),
-    Option(id: 2, title: 'High'),
-    Option(id: 3, title: 'Emergency'),
+    Option(id: 1, title: 'LOW'),
+    Option(id: 2, title: 'HIGH'),
+    Option(id: 3, title: 'EMERGENCY'),
   ];
 
   static TextStyle applyStyle(
@@ -179,31 +179,6 @@ class Constants {
   }
 }
 
-showAlert({@required BuildContext context, String error}) {
-  showDialog(
-    context: context,
-    builder: (context) => AlertDialog(
-      backgroundColor: purpleColor,
-      title: Text(
-        error.replaceAll(',', '\n'),
-        style: TextStyle(fontSize: 14, color: Colors.white),
-      ),
-      actions: [
-        TextButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          style: ButtonStyle(
-              backgroundColor: MaterialStateProperty.all(Colors.white)),
-          child: Text(
-            'Ok'.tr(),
-            style: TextStyle(color: kTextColor),
-          ),
-        ),
-      ],
-    ),
-  );
-}
 
 class FieldValidator {
   static String validate(String value, context) {

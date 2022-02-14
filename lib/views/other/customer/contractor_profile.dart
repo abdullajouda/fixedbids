@@ -4,7 +4,7 @@ import 'package:fixed_bids/widgets/app_bar.dart';
 import 'package:fixed_bids/widgets/button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-
+import 'package:easy_localization/easy_localization.dart';
 class ContractorProfile extends StatefulWidget {
   final int withRequest;
   final int id;
@@ -95,7 +95,7 @@ class _ContractorProfileState extends State<ContractorProfile> {
                                     height: 8,
                                   ),
                                   Text(
-                                    'Job Done',
+                                    'Job Done'.tr(),
                                     style: Constants.applyStyle(
                                       size: 14,
                                       fontWeight: FontWeight.w400,
@@ -117,7 +117,7 @@ class _ContractorProfileState extends State<ContractorProfile> {
                                     height: 8,
                                   ),
                                   Text(
-                                    'Avg. Ratings',
+                                    'Avg. Ratings'.tr(),
                                     style: Constants.applyStyle(
                                       size: 14,
                                       fontWeight: FontWeight.w400,
@@ -129,7 +129,7 @@ class _ContractorProfileState extends State<ContractorProfile> {
                               Column(
                                 children: [
                                   Text(
-                                    '\$29',
+                                    '\$${Data.currentUser.avgRate.toString()}',
                                     style: Constants.applyStyle(
                                       size: 18,
                                       fontWeight: FontWeight.w600,
@@ -139,7 +139,7 @@ class _ContractorProfileState extends State<ContractorProfile> {
                                     height: 8,
                                   ),
                                   Text(
-                                    'St. Rate',
+                                    'St. Rate'.tr(),
                                     style: Constants.applyStyle(
                                       size: 14,
                                       fontWeight: FontWeight.w400,
@@ -157,7 +157,7 @@ class _ContractorProfileState extends State<ContractorProfile> {
                             padding: const EdgeInsets.symmetric(horizontal: 22),
                             child: actionTaken == 1
                                 ? Button(
-                                    title: 'Message',
+                                    title: 'Message'.tr(),
                                     onPressed: () {},
                                   )
                                 : Row(
@@ -165,7 +165,7 @@ class _ContractorProfileState extends State<ContractorProfile> {
                                       if (widget.withRequest == 1)
                                         Expanded(
                                           child: Button(
-                                            title: 'Action',
+                                            title: 'Action'.tr(),
                                             onPressed: () {
                                               setState(() {
                                                 actionTaken = 1;
@@ -204,14 +204,14 @@ class _ContractorProfileState extends State<ContractorProfile> {
                                                         MainAxisSize.min,
                                                     children: [
                                                       Button(
-                                                        title: 'Accept',
+                                                        title: 'Accept'.tr(),
                                                         onPressed: () {},
                                                       ),
                                                       SizedBox(
                                                         height: 15,
                                                       ),
                                                       Button(
-                                                        title: 'Decline',
+                                                        title: 'Decline'.tr(),
                                                         color: Colors.white,
                                                         fontColor:
                                                             HexColor('#263238'),
@@ -228,7 +228,7 @@ class _ContractorProfileState extends State<ContractorProfile> {
                                       else
                                         Expanded(
                                           child: Button(
-                                            title: 'Message',
+                                            title: 'Message'.tr(),
                                             onPressed: () {},
                                           ),
                                         ),
@@ -238,7 +238,7 @@ class _ContractorProfileState extends State<ContractorProfile> {
                                       if (widget.withRequest == 1)
                                         Expanded(
                                           child: Button(
-                                            title: 'Message',
+                                            title: 'Message'.tr(),
                                             color: Colors.white,
                                             fontColor: HexColor('#263238'),
                                             hasBorder: true,
@@ -248,7 +248,7 @@ class _ContractorProfileState extends State<ContractorProfile> {
                                       else
                                         Expanded(
                                           child: Button(
-                                            title: 'Hire Me',
+                                            title: 'Hire Me'.tr(),
                                             color: Colors.white,
                                             fontColor: HexColor('#263238'),
                                             hasBorder: true,
@@ -299,7 +299,7 @@ class _ContractorProfileState extends State<ContractorProfile> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Skills',
+                    'Skills'.tr(),
                     style: Constants.applyStyle(
                       fontWeight: FontWeight.w600,
                       size: 18,
@@ -344,7 +344,7 @@ class _ContractorProfileState extends State<ContractorProfile> {
                     height: 20,
                   ),
                   Text(
-                    'Client Reviews',
+                    'Client Reviews'.tr(),
                     style: Constants.applyStyle(
                       fontWeight: FontWeight.w600,
                       size: 18,

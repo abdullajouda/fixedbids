@@ -83,7 +83,7 @@ class _CreateJobState extends State<CreateJob> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: buildAppBar(title: 'Job details'),
+      appBar: buildAppBar(title: 'Job details'.tr()),
       body: SingleChildScrollView(
           padding: EdgeInsets.symmetric(horizontal: 24, vertical: 10),
           child: Form(
@@ -91,7 +91,7 @@ class _CreateJobState extends State<CreateJob> {
             child: Column(
               children: [
                 buildContainer(
-                    title: 'Photo',
+                    title: 'Photo'.tr(),
                     body: CupertinoButton(
                         padding: EdgeInsets.zero,
                         minSize: 0,
@@ -111,24 +111,32 @@ class _CreateJobState extends State<CreateJob> {
                                   fit: BoxFit.cover,
                                 ),
                               )
-                            : Stack(
-                                alignment: Alignment.center,
-                                children: [
-                                  SvgPicture.asset(
-                                      'assets/images/blue_box.svg'),
-                                  Row(
-                                    mainAxisSize: MainAxisSize.min,
+                            : widget.job != null
+                                ? ClipRRect(
+                                    borderRadius: BorderRadius.circular(10),
+                                    child: Image.network(
+                                      widget.job.image,
+                                      fit: BoxFit.cover,
+                                    ),
+                                  )
+                                : Stack(
+                                    alignment: Alignment.center,
                                     children: [
                                       SvgPicture.asset(
-                                          'assets/icons/images.svg'),
-                                      SizedBox(
-                                        width: 12,
-                                      ),
-                                      Text('Upload a photo')
+                                          'assets/images/blue_box.svg'),
+                                      Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          SvgPicture.asset(
+                                              'assets/icons/images.svg'),
+                                          SizedBox(
+                                            width: 12,
+                                          ),
+                                          Text('Upload a photo'.tr())
+                                        ],
+                                      )
                                     ],
-                                  )
-                                ],
-                              ))),
+                                  ))),
                 Container(
                   width: double.infinity,
                   margin: EdgeInsets.only(bottom: 20),
@@ -148,7 +156,7 @@ class _CreateJobState extends State<CreateJob> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Job title',
+                        'Job title'.tr(),
                         style: Constants.applyStyle(
                             size: 18, fontWeight: FontWeight.w500),
                       ),
@@ -156,7 +164,7 @@ class _CreateJobState extends State<CreateJob> {
                         height: 15,
                       ),
                       CustomTextField(
-                        label: 'Type here',
+                        label: 'Type here'.tr(),
                         required: true,
                         controller: titleController,
                         focusNode: titleNode,
@@ -166,7 +174,7 @@ class _CreateJobState extends State<CreateJob> {
                         height: 23,
                       ),
                       Text(
-                        'Urgency',
+                        'Urgency'.tr(),
                         style: Constants.applyStyle(
                             size: 18, fontWeight: FontWeight.w500),
                       ),
@@ -178,7 +186,7 @@ class _CreateJobState extends State<CreateJob> {
                         focusNode: urgencyNode,
                         validator: (value) {
                           if (value == null) {
-                            return '* Required';
+                            return '* Required'.tr();
                           }
                           return null;
                         },
@@ -198,13 +206,13 @@ class _CreateJobState extends State<CreateJob> {
                               ),
                             )
                             .toList(),
-                        decoration: inputDecoration(hint: 'Select'),
+                        decoration: inputDecoration(hint: 'Select'.tr()),
                       ),
                       SizedBox(
                         height: 23,
                       ),
                       Text(
-                        'Location',
+                        'Location'.tr(),
                         style: Constants.applyStyle(
                             size: 18, fontWeight: FontWeight.w500),
                       ),
@@ -212,7 +220,7 @@ class _CreateJobState extends State<CreateJob> {
                         height: 15,
                       ),
                       CustomTextField(
-                        label: 'Enter ZIP code',
+                        label: 'Enter ZIP code'.tr(),
                         required: true,
                         readOnly: true,
                         controller: locationController,
@@ -250,9 +258,9 @@ class _CreateJobState extends State<CreateJob> {
                   ),
                 ),
                 buildContainer(
-                    title: 'How much are you willing to pay?',
+                    title: 'How much are you willing to pay?'.tr(),
                     body: CustomTextField(
-                        label: 'Type amount here',
+                        label: 'Type amount here'.tr(),
                         required: true,
                         controller: amountController,
                         focusNode: amountNode,
@@ -260,9 +268,9 @@ class _CreateJobState extends State<CreateJob> {
                         inputType: TextInputType.number,
                         prefix: Text('\$ '))),
                 buildContainer(
-                    title: 'Details',
+                    title: 'Details'.tr(),
                     body: CustomTextField(
-                      label: 'Type details',
+                      label: 'Type details'.tr(),
                       required: true,
                       controller: detailsController,
                       focusNode: detailsNode,
@@ -292,7 +300,7 @@ class _CreateJobState extends State<CreateJob> {
         padding: EdgeInsets.symmetric(horizontal: 22, vertical: 20),
         child: Center(
           child: Button(
-            title: 'Publish',
+            title: widget.job != null ? 'Edit'.tr() : 'Publish'.tr(),
             loading: loading,
             onPressed: () async {
               if (!_formKey.currentState.validate()) {

@@ -29,7 +29,7 @@ class Job {
   int userId;
   int serviceId;
   String title;
-  int price;
+  double price;
   String details;
   String zipCode;
   int urgencyType;
@@ -51,7 +51,7 @@ class Job {
         userId: json["user_id"],
         serviceId: json["service_id"],
         title: json["title"],
-        price: json["price"],
+        price: json["price"]!=null?double.parse(json["price"].toString()):null,
         details: json["details"],
         zipCode: json["zip_code"],
         urgencyType: json["urgency_type"],
@@ -65,7 +65,7 @@ class Job {
         createdAt: DateTime.parse(json["created_at"]),
         distance: json["distance"],
         user: User.fromJson(json["user"]),
-        service: Service.fromJson(json["service"]),
+        service:json["service"]!=null? Service.fromJson(json["service"]):null,
         attachments: json["attachments"] != null
             ? List<Attachment>.from(
                 json["attachments"].map((x) => Attachment.fromJson(x)))

@@ -85,14 +85,14 @@ class _AccountTypeState extends State<AccountType> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      'I want to',
+                                      'I want to'.tr(),
                                       style: Constants.applyStyle(
                                           color: Colors.white,
                                           size: 14,
                                           fontWeight: FontWeight.w600),
                                     ),
                                     Text(
-                                      'Hire a pro',
+                                      'Hire a pro'.tr(),
                                       style: Constants.applyStyle(
                                           color: Colors.white,
                                           size: 22,
@@ -102,7 +102,7 @@ class _AccountTypeState extends State<AccountType> {
                                       height: 30,
                                     ),
                                     Text(
-                                      'Get a professional and talented service provider!',
+                                      'Get a professional and talented service provider!'.tr(),
                                       style: Constants.applyStyle(
                                           color: Colors.white,
                                           size: 18,
@@ -173,14 +173,14 @@ class _AccountTypeState extends State<AccountType> {
                                               CrossAxisAlignment.start,
                                           children: [
                                             Text(
-                                              'I want to',
+                                              'I want to'.tr(),
                                               style: Constants.applyStyle(
                                                   color: Color(0x0ff474747),
                                                   size: 14,
                                                   fontWeight: FontWeight.w600),
                                             ),
                                             Text(
-                                              'Find a job',
+                                              'Find a job'.tr(),
                                               style: Constants.applyStyle(
                                                   color: Color(0x0ff474747),
                                                   size: 22,
@@ -190,7 +190,7 @@ class _AccountTypeState extends State<AccountType> {
                                               height: 30,
                                             ),
                                             Text(
-                                              'Meet new customers and get a good job with superb earning!',
+                                              'Meet new customers and get a good job with superb earning!'.tr(),
                                               style: Constants.applyStyle(
                                                   color: Color(0x0ff474747),
                                                   size: 18,
@@ -238,7 +238,7 @@ class _AccountTypeState extends State<AccountType> {
                             color: kTextColor,
                             fontWeight: FontWeight.w400,
                           ),
-                          text: 'I Already have an account?',
+                          text: 'I Already have an account?'.tr(),
                           children: [
                             TextSpan(
                               text: ' ',
@@ -248,7 +248,7 @@ class _AccountTypeState extends State<AccountType> {
                               ),
                             ),
                             TextSpan(
-                              text: 'Sign In',
+                              text: 'Sign In'.tr(),
                               style: TextStyle(
                                 color: kPrimaryColor,
                                 fontWeight: FontWeight.w600,

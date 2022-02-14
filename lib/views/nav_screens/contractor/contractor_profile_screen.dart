@@ -1,24 +1,17 @@
 import 'package:fixed_bids/utils/constants.dart';
 import 'package:fixed_bids/controllers/global_controller.dart';
-import 'package:fixed_bids/controllers/user_controller.dart';
-import 'package:fixed_bids/external/lib/src/place_picker.dart';
-import 'package:fixed_bids/models/responses/login_response.dart';
 import 'package:fixed_bids/models/responses/profile_response.dart';
-import 'package:fixed_bids/views/auth/sign_in.dart';
 import 'package:fixed_bids/views/other/contractor/edit_my_services.dart';
 import 'package:fixed_bids/views/other/contractor/edit_profile.dart';
-import 'package:fixed_bids/views/other/settings.dart';
-import 'package:fixed_bids/views/place_picker.dart';
 import 'package:fixed_bids/views/root.dart';
 import 'package:fixed_bids/widgets/app_bar.dart';
 import 'package:fixed_bids/widgets/icon_button.dart';
 import 'package:fixed_bids/widgets/loading.dart';
-import 'package:fixed_bids/widgets/text_field.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class ContractorProfileScreen extends StatefulWidget {
   const ContractorProfileScreen({Key key}) : super(key: key);
@@ -63,9 +56,9 @@ class _ContractorProfileScreenState extends State<ContractorProfileScreen> {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Loading();
           }
-          return  SingleChildScrollView(
-            padding: EdgeInsets.symmetric(horizontal: 22)
-                .add(EdgeInsets.only(top: appbar.preferredSize.height, bottom: 30)),
+          return SingleChildScrollView(
+            padding: EdgeInsets.symmetric(horizontal: 22).add(
+                EdgeInsets.only(top: appbar.preferredSize.height, bottom: 30)),
             child: Column(
               children: [
                 SizedBox(
@@ -113,7 +106,8 @@ class _ContractorProfileScreenState extends State<ContractorProfileScreen> {
                                 height: 27,
                               ),
                               Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
                                 children: [
                                   Column(
                                     children: [
@@ -129,7 +123,7 @@ class _ContractorProfileScreenState extends State<ContractorProfileScreen> {
                                         height: 8,
                                       ),
                                       Text(
-                                        'Job Done',
+                                        'Job Done'.tr(),
                                         style: Constants.applyStyle(
                                           size: 14,
                                           fontWeight: FontWeight.w400,
@@ -151,7 +145,7 @@ class _ContractorProfileScreenState extends State<ContractorProfileScreen> {
                                         height: 8,
                                       ),
                                       Text(
-                                        'Avg. Ratings',
+                                        'Avg. Ratings'.tr(),
                                         style: Constants.applyStyle(
                                           size: 14,
                                           fontWeight: FontWeight.w400,
@@ -163,7 +157,7 @@ class _ContractorProfileScreenState extends State<ContractorProfileScreen> {
                                   Column(
                                     children: [
                                       Text(
-                                        '\$29',
+                                        '\$${snapshot.data.item.avgRate.toString()}',
                                         style: Constants.applyStyle(
                                           size: 18,
                                           fontWeight: FontWeight.w600,
@@ -173,7 +167,7 @@ class _ContractorProfileScreenState extends State<ContractorProfileScreen> {
                                         height: 8,
                                       ),
                                       Text(
-                                        'St. Rate',
+                                        'St. Rate'.tr(),
                                         style: Constants.applyStyle(
                                           size: 14,
                                           fontWeight: FontWeight.w400,
@@ -227,8 +221,8 @@ class _ContractorProfileScreenState extends State<ContractorProfileScreen> {
                                     Radius.elliptical(9999, 9999),
                                   ),
                                   child: Center(
-                                    child:
-                                    SvgPicture.asset('assets/icons/camera.svg'),
+                                    child: SvgPicture.asset(
+                                        'assets/icons/camera.svg'),
                                   ),
                                 ),
                               ),
@@ -263,7 +257,7 @@ class _ContractorProfileScreenState extends State<ContractorProfileScreen> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            'Skills',
+                            'Skills'.tr(),
                             style: Constants.applyStyle(
                               fontWeight: FontWeight.w600,
                               size: 18,
@@ -279,13 +273,14 @@ class _ContractorProfileScreenState extends State<ContractorProfileScreen> {
                                     ),
                                   )).then((value) {
                                 setState(() {
-                                  _future = GlobalController().getProfileById(id: Data.currentUser.id);
+                                  _future = GlobalController()
+                                      .getProfileById(id: Data.currentUser.id);
                                 });
                               });
                             },
                             padding: EdgeInsets.zero,
                             child: Text(
-                              'Edit',
+                              'Edit'.tr(),
                               style: Constants.applyStyle(
                                 fontWeight: FontWeight.w600,
                                 color: kPrimaryColor,
@@ -304,14 +299,15 @@ class _ContractorProfileScreenState extends State<ContractorProfileScreen> {
                         runSpacing: 10,
                         children: List.generate(
                           snapshot.data.item.servises.length,
-                              (index) => Container(
+                          (index) => Container(
                             decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(20),
                                 color: Color.fromRGBO(232, 241, 255, 1)),
-                            padding:
-                            EdgeInsets.symmetric(vertical: 4, horizontal: 7.5),
+                            padding: EdgeInsets.symmetric(
+                                vertical: 4, horizontal: 7.5),
                             child: Text(
-                              snapshot.data.item.servises[index].service.name ?? '',
+                              snapshot.data.item.servises[index].service.name ??
+                                  '',
                               style: Constants.applyStyle(
                                   size: 12,
                                   color: Color.fromRGBO(31, 113, 237, 1),
@@ -334,7 +330,7 @@ class _ContractorProfileScreenState extends State<ContractorProfileScreen> {
                         height: 20,
                       ),
                       Text(
-                        'Client Reviews',
+                        'Client Reviews'.tr(),
                         style: Constants.applyStyle(
                           fontWeight: FontWeight.w600,
                           size: 18,
@@ -344,7 +340,7 @@ class _ContractorProfileScreenState extends State<ContractorProfileScreen> {
                         height: 30,
                       ),
                       ListView.builder(
-                        itemCount:  snapshot.data.item.reviews.length,
+                        itemCount: snapshot.data.item.reviews.length,
                         shrinkWrap: true,
                         padding: EdgeInsets.zero,
                         physics: NeverScrollableScrollPhysics(),
@@ -359,7 +355,15 @@ class _ContractorProfileScreenState extends State<ContractorProfileScreen> {
                                     height: 45,
                                     width: 45,
                                     decoration: BoxDecoration(
-                                      color: kPrimaryColor,
+                                      color: kPrimaryColor.withOpacity(0.2),
+                                      image: DecorationImage(
+                                          image: NetworkImage(snapshot
+                                              .data
+                                              .item
+                                              .reviews[index]
+                                              .user
+                                              .imageProfile),
+                                          fit: BoxFit.cover),
                                       borderRadius: BorderRadius.all(
                                         Radius.elliptical(9999, 9999),
                                       ),
@@ -369,10 +373,12 @@ class _ContractorProfileScreenState extends State<ContractorProfileScreen> {
                                     width: 17,
                                   ),
                                   Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        snapshot.data.item.reviews[index].user.name,
+                                        snapshot
+                                            .data.item.reviews[index].user.name,
                                         style: Constants.applyStyle(
                                           fontWeight: FontWeight.w600,
                                           size: 16,
@@ -384,7 +390,9 @@ class _ContractorProfileScreenState extends State<ContractorProfileScreen> {
                                       Row(
                                         children: [
                                           Text(
-                                            snapshot.data.item.reviews[index].rate.toString(),
+                                            snapshot
+                                                .data.item.reviews[index].rate
+                                                .toString(),
                                             style: Constants.applyStyle(
                                                 fontWeight: FontWeight.w600,
                                                 size: 14,
@@ -394,7 +402,9 @@ class _ContractorProfileScreenState extends State<ContractorProfileScreen> {
                                             width: 8,
                                           ),
                                           RatingBar.builder(
-                                            initialRating: snapshot.data.item.reviews[index].rate.toDouble(),
+                                            initialRating: snapshot
+                                                .data.item.reviews[index].rate
+                                                .toDouble(),
                                             minRating: 1,
                                             direction: Axis.horizontal,
                                             itemSize: 13.45,
@@ -406,8 +416,7 @@ class _ContractorProfileScreenState extends State<ContractorProfileScreen> {
                                               color: kPrimaryColor,
                                             ),
                                             ignoreGestures: true,
-                                            onRatingUpdate: (rating) {
-                                             },
+                                            onRatingUpdate: (rating) {},
                                           )
                                         ],
                                       ),
@@ -422,7 +431,7 @@ class _ContractorProfileScreenState extends State<ContractorProfileScreen> {
                                 snapshot.data.item.reviews[index].comment,
                                 style: Constants.applyStyle(
                                     color: HexColor('#655D64'), size: 16),
-                               ),
+                              ),
                               SizedBox(
                                 height: 30,
                               ),
@@ -437,7 +446,7 @@ class _ContractorProfileScreenState extends State<ContractorProfileScreen> {
             ),
           );
         },
-       ),
+      ),
     );
   }
 }

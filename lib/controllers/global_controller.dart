@@ -86,7 +86,7 @@ class GlobalController {
     return userResponse;
   }
 
-  Future<ApiResponse> register({
+  Future<LoginResponse> register({
     String email,
     String password,
     String confirmPassword,
@@ -103,14 +103,14 @@ class GlobalController {
         'password': password,
         'confirm_password': confirmPassword,
         'type': type.toString(),
-        'latitude': latitude,
-        'longitude': longitude,
+        'latitude': latitude ?? '',
+        'longitude': longitude ?? '',
       },
       headers: Constants().headers,
     );
     var output = json.decode(response.body);
     print(output);
-    ApiResponse userResponse = ApiResponse.fromJson(output);
+    LoginResponse userResponse = LoginResponse.fromJson(output);
     return userResponse;
   }
 
@@ -168,7 +168,7 @@ class GlobalController {
       Data.currentUser.completeJobCount = response.item.completeJobCount;
       Data.currentUser.rate = response.item.rate;
       Data.currentUser.servises = response.item.servises;
-     }
+    }
     return response;
   }
 

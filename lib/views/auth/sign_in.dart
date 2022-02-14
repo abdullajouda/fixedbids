@@ -279,7 +279,7 @@ class _SignInState extends State<SignIn> {
                       color: kTextColor,
                       fontWeight: FontWeight.w400,
                     ),
-                    text: 'Don’t have an account?',
+                    text: 'Don’t have an account?'.tr(),
                     children: [
                       TextSpan(
                         text: ' ',
@@ -289,7 +289,7 @@ class _SignInState extends State<SignIn> {
                         ),
                       ),
                       TextSpan(
-                        text: 'Sign Up',
+                        text: 'Sign Up'.tr(),
                         style: TextStyle(
                           color: kPrimaryColor,
                           fontWeight: FontWeight.w600,

@@ -16,7 +16,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-
+import 'package:easy_localization/easy_localization.dart';
 class ContractorProfileEdit extends StatefulWidget {
   const ContractorProfileEdit({Key key}) : super(key: key);
 
@@ -143,7 +143,7 @@ class _ContractorProfileEditState extends State<ContractorProfileEdit> {
                                     height: 8,
                                   ),
                                   Text(
-                                    'Job Done',
+                                    'Job Done'.tr(),
                                     style: Constants.applyStyle(
                                       size: 14,
                                       fontWeight: FontWeight.w400,
@@ -165,7 +165,7 @@ class _ContractorProfileEditState extends State<ContractorProfileEdit> {
                                     height: 8,
                                   ),
                                   Text(
-                                    'Avg. Ratings',
+                                    'Avg. Ratings'.tr(),
                                     style: Constants.applyStyle(
                                       size: 14,
                                       fontWeight: FontWeight.w400,
@@ -177,7 +177,7 @@ class _ContractorProfileEditState extends State<ContractorProfileEdit> {
                               Column(
                                 children: [
                                   Text(
-                                    '\$29',
+                                    '\$${Data.currentUser.avgRate.toString()}',
                                     style: Constants.applyStyle(
                                       size: 18,
                                       fontWeight: FontWeight.w600,
@@ -187,7 +187,7 @@ class _ContractorProfileEditState extends State<ContractorProfileEdit> {
                                     height: 8,
                                   ),
                                   Text(
-                                    'St. Rate',
+                                    'St. Rate'.tr(),
                                     style: Constants.applyStyle(
                                       size: 14,
                                       fontWeight: FontWeight.w400,
@@ -275,8 +275,8 @@ class _ContractorProfileEditState extends State<ContractorProfileEdit> {
                 child: Column(
                   children: [
                     BuildInfoField(
-                      title: 'Name',
-                      buttonTitle: 'Edit',
+                      title: 'Name'.tr(),
+                      buttonTitle: 'Edit'.tr(),
                       controller: nameController,
                       loading: isNameLoading,
                       function: () async {
@@ -295,8 +295,8 @@ class _ContractorProfileEditState extends State<ContractorProfileEdit> {
                       },
                     ),
                     BuildInfoField(
-                      title: 'Email',
-                      buttonTitle: 'Edit',
+                      title: 'Email'.tr(),
+                      buttonTitle: 'Edit'.tr(),
                       controller: emailController,
                       loading: isEmailLoading,
                       function: () async {
@@ -321,7 +321,7 @@ class _ContractorProfileEditState extends State<ContractorProfileEdit> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              'Password',
+                              'Password'.tr(),
                               style: Constants.applyStyle(
                                   size: 18,
                                   color: HexColor('#444444'),
@@ -334,7 +334,7 @@ class _ContractorProfileEditState extends State<ContractorProfileEdit> {
                                 minSize: 0,
                                 padding: EdgeInsets.symmetric(horizontal: 5),
                                 child: Text(
-                                  'Save',
+                                  'Save'.tr(),
                                   style: Constants.applyStyle(
                                       size: 14,
                                       color: kPrimaryColor,
@@ -378,7 +378,7 @@ class _ContractorProfileEditState extends State<ContractorProfileEdit> {
                                 minSize: 0,
                                 padding: EdgeInsets.symmetric(horizontal: 5),
                                 child: Text(
-                                  'Change',
+                                  'Change'.tr(),
                                   style: Constants.applyStyle(
                                       size: 14,
                                       color: kPrimaryColor,
@@ -403,7 +403,7 @@ class _ContractorProfileEditState extends State<ContractorProfileEdit> {
                                 focusNode: oldPasswordNode,
                                 nextFocusNode: newPasswordNode,
                                 obscure: oldPasswordObscure,
-                                label: 'Old password',
+                                label: 'Old password'.tr(),
                               ),
                               SizedBox(
                                 height: 18,
@@ -413,7 +413,7 @@ class _ContractorProfileEditState extends State<ContractorProfileEdit> {
                                 focusNode: newPasswordNode,
                                 nextFocusNode: confirmPasswordNode,
                                 obscure: newPasswordObscure,
-                                label: 'New password',
+                                label: 'New password'.tr(),
                               ),
                               SizedBox(
                                 height: 18,
@@ -423,7 +423,7 @@ class _ContractorProfileEditState extends State<ContractorProfileEdit> {
                                 focusNode: confirmPasswordNode,
                                 nextFocusNode: null,
                                 obscure: confirmPasswordObscure,
-                                label: 'Retype password',
+                                label: 'Retype password'.tr(),
                               ),
                             ],
                           )
@@ -466,8 +466,8 @@ class _ContractorProfileEditState extends State<ContractorProfileEdit> {
                       ],
                     ),
                     BuildInfoField(
-                      title: 'Location',
-                      buttonTitle: 'Edit',
+                      title: 'Location'.tr(),
+                      buttonTitle: 'Edit'.tr(),
                       readOnly: true,
                       controller: locationController,
                       loading: isLocationLoading,
@@ -533,7 +533,7 @@ class _ContractorProfileEditState extends State<ContractorProfileEdit> {
                             width: 15,
                           ),
                           Text(
-                            'Log out',
+                            'Log out'.tr(),
                             style: TextStyle(color: HexColor('FF0000')),
                           )
                         ],
@@ -599,7 +599,7 @@ class _BuildInfoFieldState extends State<BuildInfoField> {
                 minSize: 0,
                 padding: EdgeInsets.symmetric(horizontal: 5),
                 child: Text(
-                  'Save',
+                  'Save'.tr(),
                   style: Constants.applyStyle(
                       size: 14,
                       color: kPrimaryColor,

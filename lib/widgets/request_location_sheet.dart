@@ -6,7 +6,7 @@ import 'package:android_intent/android_intent.dart';
 import 'package:fixed_bids/widgets/button.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
-
+import 'package:easy_localization/easy_localization.dart';
 class RequestLocationSheet extends StatefulWidget {
   @override
   _RequestLocationSheetState createState() => _RequestLocationSheetState();
@@ -54,7 +54,7 @@ class _RequestLocationSheetState extends State<RequestLocationSheet> {
         Container(
           margin: EdgeInsets.symmetric(horizontal: 15),
           child: Text(
-            'Please Make Sure The Gps Is Enabled',
+            'Please Make Sure The Gps Is Enabled'.tr(),
             style: TextStyle(
               fontSize: 22,
               fontWeight: FontWeight.w500,
@@ -66,7 +66,7 @@ class _RequestLocationSheetState extends State<RequestLocationSheet> {
           height: 50,
         ),
         Button(
-          title: 'Go To Settings',
+          title: 'Go To Settings'.tr(),
           onPressed: () async {
             if (Platform.isAndroid) {
               final AndroidIntent intent = AndroidIntent(

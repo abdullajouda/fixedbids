@@ -6,11 +6,12 @@ import 'package:fixed_bids/models/responses/nearby_jobs_response.dart';
 import 'package:fixed_bids/views/other/contractor/contractor_job_details.dart';
 import 'package:fixed_bids/widgets/loading.dart';
 import 'package:fixed_bids/views/root.dart';
+import 'package:fixed_bids/widgets/no_data_found.dart';
 import 'package:fixed_bids/widgets/notification_button.dart';
 import 'package:flutter/material.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:pull_to_refresh/pull_to_refresh.dart';
-
+import 'package:easy_localization/easy_localization.dart';
 class ContractorHomeScreen extends StatefulWidget {
   const ContractorHomeScreen({Key key}) : super(key: key);
 
@@ -48,10 +49,12 @@ class _ContractorHomeScreenState extends State<ContractorHomeScreen> {
           elevation: 0,
           toolbarHeight: 80,
           backgroundColor: Color(0x0ffF8F8F8),
+          leadingWidth: 90,
           leading: Center(
             child: Container(
               height: 45,
               width: 45,
+              margin: EdgeInsets.symmetric(horizontal: 22),
               decoration: BoxDecoration(
                 color: Color(0x0ffF1F1F1),
                 borderRadius: BorderRadius.circular(12),
@@ -64,7 +67,7 @@ class _ContractorHomeScreenState extends State<ContractorHomeScreen> {
             ),
           ),
           title: Text(
-            'Hi, ${Data.currentUser.name}',
+            '${'Hi'.tr()}, ${Data.currentUser.name}',
             style: Constants.applyStyle(size: 22, fontWeight: FontWeight.w600),
           ),
           actions: [
@@ -151,7 +154,7 @@ class _ContractorHomeScreenState extends State<ContractorHomeScreen> {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 22),
                   child: Text(
-                    'Nearby Jobs For You 🙂',
+                    '${'Nearby Jobs For You'.tr()} 🙂',
                     style: Constants.applyStyle(
                         size: 18, fontWeight: FontWeight.w700),
                   ),
@@ -165,6 +168,11 @@ class _ContractorHomeScreenState extends State<ContractorHomeScreen> {
                       if (snapshot.connectionState == ConnectionState.waiting) {
                         return SizedBox(
                             height: Data.size.height * .4, child: Loading());
+                      }
+                      if(snapshot.data.items.isEmpty){
+                        return SizedBox(
+                            height: Data.size.height * .4,
+                            child: NoDataFound());
                       }
                       return ListView.separated(
                         itemCount: snapshot.data.items.length,

@@ -74,12 +74,12 @@ class _SelectServiceState extends State<SelectService> {
                       height: Data.size.height * .06,
                     ),
                     ListView.builder(
-                      itemCount: 10,
+                      itemCount: Data.services.items.length,
                       padding: kPadding,
                       shrinkWrap: true,
                       physics: NeverScrollableScrollPhysics(),
                       itemBuilder: (context, index) =>
-                          _checkBoxBuilder(title: 'Home cleaning'),
+                          _checkBoxBuilder(title: Data.services.items[index].name,),
                     ),
                     SizedBox(
                       height: Data.size.height * .1,

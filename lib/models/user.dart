@@ -27,6 +27,7 @@ class User {
     this.accessToken,
     this.servises,
     this.reviews,
+    this.avgRate,
   });
 
   int id;
@@ -51,6 +52,7 @@ class User {
   int totalFollowings;
   int completeJobCount;
   int rate;
+  String avgRate;
   String accessToken;
   List<Servise> servises;
   List<Review> reviews;
@@ -78,6 +80,7 @@ class User {
         totalFollowings: json["total_followings"],
         completeJobCount: json["complete_job_count"],
         rate: json["rate"],
+    avgRate: json["avg_rate"].toString(),
         accessToken: json["access_token"],
         servises: json["servises"] != null
             ? List<Servise>.from(

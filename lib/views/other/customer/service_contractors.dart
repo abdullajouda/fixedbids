@@ -1,7 +1,7 @@
 import 'package:fixed_bids/utils/constants.dart';
 import 'package:fixed_bids/widgets/app_bar.dart';
 import 'package:flutter/material.dart';
-
+import 'package:easy_localization/easy_localization.dart';
 import 'contractor_profile.dart';
 
 class ServiceProviders extends StatefulWidget {
@@ -38,7 +38,7 @@ class _ServiceProvidersState extends State<ServiceProviders> {
                   ],
                 ),
                 child: TextFormField(
-                  decoration: searchInputDecoration(hint: 'Search'),
+                  decoration: searchInputDecoration(hint: 'Search'.tr()),
                 )),
           ),
           SizedBox(
@@ -136,7 +136,7 @@ class _ServiceProvidersState extends State<ServiceProviders> {
                                   height: 14,
                                 ),
                                 Text.rich(
-                                  TextSpan(text: 'Starting', children: [
+                                  TextSpan(text: 'Starting'.tr(), children: [
                                     TextSpan(text: ' '),
                                     TextSpan(
                                       text: '\$28',

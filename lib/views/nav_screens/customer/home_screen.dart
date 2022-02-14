@@ -5,7 +5,7 @@ import 'package:fixed_bids/views/other/customer/service_contractors.dart';
 import 'package:fixed_bids/widgets/notification_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-
+import 'package:easy_localization/easy_localization.dart';
 class UserHomeScreen extends StatefulWidget {
   const UserHomeScreen({Key key}) : super(key: key);
 
@@ -31,10 +31,12 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
         elevation: 0,
         toolbarHeight: 80,
         backgroundColor: Color(0x0ffF8F8F8),
+        leadingWidth: 90,
         leading: Center(
           child: Container(
             height: 45,
             width: 45,
+            margin: EdgeInsets.symmetric(horizontal: 22),
             decoration: BoxDecoration(
               color: Color(0x0ffF1F1F1),
               borderRadius: BorderRadius.circular(12),
@@ -47,7 +49,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
           ),
         ),
         title: Text(
-          'Hi, ${Data.currentUser.name}',
+          '${'Hi'.tr()}, ${Data.currentUser.name}',
           style: Constants.applyStyle(size: 22, fontWeight: FontWeight.w600),
         ),
         actions: [
@@ -186,7 +188,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 22),
               child: Text(
-                'Recommended For You 👍',
+                '${'Recommended For You'.tr()} 👍',
                 style:
                     Constants.applyStyle(size: 18, fontWeight: FontWeight.w700),
               ),
@@ -255,7 +257,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                                   ),
                                   Text.rich(
                                     TextSpan(
-                                      text: 'from',
+                                      text: 'from'.tr(),
                                       children: [
                                         TextSpan(text: '  '),
                                         TextSpan(

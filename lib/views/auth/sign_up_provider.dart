@@ -1,10 +1,14 @@
 import 'dart:io';
 
+import 'package:bot_toast/bot_toast.dart';
+import 'package:fixed_bids/controllers/global_controller.dart';
+import 'package:fixed_bids/models/responses/login_response.dart';
 import 'package:fixed_bids/utils/constants.dart';
 import 'package:fixed_bids/views/auth/select_service.dart';
 import 'package:fixed_bids/views/auth/sign_in.dart';
 import 'package:fixed_bids/views/other/conditions.dart';
 import 'package:fixed_bids/views/other/terms.dart';
+import 'package:fixed_bids/views/root.dart';
 import 'package:fixed_bids/widgets/back_button.dart';
 import 'package:fixed_bids/widgets/button.dart';
 import 'package:fixed_bids/widgets/check_box.dart';
@@ -21,6 +25,8 @@ class SignUpProvider extends StatefulWidget {
 }
 
 class _SignUpProviderState extends State<SignUpProvider> {
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
   TextEditingController emailController,
       nameController,
       passwordController,
@@ -29,6 +35,7 @@ class _SignUpProviderState extends State<SignUpProvider> {
   bool obscure = true;
   bool obscureRetype = true;
   bool agree = false;
+  bool loading = false;
 
   @override
   void initState() {
@@ -99,6 +106,7 @@ class _SignUpProviderState extends State<SignUpProvider> {
                       height: Data.size.height * .06,
                     ),
                     Form(
+                      key: _formKey,
                       child: Column(
                         children: [
                           Padding(
@@ -203,10 +211,10 @@ class _SignUpProviderState extends State<SignUpProvider> {
                                     color: Color(0x0ff655D64),
                                     fontWeight: FontWeight.w400,
                                   ),
-                                  text: 'Agreed to the ',
+                                  text: '${'Agreed to the'.tr()} ',
                                   children: [
                                     TextSpan(
-                                      text: 'terms',
+                                      text: 'terms'.tr(),
                                       recognizer: TapGestureRecognizer()
                                         ..onTap = () {
                                           Navigator.push(
@@ -221,17 +229,18 @@ class _SignUpProviderState extends State<SignUpProvider> {
                                       ),
                                     ),
                                     TextSpan(
-                                      text: ' and ',
+                                      text: ' ${'and'.tr()} ',
                                       style: TextStyle(),
                                     ),
                                     TextSpan(
-                                      text: 'conditions',
+                                      text: 'conditions'.tr(),
                                       recognizer: TapGestureRecognizer()
                                         ..onTap = () {
                                           Navigator.push(
                                               context,
                                               MaterialPageRoute(
-                                                builder: (context) => Conditions(),
+                                                builder: (context) =>
+                                                    Conditions(),
                                               ));
                                         },
                                       style: TextStyle(
@@ -254,13 +263,41 @@ class _SignUpProviderState extends State<SignUpProvider> {
                       padding: kPadding,
                       child: Button(
                         title: 'Sign up'.tr(),
+                        loading: loading,
                         onPressed: agree
-                            ? () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => SelectService(),
-                                    ));
+                            ? () async {
+                                if (_formKey.currentState.validate()) {
+                                  setState(() {
+                                    loading = true;
+                                  });
+                                  LoginResponse userResponse =
+                                      await GlobalController().register(
+                                          email: emailController.text,
+                                          password: passwordController.text,
+                                          name: nameController.text,
+                                          confirmPassword:
+                                              retypePasswordController.text,
+                                          type: 2);
+                                  if (userResponse.status &&
+                                      userResponse.code == 200) {
+                                    Data.sharedPreferencesController
+                                        .setIsLogin(true);
+                                    Data.sharedPreferencesController
+                                        .setUserData(userResponse.user);
+                                    Data.currentUser = userResponse.user;
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => SelectService(),
+                                        ));
+                                  } else {
+                                    BotToast.showText(
+                                        text: userResponse.message);
+                                  }
+                                  setState(() {
+                                    loading = false;
+                                  });
+                                }
                               }
                             : null,
                       ),
@@ -337,7 +374,7 @@ class _SignUpProviderState extends State<SignUpProvider> {
                             color: kTextColor,
                             fontWeight: FontWeight.w400,
                           ),
-                          text: 'I Already have an account?',
+                          text: 'I Already have an account?'.tr(),
                           children: [
                             TextSpan(
                               text: ' ',
@@ -347,7 +384,7 @@ class _SignUpProviderState extends State<SignUpProvider> {
                               ),
                             ),
                             TextSpan(
-                              text: 'Sign In',
+                              text: 'Sign In'.tr(),
                               style: TextStyle(
                                 color: kPrimaryColor,
                                 fontWeight: FontWeight.w600,

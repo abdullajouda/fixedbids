@@ -96,11 +96,11 @@ class JobsController {
       'service_id': serviceId,
     };
 
-    if (deletedImages.isNotEmpty) {
-      for (int i = 0; i < deletedImages.length; i++) {
-        body.addAll({'deleted_images[$i]': '${deletedImages[i]}'});
-      }
-    }
+    // if (deletedImages.isNotEmpty) {
+    //   for (int i = 0; i < deletedImages.length; i++) {
+    //     body.addAll({'deleted_images[$i]': '${deletedImages[i]}'});
+    //   }
+    // }
 
     request.headers.addAll(Constants().headers);
     request.fields.addAll(body);
@@ -113,17 +113,17 @@ class JobsController {
 
       request.files.add(multipartFile);
     }
-    if (images.isNotEmpty) {
-      for (int i = 0; i < images.length; i++) {
-        String fileName = images[i].path.split("/").last;
-        var stream = new ByteStream(DelegatingStream(images[i].openRead()));
-        var length = await images[i].length();
-        var multipartFile =
-            new MultipartFile('images[$i]', stream, length, filename: fileName);
-
-        request.files.add(multipartFile);
-      }
-    }
+    // if (images.isNotEmpty) {
+    //   for (int i = 0; i < images.length; i++) {
+    //     String fileName = images[i].path.split("/").last;
+    //     var stream = new ByteStream(DelegatingStream(images[i].openRead()));
+    //     var length = await images[i].length();
+    //     var multipartFile =
+    //         new MultipartFile('images[$i]', stream, length, filename: fileName);
+    //
+    //     request.files.add(multipartFile);
+    //   }
+    // }
 
     Response response = await Response.fromStream(await request.send());
     var output = json.decode(response.body);

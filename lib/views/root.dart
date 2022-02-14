@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-
+import 'package:easy_localization/easy_localization.dart';
 import 'nav_screens/contractor/contractor_home_screen.dart';
 import 'nav_screens/contractor/contractor_job_history_screen.dart';
 import 'nav_screens/contractor/contractor_profile_screen.dart';
@@ -51,10 +51,12 @@ class _RootPageState extends State<RootPage>
       elevation: 0,
       toolbarHeight: 80,
       backgroundColor: Color(0x0ffF8F8F8),
+      leadingWidth: 90,
       leading: Center(
         child: Container(
           height: 45,
           width: 45,
+          margin: EdgeInsets.symmetric(horizontal: 22),
           decoration: BoxDecoration(
             color: Color(0x0ffF1F1F1),
             borderRadius: BorderRadius.circular(12),
@@ -68,7 +70,7 @@ class _RootPageState extends State<RootPage>
       ),
       centerTitle: true,
       title: Text(
-        'Job history',
+        'Job history'.tr(),
         style: Constants.applyStyle(size: 18, fontWeight: FontWeight.w600),
       ),
       actions: [
@@ -84,10 +86,12 @@ class _RootPageState extends State<RootPage>
       elevation: 0,
       toolbarHeight: 80,
       backgroundColor: Color(0x0ffF8F8F8),
+      leadingWidth: 90,
       leading: Center(
         child: Container(
           height: 45,
           width: 45,
+          margin: EdgeInsets.symmetric(horizontal: 22),
           decoration: BoxDecoration(
             color: Color(0x0ffF1F1F1),
             borderRadius: BorderRadius.circular(12),
@@ -101,7 +105,7 @@ class _RootPageState extends State<RootPage>
       ),
       centerTitle: true,
       title: Text(
-        'Messages',
+        'Messages'.tr(),
         style: Constants.applyStyle(size: 18, fontWeight: FontWeight.w600),
       ),
       actions: [
@@ -142,7 +146,7 @@ class _RootPageState extends State<RootPage>
 
     Future.delayed(
       Duration(seconds: 1),
-          () => _animationController.forward(),
+      () => _animationController.forward(),
     );
   }
 
@@ -171,47 +175,44 @@ class _RootPageState extends State<RootPage>
           scale: animation,
           child: Data.currentUser.type == '2'
               ? FloatingActionButton(
-              elevation: 8,
-              backgroundColor: kPrimaryColor,
-              child: SvgPicture.asset('assets/icons/search2.svg'),
-              onPressed: () async {
-                LatLng initialPosition =
-                await Constants.getCurrentLocation(
-                    context: context);
-                if (initialPosition != null) {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) =>
-                            NearbyJobsMap(initialPosition: initialPosition,
+                  elevation: 8,
+                  backgroundColor: kPrimaryColor,
+                  child: SvgPicture.asset('assets/icons/search2.svg'),
+                  onPressed: () async {
+                    LatLng initialPosition =
+                        await Constants.getCurrentLocation(context: context);
+                    if (initialPosition != null) {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => NearbyJobsMap(
+                              initialPosition: initialPosition,
                             ),
-                      )).then((value) {
-                    _animationController.reset();
-                    _animationController.forward();
-                  });
-                }
-
-              }
-          )
+                          )).then((value) {
+                        _animationController.reset();
+                        _animationController.forward();
+                      });
+                    }
+                  })
               : FloatingActionButton(
-            elevation: 8,
-            backgroundColor: kPrimaryColor,
-            child: Icon(
-              Icons.add_rounded,
-              size: 32,
-              color: HexColor('#FFFFFF'),
-            ),
-            onPressed: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => ChooseCategory(),
-                  )).then((value) {
-                _animationController.reset();
-                _animationController.forward();
-              });
-            },
-          ),
+                  elevation: 8,
+                  backgroundColor: kPrimaryColor,
+                  child: Icon(
+                    Icons.add_rounded,
+                    size: 32,
+                    color: HexColor('#FFFFFF'),
+                  ),
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ChooseCategory(),
+                        )).then((value) {
+                      _animationController.reset();
+                      _animationController.forward();
+                    });
+                  },
+                ),
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         bottomNavigationBar: AnimatedBottomNavigationBar.builder(

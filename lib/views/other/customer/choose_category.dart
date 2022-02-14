@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import 'create_job.dart';
-
+import 'package:easy_localization/easy_localization.dart';
 class ChooseCategory extends StatefulWidget {
   const ChooseCategory({Key key}) : super(key: key);
 
@@ -18,7 +18,7 @@ class _ChooseCategoryState extends State<ChooseCategory> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color(0x0ffF8F8F8),
-      appBar: buildAppBar(title: 'Choose category'),
+      appBar: buildAppBar(title: 'Choose category'.tr()),
       body: ListView.separated(
         itemCount: Data.services.items.length,
         padding: EdgeInsets.symmetric(horizontal: 22, vertical: 10),

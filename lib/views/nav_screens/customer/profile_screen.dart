@@ -15,7 +15,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-
+import 'package:easy_localization/easy_localization.dart';
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({Key key}) : super(key: key);
 
@@ -221,8 +221,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 child: Column(
                   children: [
                     BuildInfoField(
-                      title: 'Name',
-                      buttonTitle: 'Edit',
+                      title: 'Name'.tr(),
+                      buttonTitle: 'Edit'.tr(),
                       controller: nameController,
                       loading: isNameLoading,
                       function: () async {
@@ -241,8 +241,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       },
                     ),
                     BuildInfoField(
-                      title: 'Email',
-                      buttonTitle: 'Edit',
+                      title: 'Email'.tr(),
+                      buttonTitle: 'Edit'.tr(),
                       controller: emailController,
                       loading: isEmailLoading,
                       function: () async {
@@ -267,7 +267,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              'Password',
+                              'Password'.tr(),
                               style: Constants.applyStyle(
                                   size: 18,
                                   color: HexColor('#444444'),
@@ -280,7 +280,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 minSize: 0,
                                 padding: EdgeInsets.symmetric(horizontal: 5),
                                 child: Text(
-                                  'Save',
+                                  'Save'.tr(),
                                   style: Constants.applyStyle(
                                       size: 14,
                                       color: kPrimaryColor,
@@ -324,7 +324,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 minSize: 0,
                                 padding: EdgeInsets.symmetric(horizontal: 5),
                                 child: Text(
-                                  'Change',
+                                  'Change'.tr(),
                                   style: Constants.applyStyle(
                                       size: 14,
                                       color: kPrimaryColor,
@@ -349,7 +349,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 focusNode: oldPasswordNode,
                                 nextFocusNode: newPasswordNode,
                                 obscure: oldPasswordObscure,
-                                label: 'Old password',
+                                label: 'Old password'.tr(),
                               ),
                               SizedBox(
                                 height: 18,
@@ -359,7 +359,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 focusNode: newPasswordNode,
                                 nextFocusNode: confirmPasswordNode,
                                 obscure: newPasswordObscure,
-                                label: 'New password',
+                                label: 'New password'.tr(),
                               ),
                               SizedBox(
                                 height: 18,
@@ -369,7 +369,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 focusNode: confirmPasswordNode,
                                 nextFocusNode: null,
                                 obscure: confirmPasswordObscure,
-                                label: 'Retype password',
+                                label: 'Retype password'.tr(),
                               ),
                             ],
                           )
@@ -412,8 +412,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ],
                     ),
                     BuildInfoField(
-                      title: 'Location',
-                      buttonTitle: 'Edit',
+                      title: 'Location'.tr(),
+                      buttonTitle: 'Edit'.tr(),
                       readOnly: true,
                       controller: locationController,
                       loading: isLocationLoading,
@@ -517,7 +517,7 @@ class _BuildInfoFieldState extends State<BuildInfoField> {
                 minSize: 0,
                 padding: EdgeInsets.symmetric(horizontal: 5),
                 child: Text(
-                  'Save',
+                  'Save'.tr(),
                   style: Constants.applyStyle(
                       size: 14,
                       color: kPrimaryColor,

@@ -7,7 +7,7 @@ import 'package:fixed_bids/widgets/app_bar.dart';
 import 'package:fixed_bids/widgets/loading.dart';
 import 'package:flutter/material.dart';
 import 'package:timeago/timeago.dart' as timeago;
-
+import 'package:easy_localization/easy_localization.dart';
 import '../../utils/constants.dart';
 
 class NotificationsScreen extends StatefulWidget {
@@ -30,7 +30,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: buildAppBar(title: 'Notification', actions: []),
+      appBar: buildAppBar(title: 'Notification'.tr(), actions: []),
       body: FutureBuilder<NotificationsResponse>(
         future: _future,
         builder: (context, snapshot) {
@@ -145,14 +145,14 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                     Row(
                       children: [
                         button(
-                          title: 'Accept',
+                          title: 'Accept'.tr(),
                           onPressed: () {},
                         ),
                         SizedBox(
                           width: 20,
                         ),
                         button(
-                          title: 'Decline',
+                          title: 'Decline'.tr(),
                           color: Colors.white,
                           fontColor: HexColor('#818181'),
                           onPressed: () {},
@@ -164,7 +164,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
               ],
             ),
             Text(
-              '${DateTime.now().subtract(Duration(minutes: 10)).minute < 10 ? 'Just now' : timeago.format(DateTime.now().subtract(
+              '${DateTime.now().subtract(Duration(minutes: 10)).minute < 10 ? 'Just now'.tr() : timeago.format(DateTime.now().subtract(
                     Duration(minutes: 10),
                   ), locale: 'en_short')}',
               style: Constants.applyStyle(size: 12).copyWith(height: 1.5),

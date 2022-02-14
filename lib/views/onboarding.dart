@@ -1,8 +1,6 @@
 import 'package:fixed_bids/controllers/global_controller.dart';
 import 'package:fixed_bids/models/responses/ads_response.dart';
-import 'package:fixed_bids/models/responses/banners_response.dart';
 import 'package:fixed_bids/views/auth/sign_in.dart';
-import 'package:fixed_bids/views/auth/sign_up_customer.dart';
 import 'package:fixed_bids/widgets/button.dart';
 import 'package:fixed_bids/widgets/loading.dart';
 import 'package:flutter/cupertino.dart';
@@ -115,7 +113,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                       Padding(
                         padding: kPadding,
                         child: Button(
-                          title: 'Log into your account',
+                          title: 'Log into your account'.tr(),
                           onPressed: () {
                             Navigator.push(
                                 context,
@@ -127,7 +125,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                       ),
                       CupertinoButton(
                         child: Text(
-                          'Create an account',
+                          'Create an account'.tr(),
                           style: TextStyle(
                             fontSize: 18,
                             color: kTextColor,

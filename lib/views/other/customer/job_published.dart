@@ -2,8 +2,7 @@ import 'package:fixed_bids/utils/constants.dart';
 import 'package:fixed_bids/widgets/button.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-
+import 'package:easy_localization/easy_localization.dart';
 class JobPublished extends StatefulWidget {
   const JobPublished({Key key}) : super(key: key);
 
@@ -50,7 +49,7 @@ class _JobPublishedState extends State<JobPublished> {
                 height: 40,
               ),
               Text(
-                'Awesome!',
+                'Awesome!'.tr(),
                 style: Constants.applyStyle(
                   size: 26,
                   fontWeight: FontWeight.w700,
@@ -60,7 +59,7 @@ class _JobPublishedState extends State<JobPublished> {
                 height: 17,
               ),
               Text(
-                'Your job is publish now. We’ll notify you when your schedule is confirmed.',
+                'Your job is publish now. We’ll notify you when your schedule is confirmed.'.tr(),
                 style: Constants.applyStyle(
                     size: 18,
                     fontWeight: FontWeight.w400,
@@ -80,7 +79,7 @@ class _JobPublishedState extends State<JobPublished> {
           Padding(
             padding: const EdgeInsets.all(22.0),
             child: Button(
-              title: 'Okay',
+              title: 'Okay'.tr(),
               onPressed: () {
                 Navigator.popUntil(context, (route) => route.isFirst);
               },
@@ -90,7 +89,7 @@ class _JobPublishedState extends State<JobPublished> {
             padding: const EdgeInsets.only(bottom: 30),
             child: CupertinoButton(
               child: Text(
-                'Delete job',
+                'Delete job'.tr(),
                 style: Constants.applyStyle(
                     size: 18,
                     fontWeight: FontWeight.w600,
