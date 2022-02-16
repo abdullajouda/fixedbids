@@ -103,6 +103,11 @@
  "Go To Settings": "Go To Settings",
  "Nothing to show here.": "Nothing to show here.",
  "Type details": "Type details",
+ "Cancel": "Cancel",
+ "Confirm": "Confirm",
+ "Logout, Are you sure?": "Logout, Are you sure?",
+ "Delete this job, Are you sure?": "Delete this job, Are you sure?",
+ "": "",
  "": "",
  "": ""
 

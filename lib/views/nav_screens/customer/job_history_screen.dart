@@ -7,6 +7,7 @@ import 'package:fixed_bids/models/responses/nearby_jobs_response.dart';
 import 'package:fixed_bids/utils/constants.dart';
 import 'package:fixed_bids/views/other/open_chat.dart';
 import 'package:fixed_bids/widgets/no_data_found.dart';
+import 'package:fixed_bids/widgets/notification_button.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:fixed_bids/views/other/customer/job_details.dart';
 import 'package:fixed_bids/views/root.dart';
@@ -66,7 +67,43 @@ class _JobHistoryScreenState extends State<JobHistoryScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        elevation: 0,
+        toolbarHeight: 80,
+        backgroundColor: Color(0x0ffF8F8F8),
+        leadingWidth: 90,
+        leading: Center(
+          child: Container(
+            height: 45,
+            width: 45,
+            margin: EdgeInsets.symmetric(horizontal: 22),
+            decoration: BoxDecoration(
+              color: Color(0x0ffF1F1F1),
+              borderRadius: BorderRadius.circular(12),
+              image: DecorationImage(
+                  image: NetworkImage(
+                    Data.currentUser.imageProfile,
+                  ),
+                  fit: BoxFit.cover),
+            ),
+          ),
+        ),
+        centerTitle: true,
+        title: Text(
+          'Job history'.tr(),
+          style: Constants.applyStyle(size: 18, fontWeight: FontWeight.w600),
+        ),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 22),
+            child: Center(
+              child: NotificationButton(),
+            ),
+          )
+        ],
+      ),
       backgroundColor: kBackGroundColor,
+
       body: Column(
         children: [
           Padding(
@@ -221,7 +258,14 @@ class _JobHistoryScreenState extends State<JobHistoryScreen>
                   builder: (context) => JobDetails(
                     id: job.id,
                   ),
-                ));
+                )).then((value) {
+                  if(value){
+                    setState(() {
+                      _openFuture = UserController().getMyJobsByUser();
+                      _closedFuture = UserController().getMyJobsByUser(isOpen: 0);
+                    });
+                  }
+            });
           },
           child: Column(
             children: [
@@ -301,7 +345,11 @@ class _JobHistoryScreenState extends State<JobHistoryScreen>
                                   : 'EMERGENCY'.tr(),
                           style: Constants.applyStyle(
                               size: 14,
-                              color: HexColor('19A716'),
+                              color:job.urgencyType == 1
+                                  ? HexColor('E0A100')
+                                  : job.urgencyType == 2
+                                  ? HexColor('F76400')
+                                  : HexColor('19A716'),
                               fontWeight: FontWeight.w500),
                         ),
                       ],
@@ -317,6 +365,7 @@ class _JobHistoryScreenState extends State<JobHistoryScreen>
                     SizedBox(
                       height: 20,
                     ),
+                    if(job.providerId!=null)
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -502,6 +551,14 @@ class _JobHistoryScreenState extends State<JobHistoryScreen>
 
                       ],
                     )
+                    else
+                      Text(
+                        "No one has been assigned yet",
+                         style: TextStyle(
+                          color: Color(0xffa5a5a5),
+                          fontSize: 14,
+                        ),
+                      )
                   ],
                 ),
               )

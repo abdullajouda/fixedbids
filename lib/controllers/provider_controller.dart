@@ -18,21 +18,38 @@ class ProviderController {
     String oldPassword,
     String password,
     String confirmPassword,
+    File image
   }) async {
-    var response = await post(
-      Uri.parse("${Constants.domain}editProfile"),
-      body: {
-        'name': name,
-        'email': email,
-        'latitude': latitude,
-        'longitude': longitude,
-        'address': address,
-        'old_password': oldPassword ?? '',
-        'password': password ?? '',
-        'confirm_password': confirmPassword ?? '',
-      },
-      headers: Constants().headers,
+    var request = MultipartRequest(
+      "POST",
+      Uri.parse(
+        "${Constants.domain}editProfile",
+      ),
     );
+
+    Map<String, String> body = {
+      'name': name,
+      'email': email,
+      'latitude': latitude,
+      'longitude': longitude,
+      'address': address,
+      'old_password': oldPassword ?? '',
+      'password': password ?? '',
+      'confirm_password': confirmPassword ?? '',
+    };
+    request.headers.addAll(Constants().headers);
+    request.fields.addAll(body);
+    if (image != null) {
+      String fileName = image.path.split("/").last;
+      var stream = new ByteStream(DelegatingStream(image.openRead()));
+      var length = await image.length();
+      var multipartFile =
+      new MultipartFile('image_profile', stream, length, filename: fileName);
+
+      request.files.add(multipartFile);
+    }
+
+    Response response = await Response.fromStream(await request.send());
     var output = json.decode(response.body);
     print(output);
     LoginResponse userResponse = LoginResponse.fromJson(output);

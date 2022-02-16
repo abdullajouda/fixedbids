@@ -1,4 +1,8 @@
+import 'dart:async';
+
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
+import 'package:firebase_database/firebase_database.dart';
+import 'package:fixed_bids/controllers/notifications_controller.dart';
 import 'package:fixed_bids/utils/constants.dart';
 import 'package:fixed_bids/views/nav_screens/chat_screen.dart';
 import 'package:fixed_bids/widgets/notification_button.dart';
@@ -17,16 +21,22 @@ import 'nav_screens/customer/job_history_screen.dart';
 import 'nav_screens/customer/profile_screen.dart';
 import 'other/contractor/near_by_jobs_map.dart';
 import 'other/customer/choose_category.dart';
+import 'package:provider/provider.dart';
 
 class RootPage extends StatefulWidget {
-  const RootPage({Key key}) : super(key: key);
+  final int index;
+
+  const RootPage({Key key, this.index}) : super(key: key);
 
   @override
   _RootPageState createState() => _RootPageState();
 }
 
 class _RootPageState extends State<RootPage>
-    with SingleTickerProviderStateMixin {
+    with SingleTickerProviderStateMixin, WidgetsBindingObserver {
+  DatabaseReference _dbReference;
+  StreamSubscription<DatabaseEvent> _usersSubscription;
+
   var _bottomNavIndex = 0;
   AnimationController _animationController;
   Animation<double> animation;
@@ -45,82 +55,38 @@ class _RootPageState extends State<RootPage>
   ];
 
   List<Widget> _bodyList = [];
-  List<Widget> _appBarList = [
-    null,
-    AppBar(
-      elevation: 0,
-      toolbarHeight: 80,
-      backgroundColor: Color(0x0ffF8F8F8),
-      leadingWidth: 90,
-      leading: Center(
-        child: Container(
-          height: 45,
-          width: 45,
-          margin: EdgeInsets.symmetric(horizontal: 22),
-          decoration: BoxDecoration(
-            color: Color(0x0ffF1F1F1),
-            borderRadius: BorderRadius.circular(12),
-            image: DecorationImage(
-                image: NetworkImage(
-                  Data.currentUser.imageProfile,
-                ),
-                fit: BoxFit.cover),
-          ),
-        ),
-      ),
-      centerTitle: true,
-      title: Text(
-        'Job history'.tr(),
-        style: Constants.applyStyle(size: 18, fontWeight: FontWeight.w600),
-      ),
-      actions: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 22),
-          child: Center(
-            child: NotificationButton(),
-          ),
-        )
-      ],
-    ),
-    AppBar(
-      elevation: 0,
-      toolbarHeight: 80,
-      backgroundColor: Color(0x0ffF8F8F8),
-      leadingWidth: 90,
-      leading: Center(
-        child: Container(
-          height: 45,
-          width: 45,
-          margin: EdgeInsets.symmetric(horizontal: 22),
-          decoration: BoxDecoration(
-            color: Color(0x0ffF1F1F1),
-            borderRadius: BorderRadius.circular(12),
-            image: DecorationImage(
-                image: NetworkImage(
-                  Data.currentUser.imageProfile,
-                ),
-                fit: BoxFit.cover),
-          ),
-        ),
-      ),
-      centerTitle: true,
-      title: Text(
-        'Messages'.tr(),
-        style: Constants.applyStyle(size: 18, fontWeight: FontWeight.w600),
-      ),
-      actions: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 22),
-          child: Center(child: NotificationButton()),
-        )
-      ],
-    ),
-    null
-  ];
+
 
   @override
   void initState() {
+    _dbReference = FirebaseDatabase.instance.ref().child('Users');
+    _dbReference.keepSynced(true);
+    _dbReference.update({Data.currentUser.id.toString(): 'online'});
+    _usersSubscription = _dbReference.onValue.listen(
+      (event) {
+        context.read<NotificationsController>().resetOnlineUsers();
+        event.snapshot.children.forEach((element) {
+          print(element.key);
+          context
+              .read<NotificationsController>()
+              .updateOnlineUsers(key: element.key);
+        });
+      },
+      onError: (Object o) {
+        print('Error: ' + o.toString());
+      },
+      onDone: () {
+        // dispose();
+        print('Done Successfully !');
+      },
+    );
+
+    if (widget.index != null) {
+      _bottomNavIndex = widget.index;
+    }
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
+
     final systemTheme = SystemUiOverlayStyle.light.copyWith(
       systemNavigationBarColor: HexColor('#373A36'),
       systemNavigationBarIconBrightness: Brightness.light,
@@ -148,6 +114,24 @@ class _RootPageState extends State<RootPage>
       Duration(seconds: 1),
       () => _animationController.forward(),
     );
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      //TODO: set status to online here in firestore
+      _dbReference.update({Data.currentUser.id.toString(): 'online'});
+    } else {
+      //TODO: set status to offline here in firestore
+      _dbReference.child(Data.currentUser.id.toString()).remove();
+    }
+  }
+
+  @override
+  void dispose() {
+     _animationController.dispose();
+    super.dispose();
+    WidgetsBinding.instance.removeObserver(this);
   }
 
   @override
@@ -246,8 +230,7 @@ class _RootPageState extends State<RootPage>
           gapLocation: GapLocation.center,
           onTap: (index) => setState(() => _bottomNavIndex = index),
         ),
-        appBar: _appBarList[_bottomNavIndex],
-        body: _bodyList[_bottomNavIndex],
+         body: _bodyList[_bottomNavIndex],
       ),
     );
   }

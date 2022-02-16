@@ -8,7 +8,7 @@ import 'package:fixed_bids/models/responses/nearby_jobs_response.dart';
 import 'package:http/http.dart';
 
 class JobsController {
-  Future<ApiResponse> addNewJob({
+  Future<JobDetailsResponse> addNewJob({
     String title,
     String details,
     String price,
@@ -32,8 +32,8 @@ class JobsController {
       'price': price,
       'zip_code': zipCode,
       'urgency_type': urgencyType,
-      'latitude': latitude,
-      'longitude': longitude,
+      'latitude': latitude ?? '',
+      'longitude': longitude ?? '',
       'service_id': serviceId,
     };
     request.headers.addAll(Constants().headers);
@@ -62,7 +62,7 @@ class JobsController {
     var output = json.decode(response.body);
     print(output);
 
-    return ApiResponse.fromJson(output);
+    return JobDetailsResponse.fromJson(output);
   }
 
   Future<ApiResponse> editJob({
@@ -91,8 +91,8 @@ class JobsController {
       'price': price,
       'zip_code': zipCode,
       'urgency_type': urgencyType,
-      'latitude': latitude,
-      'longitude': longitude,
+      'latitude': latitude ?? '',
+      'longitude': longitude ?? '',
       'service_id': serviceId,
     };
 
@@ -127,6 +127,7 @@ class JobsController {
 
     Response response = await Response.fromStream(await request.send());
     var output = json.decode(response.body);
+    print(output);
 
     return ApiResponse.fromJson(output);
   }

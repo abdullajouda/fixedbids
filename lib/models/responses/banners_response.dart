@@ -14,10 +14,12 @@ class BannersResponse {
     this.code,
     this.message,
     this.items,
+    this.notifiyCount,
   });
 
   bool status;
   int code;
+  int notifiyCount;
   String message;
   List<Item> items;
 
@@ -25,6 +27,7 @@ class BannersResponse {
     status: json["status"],
     code: json["code"],
     message: json["message"],
+    notifiyCount: json["notifiy_count"],
     items: List<Item>.from(json["items"].map((x) => Item.fromJson(x))),
   );
 

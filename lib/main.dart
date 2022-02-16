@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
 
+import 'controllers/notifications_controller.dart';
 import 'utils/constants.dart';
 import 'external/lib/providers/search_provider.dart';
 
@@ -22,6 +23,9 @@ void main() async {
       ),
       ChangeNotifierProvider(
         create: (context) => SearchProvider(),
+      ),
+      ChangeNotifierProvider(
+        create: (context) => NotificationsController(),
       )
     ],
     child: EasyLocalization(
@@ -37,7 +41,8 @@ class MyApp extends StatefulWidget {
   _MyAppState createState() => _MyAppState();
 }
 
-class _MyAppState extends State<MyApp> {
+class _MyAppState extends State<MyApp>  {
+
   @override
   Widget build(BuildContext context) {
     Data.locale = context.locale;

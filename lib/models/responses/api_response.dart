@@ -6,6 +6,7 @@ class ApiResponse {
   dynamic isMore;
   dynamic url;
   dynamic chatID;
+  dynamic job;
 
   ApiResponse(
       {this.status, this.code, this.message, this.response,this.url, this.chatID,this.isMore});

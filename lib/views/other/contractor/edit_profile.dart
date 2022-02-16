@@ -1,15 +1,15 @@
+import 'dart:io';
+
+import 'package:fixed_bids/controllers/user_controller.dart';
 import 'package:fixed_bids/utils/constants.dart';
 import 'package:fixed_bids/controllers/global_controller.dart';
 import 'package:fixed_bids/controllers/provider_controller.dart';
-import 'package:fixed_bids/controllers/user_controller.dart';
-import 'package:fixed_bids/external/lib/src/place_picker.dart';
 import 'package:fixed_bids/models/responses/login_response.dart';
+import 'package:fixed_bids/utils/helper.dart';
 import 'package:fixed_bids/views/auth/sign_in.dart';
-import 'package:fixed_bids/views/other/settings.dart';
 import 'package:fixed_bids/views/place_picker.dart';
 import 'package:fixed_bids/views/root.dart';
 import 'package:fixed_bids/widgets/app_bar.dart';
-import 'package:fixed_bids/widgets/icon_button.dart';
 import 'package:fixed_bids/widgets/loading.dart';
 import 'package:fixed_bids/widgets/text_field.dart';
 import 'package:flutter/cupertino.dart';
@@ -39,6 +39,7 @@ class _ContractorProfileEditState extends State<ContractorProfileEdit> {
   bool oldPasswordObscure = true;
   bool newPasswordObscure = true;
   bool confirmPasswordObscure = true;
+  File _image;
 
   @override
   void initState() {
@@ -213,7 +214,9 @@ class _ContractorProfileEditState extends State<ContractorProfileEdit> {
                       decoration: BoxDecoration(
                         color: purpleColor,
                         image: DecorationImage(
-                            image: NetworkImage(
+                            image: _image != null
+                                ? FileImage(_image)
+                                : NetworkImage(
                               Data.currentUser.imageProfile,
                             ),
                             fit: BoxFit.cover),
@@ -236,7 +239,24 @@ class _ContractorProfileEditState extends State<ContractorProfileEdit> {
                           child: Material(
                             color: Colors.transparent,
                             child: InkWell(
-                              onTap: () {},
+                              onTap: () async {
+                                File file = await Helper()
+                                    .displayPickImageDialog(context);
+                                if (file != null) {
+                                  setState(() {
+                                    _image = file;
+                                  });
+                                  await UserController().editProfile(
+                                      name: nameController.text,
+                                      email: emailController.text,
+                                      address: locationController.text,
+                                      latitude: Data.currentUser.latitude,
+                                      longitude: Data.currentUser.longitude,
+                                      image: _image
+                                  );
+
+                                }
+                              },
                               borderRadius: BorderRadius.all(
                                 Radius.elliptical(9999, 9999),
                               ),
@@ -283,7 +303,7 @@ class _ContractorProfileEditState extends State<ContractorProfileEdit> {
                         setState(() {
                           isNameLoading = true;
                         });
-                        await UserController().editProfile(
+                        await ProviderController().editProfile(
                             name: nameController.text,
                             email: emailController.text,
                             address: locationController.text,
@@ -303,7 +323,7 @@ class _ContractorProfileEditState extends State<ContractorProfileEdit> {
                         setState(() {
                           isEmailLoading = true;
                         });
-                        await UserController().editProfile(
+                        await ProviderController().editProfile(
                             name: nameController.text,
                             email: emailController.text,
                             address: locationController.text,
@@ -346,7 +366,7 @@ class _ContractorProfileEditState extends State<ContractorProfileEdit> {
                                       isPasswordLoading = true;
                                     });
                                     LoginResponse response =
-                                        await UserController().editProfile(
+                                        await ProviderController().editProfile(
                                             name: nameController.text,
                                             email: emailController.text,
                                             address: locationController.text,
@@ -514,14 +534,39 @@ class _ContractorProfileEditState extends State<ContractorProfileEdit> {
                     CupertinoButton(
                       padding: EdgeInsets.zero,
                       onPressed: () {
-                        GlobalController().logout();
-                        Navigator.popUntil(context, (route) => route.isFirst);
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => SignIn(),
+                        showCupertinoDialog(
+                          context: context,
+                          barrierDismissible: true,
+                          builder: (context) => StatefulBuilder(
+                            builder: (context, setState) => CupertinoAlertDialog(
+                              title: Text('Logout, Are you sure?'.tr(), ),
+                              actions: [
+                                CupertinoButton(
+                                    onPressed: () {
+                                      GlobalController().logout();
+                                      Navigator.popUntil(context, (route) => route.isFirst);
+                                      Navigator.pushReplacement(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => SignIn(),
+                                        ),
+                                      );
+                                    },
+                                    child: Text('Confirm'.tr(),
+                                        style: TextStyle(color: kPrimaryColor))),
+                                CupertinoButton(
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                    },
+                                    child: Text(
+                                      'Cancel'.tr(),
+                                      style: TextStyle(color: Colors.red[900]),
+                                    )),
+                              ],
+                            ),
                           ),
                         );
+
                       },
                       child: Row(
                         children: [

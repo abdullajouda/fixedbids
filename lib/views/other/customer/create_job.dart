@@ -4,6 +4,7 @@ import 'package:bot_toast/bot_toast.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:fixed_bids/models/job.dart';
 import 'package:fixed_bids/models/responses/api_response.dart';
+import 'package:fixed_bids/models/responses/job_id_response.dart';
 import 'package:fixed_bids/utils/constants.dart';
 import 'package:fixed_bids/controllers/jobs_controller.dart';
 import 'package:fixed_bids/utils/helper.dart';
@@ -37,14 +38,15 @@ class _CreateJobState extends State<CreateJob> {
   FocusNode titleNode, amountNode, detailsNode, locationNode, urgencyNode;
   int _urgency;
   File _image;
-  LatLng _location;
+
+  // LatLng _location;
   bool loading = false;
 
   @override
   void initState() {
     if (widget.job != null) {
-      _location = LatLng(double.parse(widget.job.latitude),
-          double.parse(widget.job.longitude));
+      // _location = LatLng(double.parse(widget.job.latitude),
+      //     double.parse(widget.job.longitude));
       _urgency = widget.job.urgencyType;
       titleController = new TextEditingController(text: widget.job.title);
       locationController = new TextEditingController(text: widget.job.zipCode);
@@ -222,34 +224,34 @@ class _CreateJobState extends State<CreateJob> {
                       CustomTextField(
                         label: 'Enter ZIP code'.tr(),
                         required: true,
-                        readOnly: true,
+                        // readOnly: true,
                         controller: locationController,
                         focusNode: locationNode,
                         nextFocusNode: amountNode,
-                        onPressed: () async {
-                          LatLng initialPosition =
-                              await Constants.getCurrentLocation(
-                                  context: context);
-                          if (initialPosition != null) {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => PlacePickerScreen(
-                                    initialPosition: initialPosition,
-                                    onPlacePicked: (value) {
-                                      setState(() {
-                                        _location = LatLng(
-                                            value.geometry.location.lat,
-                                            value.geometry.location.lng);
-                                        locationController.text =
-                                            value.formattedAddress;
-                                      });
-                                      Navigator.pop(context);
-                                    },
-                                  ),
-                                ));
-                          }
-                        },
+                        // onPressed: () async {
+                        //   LatLng initialPosition =
+                        //       await Constants.getCurrentLocation(
+                        //           context: context);
+                        //   if (initialPosition != null) {
+                        //     Navigator.push(
+                        //         context,
+                        //         MaterialPageRoute(
+                        //           builder: (context) => PlacePickerScreen(
+                        //             initialPosition: initialPosition,
+                        //             onPlacePicked: (value) {
+                        //               setState(() {
+                        //                 _location = LatLng(
+                        //                     value.geometry.location.lat,
+                        //                     value.geometry.location.lng);
+                        //                 locationController.text =
+                        //                     value.formattedAddress;
+                        //               });
+                        //               Navigator.pop(context);
+                        //             },
+                        //           ),
+                        //         ));
+                        //   }
+                        // },
                       ),
                       SizedBox(
                         height: 23,
@@ -313,9 +315,8 @@ class _CreateJobState extends State<CreateJob> {
               setState(() {
                 loading = true;
               });
-              ApiResponse response;
               if (widget.job != null) {
-                response = await JobsController().editJob(
+                ApiResponse response = await JobsController().editJob(
                   id: widget.job.id,
                   serviceId: widget.job.serviceId.toString(),
                   title: titleController.text,
@@ -324,11 +325,17 @@ class _CreateJobState extends State<CreateJob> {
                   urgencyType: _urgency.toString(),
                   zipCode: locationController.text,
                   image: _image,
-                  latitude: _location.latitude.toString(),
-                  longitude: _location.longitude.toString(),
+                  // latitude: _location.latitude.toString(),
+                  // longitude: _location.longitude.toString(),
                 );
+                if (response.status) {
+                  BotToast.showText(text: response.message);
+                  Navigator.of(context).pop(true);
+                } else {
+                  BotToast.showText(text: response.message);
+                }
               } else {
-                response = await JobsController().addNewJob(
+                JobDetailsResponse response = await JobsController().addNewJob(
                   serviceId: widget.id.toString(),
                   title: titleController.text,
                   details: detailsController.text,
@@ -336,23 +343,25 @@ class _CreateJobState extends State<CreateJob> {
                   urgencyType: _urgency.toString(),
                   zipCode: locationController.text,
                   image: _image,
-                  latitude: _location.latitude.toString(),
-                  longitude: _location.longitude.toString(),
+                  // latitude: _location.latitude.toString(),
+                  // longitude: _location.longitude.toString(),
                 );
+                if (response.status) {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => JobPublished(
+                          id: response.item.id,
+                        ),
+                      ));
+                } else {
+                  BotToast.showText(text: response.message);
+                }
               }
 
               setState(() {
                 loading = false;
               });
-              if (response.status) {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => JobPublished(),
-                    ));
-              } else {
-                BotToast.showText(text: response.message);
-              }
             },
           ),
         ),

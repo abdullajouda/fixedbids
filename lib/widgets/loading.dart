@@ -21,8 +21,8 @@ class ButtonLoad extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(child: SizedBox(
-        height: 30,
-        width: 30,
+        height: 25,
+        width: 25,
         child: Lottie.asset('assets/button_load.json')));
   }
 }

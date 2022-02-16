@@ -1,8 +1,11 @@
+import 'dart:io';
+
 import 'package:fixed_bids/utils/constants.dart';
 import 'package:fixed_bids/controllers/global_controller.dart';
 import 'package:fixed_bids/controllers/user_controller.dart';
 import 'package:fixed_bids/external/lib/src/place_picker.dart';
 import 'package:fixed_bids/models/responses/login_response.dart';
+import 'package:fixed_bids/utils/helper.dart';
 import 'package:fixed_bids/views/auth/sign_in.dart';
 import 'package:fixed_bids/views/other/settings.dart';
 import 'package:fixed_bids/views/place_picker.dart';
@@ -16,6 +19,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:easy_localization/easy_localization.dart';
+
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({Key key}) : super(key: key);
 
@@ -38,6 +42,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   bool oldPasswordObscure = true;
   bool newPasswordObscure = true;
   bool confirmPasswordObscure = true;
+  File _image;
 
   @override
   void initState() {
@@ -71,32 +76,58 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     AppBar appbar = buildAppBar(
-        color: Colors.transparent,
-        // leading: MyIconButton(
-        //   svg: 'assets/icons/Setting.svg',
-        //   onPressed: () {
-        //     Navigator.push(
-        //         context,
-        //         MaterialPageRoute(
-        //           builder: (context) => SettingsScreen(),
-        //         ));
-        //   },
-        // )
-        leading: MyIconButton(
-          onPressed: () {
-            GlobalController().logout();
-            Navigator.popUntil(context, (route) => route.isFirst);
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                builder: (context) => SignIn(),
+      color: Colors.transparent,
+      // leading: MyIconButton(
+      //   svg: 'assets/icons/Setting.svg',
+      //   onPressed: () {
+      //     Navigator.push(
+      //         context,
+      //         MaterialPageRoute(
+      //           builder: (context) => SettingsScreen(),
+      //         ));
+      //   },
+      // )
+      leading: MyIconButton(
+        onPressed: () {
+          showCupertinoDialog(
+            context: context,
+            barrierDismissible: true,
+            builder: (context) => StatefulBuilder(
+              builder: (context, setState) => CupertinoAlertDialog(
+                title: Text(
+                  'Logout, Are you sure?'.tr(),
+                ),
+                actions: [
+                  CupertinoButton(
+                      onPressed: () {
+                        GlobalController().logout();
+                        Navigator.popUntil(context, (route) => route.isFirst);
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => SignIn(),
+                          ),
+                        );
+                      },
+                      child: Text('Confirm'.tr(),
+                          style: TextStyle(color: kPrimaryColor))),
+                  CupertinoButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: Text(
+                        'Cancel'.tr(),
+                        style: TextStyle(color: Colors.red[900]),
+                      )),
+                ],
               ),
-            );
-          },
-          svg: 'assets/icons/logout.svg',
-          iconColor: HexColor('FF0000'),
-        ),
-        );
+            ),
+          );
+        },
+        svg: 'assets/icons/logout.svg',
+        iconColor: HexColor('FF0000'),
+      ),
+    );
 
     return Scaffold(
       extendBodyBehindAppBar: true,
@@ -141,7 +172,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             height: 8,
                           ),
                           Text(
-                            '${Data.currentUser.address}',
+                            '${Data.currentUser.address ?? ''}',
                             style: Constants.applyStyle(
                                 size: 14,
                                 fontWeight: FontWeight.w400,
@@ -159,9 +190,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       decoration: BoxDecoration(
                         color: purpleColor,
                         image: DecorationImage(
-                            image: NetworkImage(
-                              Data.currentUser.imageProfile,
-                            ),
+                            image: _image != null
+                                ? FileImage(_image)
+                                : NetworkImage(
+                                    Data.currentUser.imageProfile,
+                                  ),
                             fit: BoxFit.cover),
                         borderRadius: BorderRadius.all(
                           Radius.elliptical(9999, 9999),
@@ -182,7 +215,24 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           child: Material(
                             color: Colors.transparent,
                             child: InkWell(
-                              onTap: () {},
+                              onTap: () async {
+                                File file = await Helper()
+                                    .displayPickImageDialog(context);
+                                if (file != null) {
+                                  setState(() {
+                                    _image = file;
+                                  });
+                                   await UserController().editProfile(
+                                      name: nameController.text,
+                                      email: emailController.text,
+                                      address: locationController.text,
+                                      latitude: Data.currentUser.latitude,
+                                      longitude: Data.currentUser.longitude,
+                                     image: _image
+                                  );
+
+                                }
+                              },
                               borderRadius: BorderRadius.all(
                                 Radius.elliptical(9999, 9999),
                               ),

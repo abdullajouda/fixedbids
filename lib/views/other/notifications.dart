@@ -1,10 +1,14 @@
+import 'package:bot_toast/bot_toast.dart';
 import 'package:fixed_bids/controllers/global_controller.dart';
+import 'package:fixed_bids/controllers/jobs_controller.dart';
 import 'package:fixed_bids/models/notification.dart';
+import 'package:fixed_bids/models/responses/api_response.dart';
 import 'package:fixed_bids/models/responses/notifications_response.dart';
 import 'package:fixed_bids/views/other/customer/contractor_profile.dart';
 import 'package:fixed_bids/views/root.dart';
 import 'package:fixed_bids/widgets/app_bar.dart';
 import 'package:fixed_bids/widgets/loading.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:easy_localization/easy_localization.dart';
@@ -26,7 +30,6 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
     super.initState();
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -37,7 +40,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Loading();
           }
-         return Container(
+          return Container(
             margin: EdgeInsets.symmetric(horizontal: 22)
                 .add(EdgeInsets.only(bottom: 25)),
             decoration: BoxDecoration(
@@ -54,21 +57,28 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
             child: ClipRRect(
               borderRadius: BorderRadius.circular(10),
               child: ListView.builder(
-                  itemCount: snapshot.data.items.length,
-                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 23),
-                  itemBuilder: (context, index) => InkWell(
-                      onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => ContractorProfile(withRequest: 1,id: snapshot.data.items[index].userId,),
-                            ));
-                      },
-                      child: notificationBox(notification: snapshot.data.items[index]))),
+                itemCount: snapshot.data.items.length,
+                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 23),
+                itemBuilder: (context, index) => InkWell(
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ContractorProfile(
+                            offerId: snapshot.data.items[index].orderId,
+                            id: snapshot.data.items[index].fromUserId,
+                          ),
+                        ));
+                  },
+                  child: notificationBox(
+                    notification: snapshot.data.items[index],
+                  ),
+                ),
+              ),
             ),
           );
         },
-       ),
+      ),
     );
   }
 
@@ -102,38 +112,46 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                       width: Data.size.width * .5,
                       child: Text.rich(
                         TextSpan(
-                            text: 'Ayub khanna',
+                            text: notification.fromUser.name,
                             style: Constants.applyStyle(
                               size: 16,
                               fontWeight: FontWeight.w600,
-                              color: kAppbarTitleColor,
+                              color: notification.seen == 1
+                                  ? Color(0xff717171)
+                                  : kAppbarTitleColor,
                             ),
                             children: [
                               TextSpan(text: ' '),
                               TextSpan(
-                                text: notification.message,
+                                text: notification.message1,
                                 style: Constants.applyStyle(
                                   size: 16,
                                   fontWeight: FontWeight.w400,
-                                  color: kAppbarTitleColor,
+                                  color: notification.seen == 1
+                                      ? Color(0xff717171)
+                                      : kAppbarTitleColor,
                                 ),
                               ),
                               TextSpan(text: ' '),
                               TextSpan(
-                                text: 'Handy Man',
+                                text: notification.coloredMessage,
                                 style: Constants.applyStyle(
                                   size: 16,
                                   fontWeight: FontWeight.w600,
-                                  color: kPrimaryColor,
+                                  color: notification.seen == 1
+                                      ? Color(0xff717171)
+                                      : kPrimaryColor,
                                 ),
                               ),
                               TextSpan(text: ' '),
                               TextSpan(
-                                text: 'job',
+                                text: notification.message2,
                                 style: Constants.applyStyle(
                                   size: 16,
                                   fontWeight: FontWeight.w400,
-                                  color: kAppbarTitleColor,
+                                  color: notification.seen == 1
+                                      ? Color(0xff717171)
+                                      : kAppbarTitleColor,
                                 ),
                               ),
                             ]),
@@ -142,23 +160,110 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                     SizedBox(
                       height: 15,
                     ),
-                    Row(
-                      children: [
-                        button(
-                          title: 'Accept'.tr(),
-                          onPressed: () {},
-                        ),
-                        SizedBox(
-                          width: 20,
-                        ),
-                        button(
-                          title: 'Decline'.tr(),
-                          color: Colors.white,
-                          fontColor: HexColor('#818181'),
-                          onPressed: () {},
-                        ),
-                      ],
-                    )
+                    if (notification.messagType == 'offer')
+                      Row(
+                        children: [
+                          button(
+                            title: 'Accept'.tr(),
+                            onPressed: () {
+                              showCupertinoDialog(
+                                context: context,
+                                barrierDismissible: true,
+                                builder: (context) => StatefulBuilder(
+                                  builder: (context, setState) =>
+                                      CupertinoAlertDialog(
+                                    title: Text(
+                                      'Are you sure you want to accept this job offer?'
+                                          .tr(),
+                                    ),
+                                    actions: [
+                                      CupertinoButton(
+                                        onPressed: () async {
+                                          ApiResponse response =
+                                              await JobsController()
+                                                  .jobOfferAction(
+                                                      status: 2,
+                                                      id: notification.orderId);
+                                          BotToast.showText(
+                                              text: response.message);
+                                          if (response.status) {
+                                            Navigator.of(context).pop(true);
+                                          }
+                                        },
+                                        child: Text(
+                                          'Confirm'.tr(),
+                                          style:
+                                              TextStyle(color: kPrimaryColor),
+                                        ),
+                                      ),
+                                      CupertinoButton(
+                                          onPressed: () {
+                                            Navigator.pop(context);
+                                          },
+                                          child: Text(
+                                            'Cancel'.tr(),
+                                            style: TextStyle(
+                                                color: Colors.red[900]),
+                                          )),
+                                    ],
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                          SizedBox(
+                            width: 20,
+                          ),
+                          button(
+                            title: 'Decline'.tr(),
+                            color: Colors.white,
+                            fontColor: HexColor('#818181'),
+                            onPressed: () {
+                              showCupertinoDialog(
+                                context: context,
+                                barrierDismissible: true,
+                                builder: (context) => StatefulBuilder(
+                                  builder: (context, setState) =>
+                                      CupertinoAlertDialog(
+                                    title: Text(
+                                      'Are you sure you want to reject this job offer?'
+                                          .tr(),
+                                    ),
+                                    actions: [
+                                      CupertinoButton(
+                                          onPressed: () async {
+                                            ApiResponse response =
+                                                await JobsController()
+                                                    .jobOfferAction(
+                                                        status: 3,
+                                                        id: notification
+                                                            .orderId);
+                                            BotToast.showText(
+                                                text: response.message);
+                                            if (response.status) {
+                                              Navigator.of(context).pop(true);
+                                            }
+                                          },
+                                          child: Text('Confirm'.tr(),
+                                              style: TextStyle(
+                                                  color: kPrimaryColor))),
+                                      CupertinoButton(
+                                          onPressed: () {
+                                            Navigator.pop(context);
+                                          },
+                                          child: Text(
+                                            'Cancel'.tr(),
+                                            style: TextStyle(
+                                                color: Colors.red[900]),
+                                          )),
+                                    ],
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                        ],
+                      )
                   ],
                 ),
               ],
@@ -167,7 +272,10 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
               '${DateTime.now().subtract(Duration(minutes: 10)).minute < 10 ? 'Just now'.tr() : timeago.format(DateTime.now().subtract(
                     Duration(minutes: 10),
                   ), locale: 'en_short')}',
-              style: Constants.applyStyle(size: 12).copyWith(height: 1.5),
+              style: notification.seen == 1
+                  ? TextStyle(
+                      color: Color(0xffa5a5a5), fontSize: 12, height: 1.5)
+                  : Constants.applyStyle(size: 12).copyWith(height: 1.5),
             )
           ],
         ),

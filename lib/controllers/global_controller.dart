@@ -13,6 +13,9 @@ import 'package:fixed_bids/models/responses/settings_response.dart';
 import 'package:async/async.dart';
 import 'package:fixed_bids/models/responses/user_by_service_response.dart';
 import 'package:http/http.dart';
+import 'package:provider/provider.dart';
+
+import 'notifications_controller.dart';
 
 class GlobalController {
   Future getSettings() async {
@@ -39,7 +42,14 @@ class GlobalController {
       Uri.parse("${Constants.domain}getBanners"),
       headers: Constants().headers,
     );
-    return BannersResponse.fromJson(json.decode(request.body));
+    BannersResponse response =
+        BannersResponse.fromJson(json.decode(request.body));
+    if (response.notifiyCount > 0) {
+      Data.navigator.navigator.context
+          .read<NotificationsController>()
+          .notificationCount = response.notifiyCount;
+    }
+    return response;
   }
 
   Future<QuestionsResponse> allQuestions() async {

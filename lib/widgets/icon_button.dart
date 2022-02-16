@@ -27,7 +27,7 @@ class MyIconButton extends StatelessWidget {
         width: 45,
         decoration: BoxDecoration(
           color:color?? Color(0x0ffF1F1F1),
-          borderRadius:isRounded?BorderRadius.all(Radius.elliptical(9999, 9999)): BorderRadius.circular(12),
+          borderRadius:isRounded?BorderRadius.all(Radius.elliptical(9999, 9999)): BorderRadius.circular(15),
         ),
         child: Center(
           child:loading?ButtonLoad() :SvgPicture.asset(

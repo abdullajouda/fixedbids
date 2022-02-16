@@ -10,6 +10,7 @@ import 'package:fixed_bids/views/root.dart';
 import 'package:fixed_bids/widgets/icon_button.dart';
 import 'package:fixed_bids/widgets/loading.dart';
 import 'package:fixed_bids/widgets/no_data_found.dart';
+import 'package:fixed_bids/widgets/notification_button.dart';
 import 'package:flutter/material.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:timeago/timeago.dart' as timeago;
@@ -67,6 +68,41 @@ class _ContractorJobHistoryScreenState extends State<ContractorJobHistoryScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        elevation: 0,
+        toolbarHeight: 80,
+        backgroundColor: Color(0x0ffF8F8F8),
+        leadingWidth: 90,
+        leading: Center(
+          child: Container(
+            height: 45,
+            width: 45,
+            margin: EdgeInsets.symmetric(horizontal: 22),
+            decoration: BoxDecoration(
+              color: Color(0x0ffF1F1F1),
+              borderRadius: BorderRadius.circular(12),
+              image: DecorationImage(
+                  image: NetworkImage(
+                    Data.currentUser.imageProfile,
+                  ),
+                  fit: BoxFit.cover),
+            ),
+          ),
+        ),
+        centerTitle: true,
+        title: Text(
+          'Job history'.tr(),
+          style: Constants.applyStyle(size: 18, fontWeight: FontWeight.w600),
+        ),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 22),
+            child: Center(
+              child: NotificationButton(),
+            ),
+          )
+        ],
+      ),
       backgroundColor: kBackGroundColor,
       body: Column(
         children: [
@@ -156,16 +192,18 @@ class _ContractorJobHistoryScreenState extends State<ContractorJobHistoryScreen>
                   return SmartRefresher(
                     controller: _openRefreshController,
                     onRefresh: _onRefresh,
-                    child:snapshot.data.items.isEmpty?NoDataFound(): ListView.separated(
-                      itemCount: snapshot.data.items.length,
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 22, vertical: 10),
-                      separatorBuilder: (context, index) => SizedBox(
-                        height: 20,
-                      ),
-                      itemBuilder: (context, index) =>
-                          buildJobBox(job: snapshot.data.items[index]),
-                    ),
+                    child: snapshot.data.items.isEmpty
+                        ? NoDataFound()
+                        : ListView.separated(
+                            itemCount: snapshot.data.items.length,
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 22, vertical: 10),
+                            separatorBuilder: (context, index) => SizedBox(
+                              height: 20,
+                            ),
+                            itemBuilder: (context, index) =>
+                                buildJobBox(job: snapshot.data.items[index]),
+                          ),
                   );
                 },
               ),
@@ -178,16 +216,18 @@ class _ContractorJobHistoryScreenState extends State<ContractorJobHistoryScreen>
                   return SmartRefresher(
                     controller: _closedRefreshController,
                     onRefresh: _onRefresh,
-                    child:snapshot.data.items.isEmpty?NoDataFound(): ListView.separated(
-                      itemCount: snapshot.data.items.length,
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 22, vertical: 10),
-                      separatorBuilder: (context, index) => SizedBox(
-                        height: 20,
-                      ),
-                      itemBuilder: (context, index) =>
-                          buildJobBox(job: snapshot.data.items[index]),
-                    ),
+                    child: snapshot.data.items.isEmpty
+                        ? NoDataFound()
+                        : ListView.separated(
+                            itemCount: snapshot.data.items.length,
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 22, vertical: 10),
+                            separatorBuilder: (context, index) => SizedBox(
+                              height: 20,
+                            ),
+                            itemBuilder: (context, index) =>
+                                buildJobBox(job: snapshot.data.items[index]),
+                          ),
                   );
                 },
               ),
@@ -303,7 +343,11 @@ class _ContractorJobHistoryScreenState extends State<ContractorJobHistoryScreen>
                                   : 'EMERGENCY'.tr(),
                           style: Constants.applyStyle(
                               size: 14,
-                              color: HexColor('19A716'),
+                              color: job.urgencyType == 1
+                                  ? HexColor('E0A100')
+                                  : job.urgencyType == 2
+                                      ? HexColor('F76400')
+                                      : HexColor('19A716'),
                               fontWeight: FontWeight.w500),
                         ),
                       ],

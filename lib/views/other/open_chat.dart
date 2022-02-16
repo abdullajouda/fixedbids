@@ -1,3 +1,4 @@
+import 'package:fixed_bids/controllers/notifications_controller.dart';
 import 'package:fixed_bids/utils/constants.dart';
 import 'package:fixed_bids/controllers/chat_controller.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -9,6 +10,7 @@ import 'package:fixed_bids/widgets/loading.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:provider/provider.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:url_launcher/url_launcher.dart';
 
@@ -246,27 +248,69 @@ class _OpenChatState extends State<OpenChat> {
       titleSpacing: 0,
       title: Row(
         children: [
-          Container(
-            height: 45,
-            width: 45,
-            decoration: BoxDecoration(
-              color: purpleColor,
-              borderRadius: BorderRadius.all(
-                Radius.elliptical(9999, 9999),
-              ),
-            ),
-            padding: EdgeInsets.symmetric(horizontal: 3),
-            child: Align(
-              alignment: AlignmentDirectional.bottomEnd,
-              child: Container(
-                height: 10,
-                width: 10,
-                decoration: BoxDecoration(
-                    color: HexColor('#27C837'),
-                    borderRadius: BorderRadius.all(
-                      Radius.elliptical(9999, 9999),
+          Consumer<NotificationsController>(
+            builder: (_, value, child) {
+              if (value.onlineUsers.contains(
+                  '${data.user.id}')) {
+                return Container(
+                  height: 45,
+                  width: 45,
+                  decoration: BoxDecoration(
+                    color: purpleColor,
+                    image: DecorationImage(
+                        image: NetworkImage(data.user.imageProfile),
+                        fit: BoxFit.cover),
+                    borderRadius:
+                    BorderRadius.all(
+                      Radius.elliptical(
+                          9999, 9999),
                     ),
-                    border: Border.all(color: Colors.white, width: 1)),
+                  ),
+                  padding:
+                  EdgeInsets.symmetric(
+                      horizontal: 3),
+                  child: Align(
+                    alignment:
+                    AlignmentDirectional
+                        .bottomEnd,
+                    child: Container(
+                      height: 10,
+                      width: 10,
+                      decoration:
+                      BoxDecoration(
+                          color: HexColor(
+                              '#27C837'),
+                          borderRadius:
+                          BorderRadius
+                              .all(
+                            Radius.elliptical(
+                                9999,
+                                9999),
+                          ),
+                          border: Border.all(
+                              color: Colors
+                                  .white,
+                              width:
+                              1)),
+                    ),
+                  ),
+                );
+              }
+              return child;
+            },
+            child: Container(
+              height: 45,
+              width: 45,
+              decoration: BoxDecoration(
+                color: purpleColor,
+                image: DecorationImage(
+                    image: NetworkImage(data.user.imageProfile),
+                    fit: BoxFit.cover),
+                borderRadius:
+                BorderRadius.all(
+                  Radius.elliptical(
+                      9999, 9999),
+                ),
               ),
             ),
           ),

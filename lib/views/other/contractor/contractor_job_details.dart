@@ -144,7 +144,11 @@ class _ContractorJobDetailsState extends State<ContractorJobDetails> {
                                           : 'EMERGENCY'.tr(),
                                   style: Constants.applyStyle(
                                       size: 14,
-                                      color: HexColor('19A716'),
+                                      color: snapshot.data.item.urgencyType == 1
+                                          ? HexColor('E0A100')
+                                          : snapshot.data.item.urgencyType == 2
+                                          ? HexColor('F76400')
+                                          : HexColor('19A716'),
                                       fontWeight: FontWeight.w500),
                                 ),
                               ],

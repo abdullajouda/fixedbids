@@ -1,3 +1,4 @@
+import 'package:bot_toast/bot_toast.dart';
 import 'package:fixed_bids/controllers/chat_controller.dart';
 import 'package:fixed_bids/controllers/jobs_controller.dart';
 import 'package:fixed_bids/models/job.dart';
@@ -30,6 +31,7 @@ class JobDetails extends StatefulWidget {
 class _JobDetailsState extends State<JobDetails> {
   Future _future;
   bool loadChat = false;
+  bool load = false;
 
   @override
   void initState() {
@@ -148,7 +150,11 @@ class _JobDetailsState extends State<JobDetails> {
                                           : 'EMERGENCY'.tr(),
                                   style: Constants.applyStyle(
                                       size: 14,
-                                      color: HexColor('19A716'),
+                                      color: snapshot.data.item.urgencyType == 1
+                                          ? HexColor('E0A100')
+                                          : snapshot.data.item.urgencyType == 2
+                                              ? HexColor('F76400')
+                                              : HexColor('19A716'),
                                       fontWeight: FontWeight.w500),
                                 ),
                               ],
@@ -342,7 +348,8 @@ class _JobDetailsState extends State<JobDetails> {
                                 Row(
                                   children: [
                                     MyIconButton(
-                                      svg: 'assets/icons/Chat.svg',loading: loadChat,
+                                      svg: 'assets/icons/Chat.svg',
+                                      loading: loadChat,
                                       onPressed: () async {
                                         setState(() {
                                           loadChat = true;
@@ -506,7 +513,14 @@ class _JobDetailsState extends State<JobDetails> {
                                       builder: (context) => CreateJob(
                                         job: snapshot.data.item,
                                       ),
-                                    ));
+                                    )).then((value) {
+                                  if (value) {
+                                    setState(() {
+                                      _future = JobsController()
+                                          .getJobId(id: widget.id);
+                                    });
+                                  }
+                                });
                               },
                       ),
                     ),
@@ -524,8 +538,56 @@ class _JobDetailsState extends State<JobDetails> {
                         onTap: snapshot.data.item == null
                             ? null
                             : () {
-                                JobsController()
-                                    .deleteJobById(id: snapshot.data.item.id);
+                                showCupertinoDialog(
+                                  context: context,
+                                  barrierDismissible: true,
+                                  builder: (context) => StatefulBuilder(
+                                    builder: (context, setState) =>
+                                        CupertinoAlertDialog(
+                                      title: Text(
+                                          'Delete this job, Are you sure?'.tr()),
+                                      actions: [
+                                        load
+                                            ? CupertinoButton(
+                                                onPressed: null,
+                                                child:
+                                                    CupertinoActivityIndicator())
+                                            : CupertinoButton(
+                                                onPressed: () async {
+                                                  setState(() {
+                                                    load = true;
+                                                  });
+                                                  ApiResponse response =
+                                                      await JobsController()
+                                                          .deleteJobById(
+                                                              id: widget.id);
+                                                  setState(() {
+                                                    load = false;
+                                                  });
+                                                  if (response.status) {
+                                                    BotToast.showText(
+                                                        text: response.message);
+                                                    Navigator.pop(context);
+                                                    Navigator.of(context)
+                                                        .pop(true);
+                                                  }
+                                                },
+                                                child: Text('Confirm'.tr(),
+                                                    style: TextStyle(
+                                                        color: kPrimaryColor))),
+                                        CupertinoButton(
+                                            onPressed: () {
+                                              Navigator.pop(context);
+                                            },
+                                            child: Text(
+                                              'Cancel'.tr(),
+                                              style: TextStyle(
+                                                  color: Colors.red[800]),
+                                            )),
+                                      ],
+                                    ),
+                                  ),
+                                );
                               },
                         borderRadius: BorderRadius.all(Radius.circular(12)),
                         child: Container(
