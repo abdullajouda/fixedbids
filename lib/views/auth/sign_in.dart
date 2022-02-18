@@ -3,6 +3,7 @@ import 'package:bot_toast/bot_toast.dart';
 import 'package:fixed_bids/utils/constants.dart';
 import 'package:fixed_bids/controllers/global_controller.dart';
 import 'package:fixed_bids/models/responses/login_response.dart';
+import 'package:fixed_bids/views/auth/forgot_password.dart';
 import 'package:fixed_bids/widgets/button.dart';
 import 'package:fixed_bids/widgets/check_box.dart';
 import 'package:fixed_bids/widgets/text_field.dart';
@@ -156,13 +157,15 @@ class _SignInState extends State<SignIn> {
                       ),
                     ),
                     CupertinoButton(
+                      onPressed: () {
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => ForgotPassword(),));
+                      },
                       padding: EdgeInsets.zero,
                       child: Text(
                         'Forgot password?'.tr(),
                         style: Constants.applyStyle(
                             size: 14, color: kPrimaryColor),
                       ),
-                      onPressed: () {},
                     )
                   ],
                 ),

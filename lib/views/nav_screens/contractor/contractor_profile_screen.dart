@@ -157,7 +157,7 @@ class _ContractorProfileScreenState extends State<ContractorProfileScreen> {
                                   Column(
                                     children: [
                                       Text(
-                                        '\$${snapshot.data.item.avgRate.toString()}',
+                                        '\$${snapshot.data.item.avgRate != 'null' ? snapshot.data.item.avgRate.toString() : '0'}',
                                         style: Constants.applyStyle(
                                           size: 18,
                                           fontWeight: FontWeight.w600,
@@ -201,33 +201,33 @@ class _ContractorProfileScreenState extends State<ContractorProfileScreen> {
                               Radius.elliptical(9999, 9999),
                             ),
                           ),
-                          child: Align(
-                            alignment: AlignmentDirectional.bottomEnd,
-                            child: Container(
-                              height: 25,
-                              width: 25,
-                              margin: EdgeInsets.symmetric(horizontal: 8),
-                              decoration: BoxDecoration(
-                                color: kPrimaryColor,
-                                borderRadius: BorderRadius.all(
-                                  Radius.elliptical(9999, 9999),
-                                ),
-                              ),
-                              child: Material(
-                                color: Colors.transparent,
-                                child: InkWell(
-                                  onTap: () {},
-                                  borderRadius: BorderRadius.all(
-                                    Radius.elliptical(9999, 9999),
-                                  ),
-                                  child: Center(
-                                    child: SvgPicture.asset(
-                                        'assets/icons/camera.svg'),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
+                          // child: Align(
+                          //   alignment: AlignmentDirectional.bottomEnd,
+                          //   child: Container(
+                          //     height: 25,
+                          //     width: 25,
+                          //     margin: EdgeInsets.symmetric(horizontal: 8),
+                          //     decoration: BoxDecoration(
+                          //       color: kPrimaryColor,
+                          //       borderRadius: BorderRadius.all(
+                          //         Radius.elliptical(9999, 9999),
+                          //       ),
+                          //     ),
+                          //     child: Material(
+                          //       color: Colors.transparent,
+                          //       child: InkWell(
+                          //         onTap: () {},
+                          //         borderRadius: BorderRadius.all(
+                          //           Radius.elliptical(9999, 9999),
+                          //         ),
+                          //         child: Center(
+                          //           child: SvgPicture.asset(
+                          //               'assets/icons/camera.svg'),
+                          //         ),
+                          //       ),
+                          //     ),
+                          //   ),
+                          // ),
                         ),
                       )
                     ],
@@ -319,126 +319,131 @@ class _ContractorProfileScreenState extends State<ContractorProfileScreen> {
                       SizedBox(
                         height: 30,
                       ),
-                      Divider(
-                        color: HexColor(
-                          '#EDECEC',
+                      if (snapshot.data.item.reviews.isNotEmpty)
+                        Divider(
+                          color: HexColor(
+                            '#EDECEC',
+                          ),
+                          thickness: 1,
+                          height: 0,
                         ),
-                        thickness: 1,
-                        height: 0,
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      Text(
-                        'Client Reviews'.tr(),
-                        style: Constants.applyStyle(
-                          fontWeight: FontWeight.w600,
-                          size: 18,
+                      if (snapshot.data.item.reviews.isNotEmpty)
+                        SizedBox(
+                          height: 20,
                         ),
-                      ),
-                      SizedBox(
-                        height: 30,
-                      ),
-                      ListView.builder(
-                        itemCount: snapshot.data.item.reviews.length,
-                        shrinkWrap: true,
-                        padding: EdgeInsets.zero,
-                        physics: NeverScrollableScrollPhysics(),
-                        itemBuilder: (context, index) => Container(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Row(
-                                children: [
-                                  Container(
-                                    height: 45,
-                                    width: 45,
-                                    decoration: BoxDecoration(
-                                      color: kPrimaryColor.withOpacity(0.2),
-                                      image: DecorationImage(
-                                          image: NetworkImage(snapshot
-                                              .data
-                                              .item
-                                              .reviews[index]
-                                              .user
-                                              .imageProfile),
-                                          fit: BoxFit.cover),
-                                      borderRadius: BorderRadius.all(
-                                        Radius.elliptical(9999, 9999),
-                                      ),
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    width: 17,
-                                  ),
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        snapshot
-                                            .data.item.reviews[index].user.name,
-                                        style: Constants.applyStyle(
-                                          fontWeight: FontWeight.w600,
-                                          size: 16,
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        height: 7,
-                                      ),
-                                      Row(
-                                        children: [
-                                          Text(
-                                            snapshot
-                                                .data.item.reviews[index].rate
-                                                .toString(),
-                                            style: Constants.applyStyle(
-                                                fontWeight: FontWeight.w600,
-                                                size: 14,
-                                                color: kPrimaryColor),
-                                          ),
-                                          SizedBox(
-                                            width: 8,
-                                          ),
-                                          RatingBar.builder(
-                                            initialRating: snapshot
-                                                .data.item.reviews[index].rate
-                                                .toDouble(),
-                                            minRating: 1,
-                                            direction: Axis.horizontal,
-                                            itemSize: 13.45,
-                                            itemCount: 5,
-                                            unratedColor: HexColor('D0D0D0'),
-                                            glowColor: kPrimaryColor,
-                                            itemBuilder: (context, _) => Icon(
-                                              Icons.star,
-                                              color: kPrimaryColor,
-                                            ),
-                                            ignoreGestures: true,
-                                            onRatingUpdate: (rating) {},
-                                          )
-                                        ],
-                                      ),
-                                    ],
-                                  )
-                                ],
-                              ),
-                              SizedBox(
-                                height: 12,
-                              ),
-                              Text(
-                                snapshot.data.item.reviews[index].comment,
-                                style: Constants.applyStyle(
-                                    color: HexColor('#655D64'), size: 16),
-                              ),
-                              SizedBox(
-                                height: 30,
-                              ),
-                            ],
+                      if (snapshot.data.item.reviews.isNotEmpty)
+                        Text(
+                          'Client Reviews'.tr(),
+                          style: Constants.applyStyle(
+                            fontWeight: FontWeight.w600,
+                            size: 18,
                           ),
                         ),
-                      )
+                      if (snapshot.data.item.reviews.isNotEmpty)
+                        SizedBox(
+                          height: 30,
+                        ),
+                      if (snapshot.data.item.reviews.isNotEmpty)
+                        ListView.builder(
+                          itemCount: snapshot.data.item.reviews.length,
+                          shrinkWrap: true,
+                          padding: EdgeInsets.zero,
+                          physics: NeverScrollableScrollPhysics(),
+                          itemBuilder: (context, index) => Container(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Row(
+                                  children: [
+                                    Container(
+                                      height: 45,
+                                      width: 45,
+                                      decoration: BoxDecoration(
+                                        color: kPrimaryColor.withOpacity(0.2),
+                                        image: DecorationImage(
+                                            image: NetworkImage(snapshot
+                                                .data
+                                                .item
+                                                .reviews[index]
+                                                .user
+                                                .imageProfile),
+                                            fit: BoxFit.cover),
+                                        borderRadius: BorderRadius.all(
+                                          Radius.elliptical(9999, 9999),
+                                        ),
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      width: 17,
+                                    ),
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          snapshot.data.item.reviews[index].user
+                                              .name,
+                                          style: Constants.applyStyle(
+                                            fontWeight: FontWeight.w600,
+                                            size: 16,
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          height: 7,
+                                        ),
+                                        Row(
+                                          children: [
+                                            Text(
+                                              snapshot
+                                                  .data.item.reviews[index].rate
+                                                  .toString(),
+                                              style: Constants.applyStyle(
+                                                  fontWeight: FontWeight.w600,
+                                                  size: 14,
+                                                  color: kPrimaryColor),
+                                            ),
+                                            SizedBox(
+                                              width: 8,
+                                            ),
+                                            RatingBar.builder(
+                                              initialRating: snapshot
+                                                  .data.item.reviews[index].rate
+                                                  .toDouble(),
+                                              minRating: 1,
+                                              direction: Axis.horizontal,
+                                              itemSize: 13.45,
+                                              itemCount: 5,
+                                              unratedColor: HexColor('D0D0D0'),
+                                              glowColor: kPrimaryColor,
+                                              itemBuilder: (context, _) => Icon(
+                                                Icons.star,
+                                                color: kPrimaryColor,
+                                              ),
+                                              ignoreGestures: true,
+                                              onRatingUpdate: (rating) {},
+                                            )
+                                          ],
+                                        ),
+                                      ],
+                                    )
+                                  ],
+                                ),
+                                SizedBox(
+                                  height: 12,
+                                ),
+                                Text(
+                                  snapshot.data.item.reviews[index].comment,
+                                  style: Constants.applyStyle(
+                                      color: HexColor('#655D64'), size: 16),
+                                ),
+                                SizedBox(
+                                  height: 30,
+                                ),
+                              ],
+                            ),
+                          ),
+                        )
                     ],
                   ),
                 ),

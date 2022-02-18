@@ -8,6 +8,7 @@ import 'package:fixed_bids/views/other/customer/contractor_profile.dart';
 import 'package:fixed_bids/views/root.dart';
 import 'package:fixed_bids/widgets/app_bar.dart';
 import 'package:fixed_bids/widgets/loading.dart';
+import 'package:fixed_bids/widgets/no_data_found.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:timeago/timeago.dart' as timeago;
@@ -56,7 +57,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
             ),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(10),
-              child: ListView.builder(
+              child:snapshot.data.items.isEmpty?NoDataFound(): ListView.builder(
                 itemCount: snapshot.data.items.length,
                 padding: EdgeInsets.symmetric(horizontal: 20, vertical: 23),
                 itemBuilder: (context, index) => InkWell(

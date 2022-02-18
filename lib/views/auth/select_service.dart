@@ -1,7 +1,11 @@
 import 'dart:io';
 
+import 'package:bot_toast/bot_toast.dart';
+import 'package:fixed_bids/controllers/provider_controller.dart';
+import 'package:fixed_bids/models/responses/api_response.dart';
 import 'package:fixed_bids/utils/constants.dart';
 import 'package:fixed_bids/views/auth/sign_in.dart';
+import 'package:fixed_bids/views/other/enter_zip_code.dart';
 import 'package:fixed_bids/widgets/back_button.dart';
 import 'package:fixed_bids/widgets/button.dart';
 import 'package:fixed_bids/widgets/check_box.dart';
@@ -21,15 +25,8 @@ class SelectService extends StatefulWidget {
 }
 
 class _SelectServiceState extends State<SelectService> {
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-  }
+  List<int> _services = [];
+  bool load = false;
 
   @override
   Widget build(BuildContext context) {
@@ -78,8 +75,21 @@ class _SelectServiceState extends State<SelectService> {
                       padding: kPadding,
                       shrinkWrap: true,
                       physics: NeverScrollableScrollPhysics(),
-                      itemBuilder: (context, index) =>
-                          _checkBoxBuilder(title: Data.services.items[index].name,),
+                      itemBuilder: (context, index) => _checkBoxBuilder(
+                        title: Data.services.items[index].name,
+                        value:
+                            _services.contains(Data.services.items[index].id),
+                        onPressed: () {
+                          setState(() {
+                            if (_services
+                                .contains(Data.services.items[index].id)) {
+                              _services.remove(Data.services.items[index].id);
+                            } else {
+                              _services.add(Data.services.items[index].id);
+                            }
+                          });
+                        },
+                      ),
                     ),
                     SizedBox(
                       height: Data.size.height * .1,
@@ -99,22 +109,22 @@ class _SelectServiceState extends State<SelectService> {
             height: 55,
             child: Button(
               title: 'Next'.tr(),
-              onPressed: () async{
-                LatLng initialPosition =
-                    await Constants.getCurrentLocation(
-                    context: context);
-                if (initialPosition != null) {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => PlacePickerScreen(
-                          initialPosition: initialPosition,
-                          onPlacePicked: (p0) {
-                            Navigator.pop(context);
-                          },
-                        ),
-                      ));
+              loading: load,
+              onPressed: () async {
+                setState(() {
+                  load = true;
+                });
+                ApiResponse response = await ProviderController()
+                    .editServices(services: _services);
+                if (response.status) {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => EnterZipCode()));
+                } else {
+                  BotToast.showText(text: response.message);
                 }
+                setState(() {
+                  load = false;
+                });
               },
             ),
           ),
@@ -123,18 +133,16 @@ class _SelectServiceState extends State<SelectService> {
     );
   }
 
-  Widget _checkBoxBuilder({String title}) {
+  Widget _checkBoxBuilder({String title, VoidCallback onPressed, bool value}) {
     return Column(
       children: [
         TextButton(
-            onPressed: () {},
+            onPressed: onPressed,
             child: Row(
               children: [
                 CustomCheckBox(
-                  value: false,
-                  onPressed: () {
-                    setState(() {});
-                  },
+                  value: value,
+                  onPressed: onPressed,
                 ),
                 Text(
                   '$title',
@@ -145,12 +153,12 @@ class _SelectServiceState extends State<SelectService> {
                 ),
               ],
             )),
-
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20.0),
           child: Divider(
             color: Color(0x0ffE3E3E3),
-            thickness: 1,height: 0,
+            thickness: 1,
+            height: 0,
           ),
         )
       ],

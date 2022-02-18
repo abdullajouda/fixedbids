@@ -102,6 +102,7 @@ class ChatController {
     }
     Response rsx = await Response.fromStream(await request.send());
     var output = json.decode(rsx.body);
+    print(output);
     ApiResponse response = ApiResponse.fromJson(output);
     return response;
   }

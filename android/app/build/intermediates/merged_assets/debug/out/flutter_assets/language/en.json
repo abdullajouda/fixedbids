@@ -107,7 +107,10 @@
  "Confirm": "Confirm",
  "Logout, Are you sure?": "Logout, Are you sure?",
  "Delete this job, Are you sure?": "Delete this job, Are you sure?",
- "": "",
+ "Complete": "Complete",
+ "Set your location first": "Set your location first",
+ "Try Again": "Try Again",
+ "SomeThing Went Wrong.": "SomeThing Went Wrong.",
  "": "",
  "": ""
 

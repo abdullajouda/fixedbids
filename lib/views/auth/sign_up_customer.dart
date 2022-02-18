@@ -6,6 +6,7 @@ import 'package:fixed_bids/models/responses/login_response.dart';
 import 'package:fixed_bids/utils/constants.dart';
 import 'package:fixed_bids/views/auth/sign_in.dart';
 import 'package:fixed_bids/views/other/conditions.dart';
+import 'package:fixed_bids/views/other/enter_zip_code.dart';
 import 'package:fixed_bids/views/other/terms.dart';
 import 'package:fixed_bids/widgets/back_button.dart';
 import 'package:fixed_bids/widgets/button.dart';
@@ -264,7 +265,7 @@ class _SignUpCustomerState extends State<SignUpCustomer> {
                     Padding(
                       padding: kPadding,
                       child: Button(
-                        title: 'Sign up'.tr(),
+                        title: 'Sign Up'.tr(),
                         loading: loading,
                         onPressed: agree
                             ? () async {
@@ -287,21 +288,12 @@ class _SignUpCustomerState extends State<SignUpCustomer> {
                                     Data.sharedPreferencesController
                                         .setUserData(userResponse.user);
                                     Data.currentUser = userResponse.user;
-                                    LatLng initialPosition =
-                                    await Constants.getCurrentLocation(
-                                        context: context);
-                                    if (initialPosition != null) {
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) => PlacePickerScreen(
-                                              initialPosition: initialPosition,
-                                              onPlacePicked: (p0) {
-                                                Navigator.pop(context);
-                                              },
-                                            ),
-                                          ));
-                                    }
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => EnterZipCode(),
+                                      ),
+                                    );
                                   } else {
                                     BotToast.showText(
                                         text: userResponse.message);

@@ -10,6 +10,7 @@ class CustomTextField extends StatefulWidget {
   final bool obscure;
   final TextEditingController controller;
   final bool required;
+  final bool isEmail;
   final bool readOnly;
   final int maxLines;
   final VoidCallback onPressed;
@@ -26,7 +27,10 @@ class CustomTextField extends StatefulWidget {
       this.readOnly = false,
       this.controller,
       this.onPressed,
-      this.required = true, this.maxLines, this.inputType})
+      this.required = true,
+      this.maxLines,
+      this.inputType,
+      this.isEmail = false})
       : super(key: key);
 
   @override
@@ -41,13 +45,14 @@ class _CustomTextFieldState extends State<CustomTextField> {
 
   @override
   void initState() {
-    widget.focusNode.addListener(listenToFocus);
+    if (widget.focusNode != null) widget.focusNode.addListener(listenToFocus);
     super.initState();
   }
 
   @override
   void dispose() {
-    widget.focusNode.removeListener(listenToFocus);
+    if (widget.focusNode != null)
+      widget.focusNode.removeListener(listenToFocus);
     super.dispose();
   }
 
@@ -58,16 +63,19 @@ class _CustomTextFieldState extends State<CustomTextField> {
       controller: widget.controller,
       keyboardType: widget.inputType,
       validator: widget.required
-          ? (value) => FieldValidator.validate(value, context)
+          ? (value) => widget.isEmail
+              ? EmailValidator.validate(value, context)
+              : FieldValidator.validate(value, context)
           : null,
-      maxLines: widget.maxLines??1,
-      readOnly:  widget.readOnly,
+      maxLines: widget.maxLines ?? 1,
+      readOnly: widget.readOnly,
       onTap: widget.onPressed,
       decoration: inputDecoration(
         hint: widget.label,
         suffix: widget.suffix,
         prefix: widget.prefix,
-        focused: widget.focusNode.hasFocus || widget.controller?.text != '',
+        focused: (widget.focusNode != null && widget.focusNode.hasFocus) ||
+            widget.controller?.text != '',
       ),
       focusNode: widget.focusNode,
       onFieldSubmitted: (value) {

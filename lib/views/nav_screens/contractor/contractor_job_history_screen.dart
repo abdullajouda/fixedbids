@@ -5,6 +5,7 @@ import 'package:fixed_bids/controllers/provider_controller.dart';
 import 'package:fixed_bids/models/job.dart';
 import 'package:fixed_bids/models/responses/nearby_jobs_response.dart';
 import 'package:fixed_bids/views/other/contractor/contractor_job_details.dart';
+import 'package:fixed_bids/views/other/contractor/job_history_details.dart';
 import 'package:fixed_bids/views/other/open_chat.dart';
 import 'package:fixed_bids/views/root.dart';
 import 'package:fixed_bids/widgets/icon_button.dart';
@@ -260,7 +261,7 @@ class _ContractorJobHistoryScreenState extends State<ContractorJobHistoryScreen>
             Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => ContractorJobDetails(
+                  builder: (context) => JobHistoryDetails(
                     id: job.id,
                   ),
                 ));

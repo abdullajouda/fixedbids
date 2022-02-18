@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:firebase_database/firebase_database.dart';
 import 'package:fixed_bids/controllers/user_controller.dart';
 import 'package:fixed_bids/utils/constants.dart';
 import 'package:fixed_bids/controllers/global_controller.dart';
@@ -7,7 +8,7 @@ import 'package:fixed_bids/controllers/provider_controller.dart';
 import 'package:fixed_bids/models/responses/login_response.dart';
 import 'package:fixed_bids/utils/helper.dart';
 import 'package:fixed_bids/views/auth/sign_in.dart';
-import 'package:fixed_bids/views/place_picker.dart';
+import 'package:fixed_bids/views/other/enter_zip_code.dart';
 import 'package:fixed_bids/views/root.dart';
 import 'package:fixed_bids/widgets/app_bar.dart';
 import 'package:fixed_bids/widgets/loading.dart';
@@ -17,6 +18,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:easy_localization/easy_localization.dart';
+
 class ContractorProfileEdit extends StatefulWidget {
   const ContractorProfileEdit({Key key}) : super(key: key);
 
@@ -119,7 +121,7 @@ class _ContractorProfileEditState extends State<ContractorProfileEdit> {
                             height: 8,
                           ),
                           Text(
-                            Data.currentUser.address??'',
+                            Data.currentUser.address ?? '',
                             style: Constants.applyStyle(
                                 size: 14,
                                 fontWeight: FontWeight.w400,
@@ -178,7 +180,7 @@ class _ContractorProfileEditState extends State<ContractorProfileEdit> {
                               Column(
                                 children: [
                                   Text(
-                                    '\$${Data.currentUser.avgRate.toString()}',
+                                    '\$${Data.currentUser.avgRate != 'null' ? Data.currentUser.avgRate.toString() : '0'}',
                                     style: Constants.applyStyle(
                                       size: 18,
                                       fontWeight: FontWeight.w600,
@@ -217,8 +219,8 @@ class _ContractorProfileEditState extends State<ContractorProfileEdit> {
                             image: _image != null
                                 ? FileImage(_image)
                                 : NetworkImage(
-                              Data.currentUser.imageProfile,
-                            ),
+                                    Data.currentUser.imageProfile,
+                                  ),
                             fit: BoxFit.cover),
                         borderRadius: BorderRadius.all(
                           Radius.elliptical(9999, 9999),
@@ -252,9 +254,7 @@ class _ContractorProfileEditState extends State<ContractorProfileEdit> {
                                       address: locationController.text,
                                       latitude: Data.currentUser.latitude,
                                       longitude: Data.currentUser.longitude,
-                                      image: _image
-                                  );
-
+                                      image: _image);
                                 }
                               },
                               borderRadius: BorderRadius.all(
@@ -499,36 +499,35 @@ class _ContractorProfileEditState extends State<ContractorProfileEdit> {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => PlacePickerScreen(
-                                  initialPosition: initialPosition,
-                                  onPlacePicked: (p0) {
-                                    Navigator.pop(context);
-                                    setState(() {
-                                      Data.currentUser.latitude =
-                                          p0.geometry.location.lat.toString();
-                                      Data.currentUser.longitude =
-                                          p0.geometry.location.lng.toString();
-                                      locationController.text =
-                                          p0.formattedAddress;
-                                    });
-                                  },
+                                builder: (context) => EnterZipCode(
+                                  zipCode: Data.currentUser.zipCode,
+                                  latitude: Data.currentUser.latitude != null
+                                      ? double.parse(Data.currentUser.latitude)
+                                      : null,
+                                  longitude: Data.currentUser.longitude != null
+                                      ? double.parse(Data.currentUser.longitude)
+                                      : null,
                                 ),
-                              ));
+                              )).then((value) {
+                            if (value) {
+                              setState(() {});
+                            }
+                          });
                         }
                       },
                       function: () async {
-                        setState(() {
-                          isLocationLoading = true;
-                        });
-                        await ProviderController().editProfile(
-                            name: nameController.text,
-                            email: emailController.text,
-                            address: locationController.text,
-                            latitude: Data.currentUser.latitude,
-                            longitude: Data.currentUser.longitude);
-                        setState(() {
-                          isLocationLoading = false;
-                        });
+                        // setState(() {
+                        //   isLocationLoading = true;
+                        // });
+                        // await ProviderController().editProfile(
+                        //     name: nameController.text,
+                        //     email: emailController.text,
+                        //     address: locationController.text,
+                        //     latitude: Data.currentUser.latitude,
+                        //     longitude: Data.currentUser.longitude);
+                        // setState(() {
+                        //   isLocationLoading = false;
+                        // });
                       },
                     ),
                     CupertinoButton(
@@ -538,13 +537,24 @@ class _ContractorProfileEditState extends State<ContractorProfileEdit> {
                           context: context,
                           barrierDismissible: true,
                           builder: (context) => StatefulBuilder(
-                            builder: (context, setState) => CupertinoAlertDialog(
-                              title: Text('Logout, Are you sure?'.tr(), ),
+                            builder: (context, setState) =>
+                                CupertinoAlertDialog(
+                              title: Text(
+                                'Logout, Are you sure?'.tr(),
+                              ),
                               actions: [
                                 CupertinoButton(
                                     onPressed: () {
+                                      DatabaseReference _dbReference;
+                                      _dbReference = FirebaseDatabase.instance
+                                          .ref()
+                                          .child('Users');
+                                      _dbReference
+                                          .child(Data.currentUser.id.toString())
+                                          .remove();
                                       GlobalController().logout();
-                                      Navigator.popUntil(context, (route) => route.isFirst);
+                                      Navigator.popUntil(
+                                          context, (route) => route.isFirst);
                                       Navigator.pushReplacement(
                                         context,
                                         MaterialPageRoute(
@@ -553,7 +563,8 @@ class _ContractorProfileEditState extends State<ContractorProfileEdit> {
                                       );
                                     },
                                     child: Text('Confirm'.tr(),
-                                        style: TextStyle(color: kPrimaryColor))),
+                                        style:
+                                            TextStyle(color: kPrimaryColor))),
                                 CupertinoButton(
                                     onPressed: () {
                                       Navigator.pop(context);
@@ -566,7 +577,6 @@ class _ContractorProfileEditState extends State<ContractorProfileEdit> {
                             ),
                           ),
                         );
-
                       },
                       child: Row(
                         children: [

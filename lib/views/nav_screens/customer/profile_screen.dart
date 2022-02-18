@@ -1,14 +1,14 @@
 import 'dart:io';
 
+import 'package:firebase_database/firebase_database.dart';
 import 'package:fixed_bids/utils/constants.dart';
 import 'package:fixed_bids/controllers/global_controller.dart';
 import 'package:fixed_bids/controllers/user_controller.dart';
-import 'package:fixed_bids/external/lib/src/place_picker.dart';
 import 'package:fixed_bids/models/responses/login_response.dart';
 import 'package:fixed_bids/utils/helper.dart';
 import 'package:fixed_bids/views/auth/sign_in.dart';
-import 'package:fixed_bids/views/other/settings.dart';
-import 'package:fixed_bids/views/place_picker.dart';
+import 'package:fixed_bids/views/other/enter_zip_code.dart';
+
 import 'package:fixed_bids/views/root.dart';
 import 'package:fixed_bids/widgets/app_bar.dart';
 import 'package:fixed_bids/widgets/icon_button.dart';
@@ -17,7 +17,6 @@ import 'package:fixed_bids/widgets/text_field.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:easy_localization/easy_localization.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -34,7 +33,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
   bool isLocationLoading = false;
   bool isPasswordLoading = false;
   bool isPasswordEditing = false;
-  TextEditingController nameController, emailController, locationController;
+  TextEditingController nameController,
+      emailController /*, locationController*/;
+
   TextEditingController oldPasswordController,
       newPasswordController,
       confirmPasswordController;
@@ -43,16 +44,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
   bool newPasswordObscure = true;
   bool confirmPasswordObscure = true;
   File _image;
+  Future _future;
 
   @override
   void initState() {
+    _future = GlobalController().getProfileById(id: Data.currentUser.id);
     oldPasswordController = new TextEditingController();
     newPasswordController = new TextEditingController();
     confirmPasswordController = new TextEditingController();
     nameController = new TextEditingController(text: Data.currentUser.name);
     emailController = new TextEditingController(text: Data.currentUser.email);
-    locationController =
-        new TextEditingController(text: Data.currentUser.address);
+    // locationController =
+    //     new TextEditingController(text: );
     oldPasswordNode = new FocusNode();
     newPasswordNode = new FocusNode();
     confirmPasswordNode = new FocusNode();
@@ -66,7 +69,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     confirmPasswordController.dispose();
     nameController.dispose();
     emailController.dispose();
-    locationController.dispose();
+    // locationController.dispose();
     oldPasswordNode.dispose();
     newPasswordNode.dispose();
     confirmPasswordNode.dispose();
@@ -100,6 +103,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 actions: [
                   CupertinoButton(
                       onPressed: () {
+                        DatabaseReference _dbReference;
+                        _dbReference =
+                            FirebaseDatabase.instance.ref().child('Users');
+                        _dbReference
+                            .child(Data.currentUser.id.toString())
+                            .remove();
                         GlobalController().logout();
                         Navigator.popUntil(context, (route) => route.isFirst);
                         Navigator.pushReplacement(
@@ -222,15 +231,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   setState(() {
                                     _image = file;
                                   });
-                                   await UserController().editProfile(
+                                  await UserController().editProfile(
                                       name: nameController.text,
                                       email: emailController.text,
-                                      address: locationController.text,
-                                      latitude: Data.currentUser.latitude,
-                                      longitude: Data.currentUser.longitude,
-                                     image: _image
-                                  );
-
+                                      // address: locationController.text,
+                                      // latitude: Data.currentUser.latitude,
+                                      // longitude: Data.currentUser.longitude,
+                                      image: _image);
                                 }
                               },
                               borderRadius: BorderRadius.all(
@@ -280,11 +287,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           isNameLoading = true;
                         });
                         await UserController().editProfile(
-                            name: nameController.text,
-                            email: emailController.text,
-                            address: locationController.text,
-                            latitude: Data.currentUser.latitude,
-                            longitude: Data.currentUser.longitude);
+                          name: nameController.text,
+                          email: emailController.text,
+                          // address: locationController.text,
+                          // latitude: Data.currentUser.latitude,
+                          // longitude: Data.currentUser.longitude
+                        );
                         setState(() {
                           isNameLoading = false;
                         });
@@ -300,11 +308,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           isEmailLoading = true;
                         });
                         await UserController().editProfile(
-                            name: nameController.text,
-                            email: emailController.text,
-                            address: locationController.text,
-                            latitude: Data.currentUser.latitude,
-                            longitude: Data.currentUser.longitude);
+                          name: nameController.text,
+                          email: emailController.text,
+                          // address: locationController.text,
+                          // latitude: Data.currentUser.latitude,
+                          // longitude: Data.currentUser.longitude
+                        );
                         setState(() {
                           isEmailLoading = false;
                         });
@@ -345,10 +354,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         await UserController().editProfile(
                                             name: nameController.text,
                                             email: emailController.text,
-                                            address: locationController.text,
-                                            latitude: Data.currentUser.latitude,
-                                            longitude:
-                                                Data.currentUser.longitude,
+                                            // address: locationController.text,
+                                            // latitude: Data.currentUser.latitude,
+                                            // longitude:
+                                            //     Data.currentUser.longitude,
                                             oldPassword:
                                                 oldPasswordController.text,
                                             password:
@@ -461,52 +470,49 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ),
                       ],
                     ),
-                    BuildInfoField(
-                      title: 'Location'.tr(),
-                      buttonTitle: 'Edit'.tr(),
-                      readOnly: true,
-                      controller: locationController,
-                      loading: isLocationLoading,
-                      onTextFieldPress: () async {
-                        LatLng initialPosition =
-                            await Constants.getCurrentLocation(
-                                context: context);
-                        if (initialPosition != null) {
+                    Builder(builder: (context) {
+                      return BuildInfoField(
+                        title: 'Location'.tr(),
+                        buttonTitle: 'Edit'.tr(),
+                        readOnly: true,
+                        initialValue: Data.currentUser.zipCode,
+                        // controller: locationController,
+                        loading: isLocationLoading,
+                        onTextFieldPress: () async {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => PlacePickerScreen(
-                                  initialPosition: initialPosition,
-                                  onPlacePicked: (p0) {
-                                    Navigator.pop(context);
-                                    setState(() {
-                                      Data.currentUser.latitude =
-                                          p0.geometry.location.lat.toString();
-                                      Data.currentUser.longitude =
-                                          p0.geometry.location.lng.toString();
-                                      locationController.text =
-                                          p0.formattedAddress;
-                                    });
-                                  },
+                                builder: (context) => EnterZipCode(
+                                  zipCode: Data.currentUser.zipCode,
+                                  latitude: Data.currentUser.latitude != null
+                                      ? double.parse(Data.currentUser.latitude)
+                                      : null,
+                                  longitude: Data.currentUser.longitude != null
+                                      ? double.parse(Data.currentUser.longitude)
+                                      : null,
                                 ),
-                              ));
-                        }
-                      },
-                      function: () async {
-                        setState(() {
-                          isLocationLoading = true;
-                        });
-                        await UserController().editProfile(
-                            name: nameController.text,
-                            email: emailController.text,
-                            address: locationController.text,
-                            latitude: Data.currentUser.latitude,
-                            longitude: Data.currentUser.longitude);
-                        setState(() {
-                          isLocationLoading = false;
-                        });
-                      },
-                    ),
+                              )).then((value) {
+                            if (value) {
+                              setState(() {});
+                            }
+                          });
+                        },
+                        function: () async {
+                          // setState(() {
+                          //   isLocationLoading = true;
+                          // });
+                          // await UserController().editProfile(
+                          //     name: nameController.text,
+                          //     email: emailController.text,
+                          //     address: locationController.text,
+                          //     latitude: Data.currentUser.latitude,
+                          //     longitude: Data.currentUser.longitude);
+                          // setState(() {
+                          //   isLocationLoading = false;
+                          // });
+                        },
+                      );
+                    }),
                   ],
                 ),
               ),
@@ -521,6 +527,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 class BuildInfoField extends StatefulWidget {
   final String title;
   final String buttonTitle;
+  final String initialValue;
   final bool loading;
   final bool readOnly;
   final TextEditingController controller;
@@ -535,7 +542,8 @@ class BuildInfoField extends StatefulWidget {
       this.loading = false,
       this.function,
       this.readOnly = false,
-      this.onTextFieldPress})
+      this.onTextFieldPress,
+      this.initialValue})
       : super(key: key);
 
   @override
@@ -606,6 +614,7 @@ class _BuildInfoFieldState extends State<BuildInfoField> {
           controller: widget.controller,
           readOnly: widget.readOnly,
           onTap: widget.onTextFieldPress,
+          initialValue: widget.initialValue,
           style: Constants.applyStyle(
               size: 18,
               color: isEditing ? HexColor('444444') : HexColor('A8A8A8')),

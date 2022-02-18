@@ -103,7 +103,6 @@ class _JobHistoryScreenState extends State<JobHistoryScreen>
         ],
       ),
       backgroundColor: kBackGroundColor,
-
       body: Column(
         children: [
           Padding(
@@ -192,16 +191,18 @@ class _JobHistoryScreenState extends State<JobHistoryScreen>
                     return SmartRefresher(
                       controller: _openRefreshController,
                       onRefresh: _onRefresh,
-                      child:snapshot.data.items.isEmpty?NoDataFound(): ListView.separated(
-                        itemCount: snapshot.data.items.length,
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 22, vertical: 10),
-                        separatorBuilder: (context, index) => SizedBox(
-                          height: 20,
-                        ),
-                        itemBuilder: (context, index) =>
-                            buildJobBox(job: snapshot.data.items[index]),
-                      ),
+                      child: snapshot.data.items.isEmpty
+                          ? NoDataFound()
+                          : ListView.separated(
+                              itemCount: snapshot.data.items.length,
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 22, vertical: 10),
+                              separatorBuilder: (context, index) => SizedBox(
+                                height: 20,
+                              ),
+                              itemBuilder: (context, index) =>
+                                  buildJobBox(job: snapshot.data.items[index]),
+                            ),
                     );
                   }),
               FutureBuilder<NearByJobsResponse>(
@@ -213,16 +214,18 @@ class _JobHistoryScreenState extends State<JobHistoryScreen>
                   return SmartRefresher(
                     controller: _closedRefreshController,
                     onRefresh: _onRefresh,
-                    child:snapshot.data.items.isEmpty?NoDataFound(): ListView.separated(
-                      itemCount: snapshot.data.items.length,
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 22, vertical: 10),
-                      separatorBuilder: (context, index) => SizedBox(
-                        height: 20,
-                      ),
-                      itemBuilder: (context, index) =>
-                          buildJobBox(job: snapshot.data.items[index]),
-                    ),
+                    child: snapshot.data.items.isEmpty
+                        ? NoDataFound()
+                        : ListView.separated(
+                            itemCount: snapshot.data.items.length,
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 22, vertical: 10),
+                            separatorBuilder: (context, index) => SizedBox(
+                              height: 20,
+                            ),
+                            itemBuilder: (context, index) =>
+                                buildJobBox(job: snapshot.data.items[index]),
+                          ),
                   );
                 },
               ),
@@ -259,12 +262,12 @@ class _JobHistoryScreenState extends State<JobHistoryScreen>
                     id: job.id,
                   ),
                 )).then((value) {
-                  if(value){
-                    setState(() {
-                      _openFuture = UserController().getMyJobsByUser();
-                      _closedFuture = UserController().getMyJobsByUser(isOpen: 0);
-                    });
-                  }
+              if (value != null && value) {
+                setState(() {
+                  _openFuture = UserController().getMyJobsByUser();
+                  _closedFuture = UserController().getMyJobsByUser(isOpen: 0);
+                });
+              }
             });
           },
           child: Column(
@@ -345,11 +348,11 @@ class _JobHistoryScreenState extends State<JobHistoryScreen>
                                   : 'EMERGENCY'.tr(),
                           style: Constants.applyStyle(
                               size: 14,
-                              color:job.urgencyType == 1
+                              color: job.urgencyType == 1
                                   ? HexColor('E0A100')
                                   : job.urgencyType == 2
-                                  ? HexColor('F76400')
-                                  : HexColor('19A716'),
+                                      ? HexColor('F76400')
+                                      : HexColor('19A716'),
                               fontWeight: FontWeight.w500),
                         ),
                       ],
@@ -365,196 +368,200 @@ class _JobHistoryScreenState extends State<JobHistoryScreen>
                     SizedBox(
                       height: 20,
                     ),
-                    if(job.providerId!=null)
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
-                          children: [
-                            Container(
-                              height: 50,
-                              width: 50,
-                              decoration: BoxDecoration(
-                                color: purpleColor,
-                                image: DecorationImage(
-                                    fit: BoxFit.cover,
-                                    image: NetworkImage(job.user.imageProfile)),
-                                borderRadius: BorderRadius.all(
-                                  Radius.elliptical(9999, 9999),
+                    if (job.providerId != null)
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            children: [
+                              Container(
+                                height: 50,
+                                width: 50,
+                                decoration: BoxDecoration(
+                                  color: purpleColor,
+                                  image: DecorationImage(
+                                      fit: BoxFit.cover,
+                                      image: NetworkImage(
+                                          job.provider.imageProfile)),
+                                  borderRadius: BorderRadius.all(
+                                    Radius.elliptical(9999, 9999),
+                                  ),
                                 ),
-                              ),
-                              child: Transform.translate(
-                                offset: Offset(0, 3),
-                                child: Align(
-                                  alignment: Alignment.bottomCenter,
-                                  child: Container(
-                                    height: 17.8,
-                                    width: 31,
-                                    decoration: BoxDecoration(
-                                      color: kPrimaryColor,
-                                      border: Border.all(
-                                          color: Colors.white, width: 1),
-                                      borderRadius: BorderRadius.circular(6),
-                                    ),
-                                    child: Center(
-                                      child: Text(
-                                        '${job.user.rate}',
-                                        style: Constants.applyStyle(
-                                            color: Colors.white,
-                                            size: 12,
-                                            fontWeight: FontWeight.w500),
+                                child: Transform.translate(
+                                  offset: Offset(0, 3),
+                                  child: Align(
+                                    alignment: Alignment.bottomCenter,
+                                    child: Container(
+                                      height: 17.8,
+                                      width: 31,
+                                      decoration: BoxDecoration(
+                                        color: kPrimaryColor,
+                                        border: Border.all(
+                                            color: Colors.white, width: 1),
+                                        borderRadius: BorderRadius.circular(6),
+                                      ),
+                                      child: Center(
+                                        child: Text(
+                                          '${job.provider.rate}',
+                                          style: Constants.applyStyle(
+                                              color: Colors.white,
+                                              size: 12,
+                                              fontWeight: FontWeight.w500),
+                                        ),
                                       ),
                                     ),
                                   ),
                                 ),
                               ),
-                            ),
-                            SizedBox(
-                              width: 12.6,
-                            ),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  '${job.user.name}',
-                                  style: Constants.applyStyle(
-                                      fontWeight: FontWeight.w600, size: 18),
-                                ),
-                                SizedBox(
-                                  height: 12.8,
-                                ),
-                                if (job.user.servises != null &&
-                                    job.user.servises.isNotEmpty)
-                                  LayoutBuilder(
-                                    builder: (context, constraints) =>
-                                        SizedOverflowBox(
-                                      alignment:
-                                          AlignmentDirectional.centerStart,
-                                      size: Size(constraints.minWidth, 23),
-                                      child: Row(
-                                        children: [
-                                          Row(
-                                            children: List.generate(
-                                              constraints.isSatisfiedBy(Size(
-                                                      constraints.minWidth - 10,
-                                                      23))
-                                                  ? job.user.servises.length
-                                                  : 1,
-                                              (index) => Row(
-                                                children: [
-                                                  Container(
-                                                    decoration: BoxDecoration(
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(20),
-                                                        color: Color.fromRGBO(
-                                                            232, 241, 255, 1)),
-                                                    padding:
-                                                        EdgeInsets.symmetric(
-                                                            vertical: 4,
-                                                            horizontal: 7.5),
-                                                    child: Text(
-                                                      '${job.service.name}',
-                                                      style:
-                                                          Constants.applyStyle(
-                                                              size: 12,
-                                                              color: Color
-                                                                  .fromRGBO(
-                                                                      31,
-                                                                      113,
-                                                                      237,
-                                                                      1),
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w400),
+                              SizedBox(
+                                width: 12.6,
+                              ),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    '${job.provider.name}',
+                                    style: Constants.applyStyle(
+                                        fontWeight: FontWeight.w600, size: 18),
+                                  ),
+                                  SizedBox(
+                                    height: 12.8,
+                                  ),
+                                  if (job.provider.servises != null &&
+                                      job.provider.servises.isNotEmpty)
+                                    LayoutBuilder(
+                                      builder: (context, constraints) =>
+                                          SizedOverflowBox(
+                                        alignment:
+                                            AlignmentDirectional.centerStart,
+                                        size: Size(constraints.minWidth, 23),
+                                        child: Row(
+                                          children: [
+                                            Row(
+                                              children: List.generate(
+                                                constraints.isSatisfiedBy(Size(
+                                                        constraints.minWidth -
+                                                            10,
+                                                        23))
+                                                    ? job.provider.servises
+                                                        .length
+                                                    : 1,
+                                                (index) => Row(
+                                                  children: [
+                                                    Container(
+                                                      decoration: BoxDecoration(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(20),
+                                                          color: Color.fromRGBO(
+                                                              232,
+                                                              241,
+                                                              255,
+                                                              1)),
+                                                      padding:
+                                                          EdgeInsets.symmetric(
+                                                              vertical: 4,
+                                                              horizontal: 7.5),
+                                                      child: Text(
+                                                        '${job.service.name}',
+                                                        style: Constants
+                                                            .applyStyle(
+                                                                size: 12,
+                                                                color: Color
+                                                                    .fromRGBO(
+                                                                        31,
+                                                                        113,
+                                                                        237,
+                                                                        1),
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w400),
+                                                      ),
                                                     ),
-                                                  ),
-                                                  SizedBox(
-                                                    width: 5,
-                                                  )
-                                                ],
+                                                    SizedBox(
+                                                      width: 5,
+                                                    )
+                                                  ],
+                                                ),
                                               ),
                                             ),
-                                          ),
-                                          if (!constraints.isSatisfiedBy(Size(
-                                              constraints.minWidth - 10, 23)))
-                                            Container(
-                                              decoration: BoxDecoration(
-                                                  borderRadius:
-                                                      BorderRadius.circular(20),
-                                                  color: Color.fromRGBO(
-                                                      232, 241, 255, 1)),
-                                              padding: EdgeInsets.symmetric(
-                                                  vertical: 4, horizontal: 7.5),
-                                              child: Text(
-                                                '${job.user.servises.length - 1}+',
-                                                style: Constants.applyStyle(
-                                                    size: 12,
+                                            if (!constraints.isSatisfiedBy(Size(
+                                                constraints.minWidth - 10, 23)))
+                                              Container(
+                                                decoration: BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            20),
                                                     color: Color.fromRGBO(
-                                                        31, 113, 237, 1),
-                                                    fontWeight:
-                                                        FontWeight.w400),
+                                                        232, 241, 255, 1)),
+                                                padding: EdgeInsets.symmetric(
+                                                    vertical: 4,
+                                                    horizontal: 7.5),
+                                                child: Text(
+                                                  '${job.provider.servises.length - 1}+',
+                                                  style: Constants.applyStyle(
+                                                      size: 12,
+                                                      color: Color.fromRGBO(
+                                                          31, 113, 237, 1),
+                                                      fontWeight:
+                                                          FontWeight.w400),
+                                                ),
                                               ),
-                                            ),
-                                        ],
+                                          ],
+                                        ),
                                       ),
                                     ),
-                                  ),
-                              ],
-                            )
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            MyIconButton(
-                              svg: 'assets/icons/Chat.svg',loading: loadChat,
-                              onPressed: () async {
-                                setState(() {
-                                  loadChat = true;
-                                });
-                                ApiResponse response =
-                                await ChatController().checkChat(
-                                    id: job.user.id);
-                                setState(() {
-                                  loadChat = false;
-                                });
-                                if (response.status) {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => OpenChat(
-                                        id: response.chatID,
+                                ],
+                              )
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              MyIconButton(
+                                svg: 'assets/icons/Chat.svg',
+                                loading: loadChat,
+                                onPressed: () async {
+                                  setState(() {
+                                    loadChat = true;
+                                  });
+                                  ApiResponse response = await ChatController()
+                                      .checkChat(id: job.providerId);
+                                  setState(() {
+                                    loadChat = false;
+                                  });
+                                  if (response.status) {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => OpenChat(
+                                          id: response.chatID,
+                                        ),
                                       ),
-                                    ),
-                                  );
-                                }
-                              },
-                              color:
-                              HexColor('#1F71ED').withOpacity(0.15),
-                              iconColor: kPrimaryColor,
-                            ),
-                            SizedBox(
-                              width: 10,
-                            ),
-                            MyIconButton(
-                              svg: 'assets/icons/Calling.svg',
-                              onPressed: () async {
-                                await launch('tel:' +
-                                    job.user.mobile);
-                              },
-                              color:
-                              HexColor('#1F71ED').withOpacity(0.15),
-                              iconColor: kPrimaryColor,
-                            )
-                          ],
-                        ),
-
-                      ],
-                    )
+                                    );
+                                  }
+                                },
+                                color: HexColor('#1F71ED').withOpacity(0.15),
+                                iconColor: kPrimaryColor,
+                              ),
+                              SizedBox(
+                                width: 10,
+                              ),
+                              MyIconButton(
+                                svg: 'assets/icons/Calling.svg',
+                                onPressed: () async {
+                                  await launch('tel:' + job.provider.mobile);
+                                },
+                                color: HexColor('#1F71ED').withOpacity(0.15),
+                                iconColor: kPrimaryColor,
+                              )
+                            ],
+                          ),
+                        ],
+                      )
                     else
                       Text(
                         "No one has been assigned yet",
-                         style: TextStyle(
+                        style: TextStyle(
                           color: Color(0xffa5a5a5),
                           fontSize: 14,
                         ),

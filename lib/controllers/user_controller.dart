@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:bot_toast/bot_toast.dart';
+import 'package:fixed_bids/models/responses/api_response.dart';
 import 'package:fixed_bids/utils/constants.dart';
 import 'package:fixed_bids/models/responses/login_response.dart';
 import 'package:fixed_bids/models/responses/nearby_jobs_response.dart';
@@ -8,18 +9,18 @@ import 'package:flutter/material.dart';
 
 import 'package:http/http.dart';
 import 'package:async/async.dart';
+
 class UserController {
-  Future<LoginResponse> editProfile({
-    String email,
-    String name,
-    String latitude,
-    String longitude,
-    String address,
-    String oldPassword,
-    String password,
-    String confirmPassword,
-    File image
-  }) async {
+  Future<LoginResponse> editProfile(
+      {String email,
+      String name,
+      String latitude,
+      String longitude,
+      String address,
+      String oldPassword,
+      String password,
+      String confirmPassword,
+      File image}) async {
     var request = MultipartRequest(
       "POST",
       Uri.parse(
@@ -43,8 +44,8 @@ class UserController {
       String fileName = image.path.split("/").last;
       var stream = new ByteStream(DelegatingStream(image.openRead()));
       var length = await image.length();
-      var multipartFile =
-      new MultipartFile('image_profile', stream, length, filename: fileName);
+      var multipartFile = new MultipartFile('image_profile', stream, length,
+          filename: fileName);
 
       request.files.add(multipartFile);
     }
@@ -73,4 +74,20 @@ class UserController {
     return response;
   }
 
+  Future<ApiResponse> updateLocation(
+      {String lat, String lng, String zipCode}) async {
+    var request = await post(
+      Uri.parse("${Constants.domain}updateMyLocation"),
+      body: {
+        "latitude":"$lat",
+        "longitude":"$lng",
+        "zip_code":"$zipCode",
+      },
+      headers: Constants().headers,
+    );
+    var output = json.decode(request.body);
+    print(output);
+    ApiResponse response = ApiResponse.fromJson(output);
+    return response;
+  }
 }

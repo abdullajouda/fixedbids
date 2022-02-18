@@ -21,6 +21,7 @@ class Job {
     this.createdAt,
     this.distance,
     this.user,
+    this.provider,
     this.service,
     this.attachments,
   });
@@ -41,8 +42,9 @@ class Job {
   int providerId;
   int isApproved;
   DateTime createdAt;
-  int distance;
+  double distance;
   User user;
+  User provider;
   Service service;
   List<Attachment> attachments;
 
@@ -51,7 +53,9 @@ class Job {
         userId: json["user_id"],
         serviceId: json["service_id"],
         title: json["title"],
-        price: json["price"]!=null?double.parse(json["price"].toString()):null,
+        price: json["price"] != null
+            ? double.parse(json["price"].toString())
+            : null,
         details: json["details"],
         zipCode: json["zip_code"],
         urgencyType: json["urgency_type"],
@@ -63,9 +67,14 @@ class Job {
         providerId: json["provider_id"] == null ? null : json["provider_id"],
         isApproved: json["is_approved"],
         createdAt: DateTime.parse(json["created_at"]),
-        distance: json["distance"],
+        distance: json["distance"] != null
+            ? double.parse(json["distance"].toString())
+            : null,
         user: User.fromJson(json["user"]),
-        service:json["service"]!=null? Service.fromJson(json["service"]):null,
+        provider:
+            json["provider"] != null ? User.fromJson(json["provider"]) : null,
+        service:
+            json["service"] != null ? Service.fromJson(json["service"]) : null,
         attachments: json["attachments"] != null
             ? List<Attachment>.from(
                 json["attachments"].map((x) => Attachment.fromJson(x)))

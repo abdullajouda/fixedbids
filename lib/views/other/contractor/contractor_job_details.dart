@@ -1,3 +1,4 @@
+import 'package:bot_toast/bot_toast.dart';
 import 'package:fixed_bids/controllers/chat_controller.dart';
 import 'package:fixed_bids/controllers/jobs_controller.dart';
 import 'package:fixed_bids/models/job.dart';
@@ -29,6 +30,7 @@ class ContractorJobDetails extends StatefulWidget {
 class _ContractorJobDetailsState extends State<ContractorJobDetails> {
   Future _future;
   bool loadChat = false;
+  bool load = false;
 
   @override
   void initState() {
@@ -147,8 +149,8 @@ class _ContractorJobDetailsState extends State<ContractorJobDetails> {
                                       color: snapshot.data.item.urgencyType == 1
                                           ? HexColor('E0A100')
                                           : snapshot.data.item.urgencyType == 2
-                                          ? HexColor('F76400')
-                                          : HexColor('19A716'),
+                                              ? HexColor('F76400')
+                                              : HexColor('19A716'),
                                       fontWeight: FontWeight.w500),
                                 ),
                               ],
@@ -342,14 +344,15 @@ class _ContractorJobDetailsState extends State<ContractorJobDetails> {
                                 Row(
                                   children: [
                                     MyIconButton(
-                                      svg: 'assets/icons/Chat.svg',loading: loadChat,
+                                      svg: 'assets/icons/Chat.svg',
+                                      loading: loadChat,
                                       onPressed: () async {
                                         setState(() {
                                           loadChat = true;
                                         });
                                         ApiResponse response =
-                                        await ChatController().checkChat(
-                                            id: snapshot.data.item.user.id);
+                                            await ChatController().checkChat(
+                                                id: snapshot.data.item.user.id);
                                         setState(() {
                                           loadChat = false;
                                         });
@@ -365,7 +368,7 @@ class _ContractorJobDetailsState extends State<ContractorJobDetails> {
                                         }
                                       },
                                       color:
-                                      HexColor('#1F71ED').withOpacity(0.15),
+                                          HexColor('#1F71ED').withOpacity(0.15),
                                       iconColor: kPrimaryColor,
                                     ),
                                     SizedBox(
@@ -378,12 +381,11 @@ class _ContractorJobDetailsState extends State<ContractorJobDetails> {
                                             snapshot.data.item.user.mobile);
                                       },
                                       color:
-                                      HexColor('#1F71ED').withOpacity(0.15),
+                                          HexColor('#1F71ED').withOpacity(0.15),
                                       iconColor: kPrimaryColor,
                                     )
                                   ],
                                 ),
-
                               ],
                             ),
                             SizedBox(
@@ -493,7 +495,18 @@ class _ContractorJobDetailsState extends State<ContractorJobDetails> {
             child: Center(
               child: Button(
                 title: 'Get job'.tr(),
-                onPressed: () {},
+                loading: load,
+                onPressed: () async {
+                  setState(() {
+                    load = true;
+                  });
+                  ApiResponse response =
+                      await JobsController().addNewJobOffer(id: widget.id);
+                  BotToast.showText(text: response.message);
+                  setState(() {
+                    load = false;
+                  });
+                },
               ),
             ),
           ),

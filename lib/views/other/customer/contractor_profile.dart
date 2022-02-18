@@ -32,7 +32,7 @@ class _ContractorProfileState extends State<ContractorProfile> {
 
   @override
   void initState() {
-    _future = GlobalController().getProfileById(id: Data.currentUser.id);
+    _future = GlobalController().getProfileById(id: widget.id);
     super.initState();
   }
 
@@ -91,7 +91,7 @@ class _ContractorProfileState extends State<ContractorProfile> {
                                   height: 8,
                                 ),
                                 Text(
-                                  user.address,
+                                  user.address??'',
                                   style: Constants.applyStyle(
                                       size: 14,
                                       fontWeight: FontWeight.w400,
@@ -387,35 +387,35 @@ class _ContractorProfileState extends State<ContractorProfile> {
                                                 ),
                                               )
                                             else
-                                              Expanded(
-                                                child: Button(
-                                                  title: 'Message'.tr(),
-                                                  loading: loadChat,
-                                                  onPressed: () async {
-                                                    setState(() {
-                                                      loadChat = true;
-                                                    });
-                                                    ApiResponse response = await ChatController()
-                                                        .checkChat(id: user.id);
-                                                    setState(() {
-                                                      loadChat = false;
-                                                    });
-                                                    if (response.status) {
-                                                      Navigator.push(
-                                                        context,
-                                                        MaterialPageRoute(
-                                                          builder: (context) => OpenChat(
-                                                            id: response.chatID,
-                                                          ),
-                                                        ),
-                                                      );
-                                                    }
-                                                  },
-                                                ),
-                                              ),
-                                            SizedBox(
-                                              width: 11,
-                                            ),
+                                            //   Expanded(
+                                            //     child: Button(
+                                            //       title: 'Message'.tr(),
+                                            //       loading: loadChat,
+                                            //       onPressed: () async {
+                                            //         setState(() {
+                                            //           loadChat = true;
+                                            //         });
+                                            //         ApiResponse response = await ChatController()
+                                            //             .checkChat(id: user.id);
+                                            //         setState(() {
+                                            //           loadChat = false;
+                                            //         });
+                                            //         if (response.status) {
+                                            //           Navigator.push(
+                                            //             context,
+                                            //             MaterialPageRoute(
+                                            //               builder: (context) => OpenChat(
+                                            //                 id: response.chatID,
+                                            //               ),
+                                            //             ),
+                                            //           );
+                                            //         }
+                                            //       },
+                                            //     ),
+                                            //   ),
+                                            // SizedBox(
+                                            //   width: 11,
+                                            // ),
                                             Expanded(
                                               child: Button(
                                                 title: 'Message'.tr(),
@@ -445,17 +445,17 @@ class _ContractorProfileState extends State<ContractorProfile> {
                                                 },
                                               ),
                                             ),
-                                            if (widget.offerId == null)
-                                              Expanded(
-                                                child: Button(
-                                                  title: 'Hire Me'.tr(),
-                                                  color: Colors.white,
-                                                  fontColor:
-                                                      HexColor('#263238'),
-                                                  hasBorder: true,
-                                                  onPressed: () {},
-                                                ),
-                                              ),
+                                            // if (widget.offerId == null)
+                                            //   Expanded(
+                                            //     child: Button(
+                                            //       title: 'Hire Me'.tr(),
+                                            //       color: Colors.white,
+                                            //       fontColor:
+                                            //           HexColor('#263238'),
+                                            //       hasBorder: true,
+                                            //       onPressed: () {},
+                                            //     ),
+                                            //   ),
                                           ],
                                         ),
                                 ),
@@ -530,7 +530,7 @@ class _ContractorProfileState extends State<ContractorProfile> {
                                     padding: EdgeInsets.symmetric(
                                         vertical: 4, horizontal: 7.5),
                                     child: Text(
-                                      'home cleaning',
+                                      user.servises[index].service.name,
                                       style: Constants.applyStyle(
                                           size: 12,
                                           color:
@@ -574,7 +574,7 @@ class _ContractorProfileState extends State<ContractorProfile> {
                             padding: EdgeInsets.zero,
                             physics: NeverScrollableScrollPhysics(),
                             itemBuilder: (context, index) => Container(
-                              child: Column(
+                              child: Column(crossAxisAlignment: CrossAxisAlignment.start,
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
                                   Row(
