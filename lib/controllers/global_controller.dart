@@ -185,7 +185,7 @@ class GlobalController {
   Future<UsersByServiceResponse> getUsersByServiceId(
       {int id, String text}) async {
     var request = await get(
-      Uri.parse("${Constants.domain}getUsersByServiceId/$id?text=$text"),
+      Uri.parse("${Constants.domain}getUsersByServiceId/$id?text=${text??''}"),
       headers: Constants().headers,
     );
     return UsersByServiceResponse.fromJson(json.decode(request.body));
