@@ -20,6 +20,7 @@ class _SplashScreenState extends State<SplashScreen>
   AnimationController _controller;
 
   landingPage() async {
+    FirebaseMessagingService().getToken();
     Data.sharedPreferencesController =
         await SharedPreferencesController.instance;
     await Future.delayed(_controller.duration);

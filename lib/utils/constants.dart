@@ -180,27 +180,27 @@ class Constants {
 }
 
 
-class FieldValidator {
-  static String validate(String value, context) {
-    if (value.isEmpty) {
-      return '* Required'.tr();
+  class FieldValidator {
+    static String validate(String value, context) {
+      if (value.isEmpty) {
+        return '* Required'.tr();
+      }
+      return null;
     }
-    return null;
   }
-}
 
-class EmailValidator {
-  static String validate(String value, context) {
-    if (value.isEmpty) {
-      return '* Required'.tr();
+  class EmailValidator {
+    static String validate(String value, context) {
+      if (value.isEmpty) {
+        return '* Required'.tr();
+      }
+      RegExp regExp = new RegExp(emailRegExp);
+      if (!regExp.hasMatch(value)) {
+        return 'Enter A Valid Email'.tr();
+      }
+      return null;
     }
-    RegExp regExp = new RegExp(emailRegExp);
-    if (!regExp.hasMatch(value)) {
-      return 'Enter A Valid Email'.tr();
-    }
-    return null;
   }
-}
 
 InputDecoration inputDecoration(
     {Widget suffix,

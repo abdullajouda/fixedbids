@@ -80,7 +80,7 @@ class User {
         totalFollowings: json["total_followings"],
         completeJobCount: json["complete_job_count"],
         rate: json["rate"],
-    avgRate: json["avg_rate"].toString(),
+        avgRate: json["avg_rate"].toString(),
         accessToken: json["access_token"],
         servises: json["servises"] != null
             ? List<Servise>.from(
@@ -115,7 +115,9 @@ class User {
         "complete_job_count": completeJobCount,
         "rate": rate,
         "access_token": accessToken,
-        "servises": List<dynamic>.from(servises.map((x) => x)),
+        "servises": servises != null
+            ? List<Servise>.from(servises.map((x) => x))
+            : null,
       };
 }
 

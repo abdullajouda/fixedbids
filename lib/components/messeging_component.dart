@@ -71,9 +71,11 @@ class _AudioComponentState extends State<AudioComponent> {
             myPlayer.isStopped ? Icons.play_arrow_rounded : Icons.stop,
             color: Colors.white,
           ),
-          Text(
-            '${widget.recording.split('/').last}',
-            style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700),
+          Expanded(
+            child: Text(
+              '${widget.recording.split('/').last}',
+              style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700),
+            ),
           ),
         ],
       ),

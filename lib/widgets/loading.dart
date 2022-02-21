@@ -23,6 +23,6 @@ class ButtonLoad extends StatelessWidget {
     return Center(child: SizedBox(
         height: 25,
         width: 25,
-        child: Lottie.asset('assets/button_load.json')));
+        child: Lottie.asset('assets/button_load.json',)));
   }
 }

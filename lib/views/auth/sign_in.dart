@@ -4,8 +4,10 @@ import 'package:fixed_bids/utils/constants.dart';
 import 'package:fixed_bids/controllers/global_controller.dart';
 import 'package:fixed_bids/models/responses/login_response.dart';
 import 'package:fixed_bids/views/auth/forgot_password.dart';
+import 'package:fixed_bids/views/auth/social_account_type.dart';
 import 'package:fixed_bids/widgets/button.dart';
 import 'package:fixed_bids/widgets/check_box.dart';
+import 'package:fixed_bids/widgets/loading.dart';
 import 'package:fixed_bids/widgets/text_field.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -26,6 +28,8 @@ class _SignInState extends State<SignIn> {
   bool obscure = true;
   bool remember = false;
   bool loading = false;
+  bool loadingGmail = false;
+  bool loadingFacebook = false;
 
   @override
   void initState() {
@@ -158,7 +162,11 @@ class _SignInState extends State<SignIn> {
                     ),
                     CupertinoButton(
                       onPressed: () {
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => ForgotPassword(),));
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ForgotPassword(),
+                            ));
                       },
                       padding: EdgeInsets.zero,
                       child: Text(
@@ -177,18 +185,18 @@ class _SignInState extends State<SignIn> {
                 padding: kPadding,
                 child: Button(
                   title: 'Log in'.tr(),
-                  loading:  loading,
+                  loading: loading,
                   onPressed: () async {
-                    if(_formKey.currentState.validate()){
+                    if (_formKey.currentState.validate()) {
                       setState(() {
                         loading = true;
                       });
                       LoginResponse userResponse = await GlobalController()
                           .signIn(
-                          email: emailController.text,
-                          password: passwordController.text);
+                              email: emailController.text,
+                              password: passwordController.text);
                       if (userResponse.status && userResponse.code == 200) {
-                        if(remember){
+                        if (remember) {
                           Data.sharedPreferencesController.setIsLogin(true);
                         }
                         Data.sharedPreferencesController
@@ -233,8 +241,38 @@ class _SignInState extends State<SignIn> {
                       color: Color(0x0ffF3F3F3),
                     ),
                     child: CupertinoButton(
-                      child: SvgPicture.asset('assets/images/google.svg'),
-                      onPressed: () {},
+                      child: loadingGmail
+                          ? ButtonLoad()
+                          : SvgPicture.asset('assets/images/google.svg'),
+                      onPressed: () async {
+                        setState(() {
+                          loadingGmail = true;
+                        });
+                        LoginResponse firstResponse =
+                            await GlobalController().signInGmail();
+                        if (firstResponse.status) {
+                          Data.sharedPreferencesController.setIsLogin(true);
+                          Data.sharedPreferencesController
+                              .setUserData(firstResponse.user);
+                          Data.currentUser = firstResponse.user;
+                          Data.navigator.navigator
+                              .pushReplacement(MaterialPageRoute(
+                            builder: (context) => RootPage(),
+                          ));
+                        } else {
+                          BotToast.showText(text: firstResponse.message);
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => SocialAccountType(
+                                  socialType: 'google',
+                                ),
+                              ));
+                        }
+                        setState(() {
+                          loadingGmail = false;
+                        });
+                      },
                     ),
                   ),
                   SizedBox(
@@ -248,8 +286,38 @@ class _SignInState extends State<SignIn> {
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: CupertinoButton(
-                      child: SvgPicture.asset('assets/images/fb.svg'),
-                      onPressed: () {},
+                      child: loadingFacebook
+                          ? ButtonLoad()
+                          : SvgPicture.asset('assets/images/fb.svg'),
+                      onPressed: () async {
+                        setState(() {
+                          loadingFacebook = true;
+                        });
+                        LoginResponse firstResponse =
+                            await GlobalController().facebookLogin();
+                        if (firstResponse.status) {
+                          Data.sharedPreferencesController.setIsLogin(true);
+                          Data.sharedPreferencesController
+                              .setUserData(firstResponse.user);
+                          Data.currentUser = firstResponse.user;
+                          Data.navigator.navigator
+                              .pushReplacement(MaterialPageRoute(
+                            builder: (context) => RootPage(),
+                          ));
+                        } else {
+                          BotToast.showText(text: firstResponse.message);
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => SocialAccountType(
+                                  socialType: 'facebook',
+                                ),
+                              ));
+                        }
+                        setState(() {
+                          loadingFacebook = false;
+                        });
+                      },
                     ),
                   ),
                   if (Platform.isIOS)

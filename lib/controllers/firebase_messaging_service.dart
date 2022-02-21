@@ -58,15 +58,19 @@ class FirebaseMessagingService {
     }
   }
 
+  Future getToken()async{
+    String token = await _fcm.getToken();
+    print("FirebaseMessaging token: $token");
+    Data.fcm = token;
+  }
+
   Future initialise() async {
     if (Platform.isIOS) {
       _fcm.setForegroundNotificationPresentationOptions(
           sound: true, badge: true, alert: true);
     }
 
-    String token = await _fcm.getToken();
-    print("FirebaseMessaging token: $token");
-    Data.fcm = token;
+
     FirebaseMessaging.instance
         .getInitialMessage()
         .then((RemoteMessage message) {

@@ -1,5 +1,6 @@
 import 'dart:io';
-import 'dart:ui';
+import 'package:flutter/services.dart';
+import 'package:path_provider/path_provider.dart';
 
 import 'package:fixed_bids/components/messeging_component.dart';
 import 'package:fixed_bids/controllers/notifications_controller.dart';
@@ -46,9 +47,18 @@ class _OpenChatState extends State<OpenChat> {
         throw RecordingPermissionException("Microphone permission not granted");
     } else {
       await _soundRecorder.openRecorder();
+      String customPath = '/fixedBids_recordings';
+      Directory appDocDirectory;
+      if (Platform.isIOS) {
+        appDocDirectory = await getApplicationDocumentsDirectory();
+      } else {
+        appDocDirectory = await getExternalStorageDirectory();
+      }
+      customPath = appDocDirectory.path +
+          customPath +
+          DateTime.now().millisecondsSinceEpoch.toString();
       await _soundRecorder.startRecorder(
-        toFile: 'audio.aac',
-      );
+          toFile: customPath, codec: Codec.defaultCodec);
       setState(() {});
     }
   }
@@ -125,11 +135,17 @@ class _OpenChatState extends State<OpenChat> {
                               children: [
                                 if (snapshot.data.messages.data[index].type ==
                                     2)
-                                  ImageComponent(image: snapshot.data.messages.data[index].text,)
+                                  ImageComponent(
+                                    image:
+                                        snapshot.data.messages.data[index].text,
+                                  )
                                 else if (snapshot
                                         .data.messages.data[index].type ==
                                     5)
-                                  AudioComponent(recording: snapshot.data.messages.data[index].text,)
+                                  AudioComponent(
+                                    recording:
+                                        snapshot.data.messages.data[index].text,
+                                  )
                                 else
                                   Text(
                                     snapshot.data.messages.data[index].text,
@@ -175,11 +191,17 @@ class _OpenChatState extends State<OpenChat> {
                               children: [
                                 if (snapshot.data.messages.data[index].type ==
                                     2)
-                                  ImageComponent(image: snapshot.data.messages.data[index].text,)
+                                  ImageComponent(
+                                    image:
+                                        snapshot.data.messages.data[index].text,
+                                  )
                                 else if (snapshot
-                                    .data.messages.data[index].type ==
+                                        .data.messages.data[index].type ==
                                     5)
-                                  AudioComponent(recording: snapshot.data.messages.data[index].text,)
+                                  AudioComponent(
+                                    recording:
+                                        snapshot.data.messages.data[index].text,
+                                  )
                                 else
                                   Text(
                                     snapshot.data.messages.data[index].text,
@@ -285,6 +307,13 @@ class _OpenChatState extends State<OpenChat> {
                     Expanded(
                       child: TextFormField(
                         controller: message,
+                        onChanged: (value) {
+                          if(value.startsWith(' ')){
+                            setState(() {
+                              message.clear();
+                            });
+                          }
+                        },
                         onFieldSubmitted: (value) async {
                           setState(() {
                             if (_file != null) {
@@ -327,7 +356,7 @@ class _OpenChatState extends State<OpenChat> {
                                 _recording = null;
                                 message.clear();
                               });
-                            } else {
+                            } else if (message.text.isNotEmpty) {
                               snapshot.data.messages.data.insert(
                                   0,
                                   Message(
@@ -429,7 +458,7 @@ class _OpenChatState extends State<OpenChat> {
                               _recording = null;
                               message.clear();
                             });
-                          } else {
+                          } else if (message.text.isNotEmpty) {
                             snapshot.data.messages.data.insert(
                                 0,
                                 Message(

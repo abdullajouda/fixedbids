@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'dart:io';
+import 'package:bot_toast/bot_toast.dart';
 import 'package:fixed_bids/utils/constants.dart';
 import 'package:fixed_bids/models/responses/ads_response.dart';
 import 'package:fixed_bids/models/responses/api_response.dart';
@@ -10,8 +12,12 @@ import 'package:fixed_bids/models/responses/profile_response.dart';
 import 'package:fixed_bids/models/responses/questions_response.dart';
 import 'package:fixed_bids/models/responses/services_response.dart';
 import 'package:fixed_bids/models/responses/settings_response.dart';
-import 'package:async/async.dart';
+import 'package:fixed_bids/views/root.dart';
+import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+
 import 'package:fixed_bids/models/responses/user_by_service_response.dart';
+import 'package:flutter_login_facebook/flutter_login_facebook.dart';
 import 'package:http/http.dart';
 import 'package:provider/provider.dart';
 
@@ -94,6 +100,105 @@ class GlobalController {
     print(output);
     LoginResponse userResponse = LoginResponse.fromJson(output);
     return userResponse;
+  }
+
+  Future<LoginResponse> socialLogin({String token, String type}) async {
+    var response = await post(
+      Uri.parse("${Constants.domain}socialSignUp"),
+      body: {
+        'social_token': token,
+        'social_type': type,
+        'device_type': Platform.isAndroid ? 'android' : 'ios',
+        'fcm_token': Data.fcm,
+      },
+      headers: Constants().headers,
+    );
+    var output = json.decode(response.body);
+    print(output);
+    LoginResponse userResponse = LoginResponse.fromJson(output);
+    return userResponse;
+  }
+
+  Future<LoginResponse> socialCreateNewAccount(
+      {String token, String socialType, int type}) async {
+    var response = await post(
+      Uri.parse("${Constants.domain}socialCreateNewAccount"),
+      body: {
+        'social_token': token,
+        'social_type': socialType,
+        'device_type': Platform.isAndroid ? 'android' : 'ios',
+        'fcm_token': Data.fcm,
+        'type': '$type',
+      },
+      headers: Constants().headers,
+    );
+    var output = json.decode(response.body);
+    print(output);
+    LoginResponse userResponse = LoginResponse.fromJson(output);
+    return userResponse;
+  }
+
+  Future<LoginResponse> facebookLogin() async {
+    final fb = FacebookLogin();
+
+// Log in
+    final res = await fb.logIn(permissions: [
+      FacebookPermission.publicProfile,
+      FacebookPermission.email,
+    ]);
+    switch (res.status) {
+      case FacebookLoginStatus.success:
+        // Logged in
+
+        // Send access token to server for validation and auth
+        final FacebookAccessToken accessToken = res.accessToken;
+        print('Access token: ${accessToken.token}');
+
+        // Get profile data
+        final profile = await fb.getUserProfile();
+        print('Hello, ${profile.name}! You ID: ${profile.userId}');
+
+        // Get user profile image url
+        final imageUrl = await fb.getProfileImageUrl(width: 100);
+        print('Your profile image: $imageUrl');
+
+        // Get email (since we request email permission)
+        final email = await fb.getUserEmail();
+        // But user can decline permission
+        if (email != null) print('And your email is $email');
+        LoginResponse response =
+        await socialLogin(type: 'google', token: accessToken.token);
+        return response;
+        break;
+      case FacebookLoginStatus.cancel:
+        // User cancel log in
+        BotToast.showText(text: res.error.localizedTitle);
+        return null;
+        break;
+      case FacebookLoginStatus.error:
+        // Log in failed
+        BotToast.showText(text: res.error.localizedTitle);
+        print('Error while log in: ${res.error}');
+        return null;
+        break;
+      default:
+        return null;
+        break;
+    }
+  }
+
+  Future <LoginResponse>  signInGmail() async {
+    GoogleSignIn _googleSignIn = GoogleSignIn(
+      scopes: [
+        'email',
+      ],
+    );
+    if (await _googleSignIn.isSignedIn()) await _googleSignIn.signOut();
+    var account = await _googleSignIn.signIn();
+    var token = await account.authentication;
+    LoginResponse firstResponse =
+        await socialLogin(type: 'google', token: token.accessToken);
+   return firstResponse;
   }
 
   Future<LoginResponse> register({
@@ -185,7 +290,8 @@ class GlobalController {
   Future<UsersByServiceResponse> getUsersByServiceId(
       {int id, String text}) async {
     var request = await get(
-      Uri.parse("${Constants.domain}getUsersByServiceId/$id?text=${text??''}"),
+      Uri.parse(
+          "${Constants.domain}getUsersByServiceId/$id?text=${text ?? ''}"),
       headers: Constants().headers,
     );
     return UsersByServiceResponse.fromJson(json.decode(request.body));
@@ -196,6 +302,7 @@ class GlobalController {
       Uri.parse("${Constants.domain}logout"),
       headers: Constants().headers,
     );
+    Data.sharedPreferencesController.clearUserData();
   }
 
 // changeLanguage({String lang}) async {

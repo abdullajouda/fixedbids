@@ -379,6 +379,7 @@ class _UserHomeScreenState extends State<UserHomeScreen> {
                                     SizedBox(
                                       height: 14,
                                     ),
+                                    if(snapshot.data.items[index].avgRate!='null')
                                     Text.rich(
                                       TextSpan(
                                           text: 'St. Rate'.tr(),
